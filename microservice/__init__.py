@@ -53,6 +53,9 @@ def create_app(args=None):
         from .routes import service
         app.register_blueprint(service.bp)
 
+        from .routes import database
+        app.register_blueprint(database.bp)
+
     # TODO: log start of the service
     # return the app
     return app

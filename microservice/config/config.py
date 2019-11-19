@@ -31,6 +31,11 @@ class DevelopmentConfig(Config):
     ENV='development'
     DEBUG = True
     SECRET_KEY=os.getenv('DEV_SECRET_KEY')
+    DB_USER = os.getenv('DEVELOPMENT_DATABASE_USER')
+    DB_HOST = os.getenv('DEVELOPMENT_DATABASE_HOST')
+    DB_PORT = os.getenv('DEVELOPMENT_DATABASE_PORT')
+    DB_PASSWORD = os.getenv('DEVELOPMENT_DATABASE_PASSWORD')
+    DB_NAME = os.getenv('DEVELOPMENT_DATABASE_NAME')
 
 
 class TestingConfig(Config):
