@@ -58,14 +58,15 @@ def index():
 @bp.route('/document', methods=['POST'])
 def get_document():
     """
-    At this endpoint you get the document that you provided in the JSON body.
+    At this endpoint you get the documents that you provided in the JSON body.
 
     JSON structure:
     {
-        "document_id" : (id of the document)
+        "document_ids" : [list of document ids]
     }
 
-    The function returns a JSON response with the data of the document.
+    The function returns a JSON response with the data of the documents. It is limited to 
+    output maximum of 10 documents.
     """
 
     DB_USER = app.config.get('DB_USER', 'postgres')
@@ -78,6 +79,34 @@ def get_document():
         password=DB_PASSWORD
     )
 
+    if DB.cursor is None:
+        return jsonify({'Error' : 'The connection could not be established'})
+
+    document_ids = request.json.get('document_ids', None)
+
+    # If the "document_ids" parameter was not set:
+    if document_ids is None:
+        return jsonify(
+            {'Message' : 'You need to provide json with "documents_ids" : [list of documents ids] value'}
+        )
+
+    statement = """SELECT * FROM documents WHERE document_id IN %s;"""
+    DB.cursor.execute(statement, (tuple(document_ids), )) 
+
+    # Enumerating the fields
+    num_fields = len(DB.cursor.description)
+    field_names = [i[0] for i in DB.cursor.description]
+    documents = [{ field_names[i]: row[i] for i in range(num_fields) } for row in DB.cursor.fetchall()]
+    
+    # Cleaning the ouput:
+    # - removing fulltext field
+    # - slicing down the fulltext_cleaned field to 500 chars
+    # - we return only the first 10 results
+    for i in range(len(documents)):
+        if documents[i]['fulltext_cleaned'] is not None:
+            documents[i]['fulltext_cleaned'] = documents[i]['fulltext_cleaned'][:500]
+        documents[i].pop('fulltext')
+
     DB.disconnect()
 
-    return Response('DB is successfully connected!')
+    return jsonify(documents[:10])
