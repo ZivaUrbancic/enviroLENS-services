@@ -56,7 +56,7 @@ def index():
     return render_template('index.html', result=result)
 
 @bp.route('/document', methods=['POST'])
-def get_document():
+def get_documents():
     """
     At this endpoint you get the documents that you provided in the JSON body.
 

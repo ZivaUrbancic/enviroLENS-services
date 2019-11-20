@@ -8,6 +8,8 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
+import requests
+
 
 #################################################
 # Initialize the models
@@ -27,6 +29,25 @@ bp = Blueprint('service', __name__, url_prefix='/api/v1/service')
 def index():
     # TODO: provide an appropriate output
     return abort(501)
+
+@bp.route('/embedding', methods=['POST'])
+def get_embedding():
+    # This is only hardcoded test:
+
+    text = request.json.get('text')
+    text_language = request.json.get('language')
+
+    HOST = 'localhost'
+    PORT = '4200'
+
+    data = {
+    "text": text,
+    "language": text_language
+    }
+
+    r = requests.post(f"http://{HOST}:{PORT}/embeddings", json=data)
+
+    return jsonify(r.json())
 
 # TODO: add an appropriate route name
 @bp.route('/second', methods=['GET', 'POST'])
