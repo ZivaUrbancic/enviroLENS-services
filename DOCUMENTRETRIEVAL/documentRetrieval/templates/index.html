@@ -1,0 +1,509 @@
+<!doctype html>
+<html>
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bs/bootstrap.min.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i&amp;subset=latin-ext" rel="stylesheet">
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+</head>
+
+<body class="pt-6">
+  <main role="main">
+    <div class="container">
+      <div class="row">
+        <div class="col title__block">
+          <h1 class="title text-center">Microservice</h1>
+          <h5 class="title text-center">Document retrieval</h5>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <h2 class="doc doc__section mt-4">REST API</h2>
+
+          <p class="information">
+            All URLs referenced in the REST API section have the following base:
+          </p>
+
+          <div class="doc url_baseline p-4 mb-3">
+            <p class="information">
+              <b class="doc">http://{{ result.host }}:{{ result.port }}/api/v1</b>
+            </p>
+          </div>
+
+          <h3 class="doc doc__section mt-5">
+            Document retrieval REST API
+          </h3>
+          <p class="information">
+            The Document retrieval REST API allows the user to retrieve relevant documents based on a given query.
+          </p>
+
+          <h6 class="mt-2">
+            Available methods
+          </h6>
+
+          <div class="table-responsive">
+            <table class="table table-borderless table-hover">
+              <thead>
+                <tr>
+                  <th class="doc doc__method request">
+                  </th><th class="doc doc__method route">
+                  </th><th class="doc doc__method description">
+                </th></tr>
+              </thead>
+              <tbody>
+                <tr class="clickable-row" data-href="#get-create-text-embedding">
+                  <td><b class="doc">GET</b></td>
+                  <td>/docRetrieval/retrieval</td>
+                  <td>Retrieve relevant documents</td>
+                </tr>
+                <tr class="clickable-row" data-href="#post-create-text-embedding">
+                    <td><b class="doc">POST</b></td>
+                    <td>/docRetrieval/retrieval</td>
+                    <td>Retrieve relevant documents (similar to the GET request)</td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <a class="anchor" id="get-create-text-embedding"></a>
+          <h5 class="doc doc__subsection mt-5 mb-3">
+              Retrieve reeavant documents
+          </h5>
+
+          <div class="table-responsive">
+            <table class="table table-borderless">
+              <thead>
+                <tr>
+                  <th class="doc doc__method request">
+                  </th><th class="doc doc__method route">
+                </th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b class="doc">GET</b></td>
+                  <td><b>/docRetrieval/retrieval</b></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Route information</p>
+          <h6 class="mt-2">Query string parameters</h6>
+          <div class="table-responsive">
+            <table class="table table-dashed-borders">
+              <thead>
+                <tr>
+                  <th class="doc doc__query name"></th>
+                  <th class="doc doc__query type"></th>
+                  <th class="doc doc__query title"></th>
+                  <th class="doc doc__query optional"></th>
+                  <th class="doc doc__query description"></th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr>
+                  <td><b class="doc">query</b></td>
+                  <td>
+                    <span class="doc doc--small">Type:</span> String
+                  </td>
+                  <td>
+                    <span class="doc doc--small">Title:</span> Query Text
+                  </td>
+                  <td>
+                    <span class="doc doc--small">Optional:</span> false
+                  </td>
+                  <td>
+                    The query for which we wish to retrieve documents.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td><b class="doc">m</b></td>
+                  <td>
+                    <span class="doc doc--small">Type:</span> Integer
+                  </td>
+                  <td>
+                    <span class="doc doc--small">Title:</span> Number of retrieved documents
+                  </td>
+                  <td>
+                    <span class="doc doc--small">Optional:</span> true
+                  </td>
+                  <td>
+                    Number of retrieved documents.
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+          <h6 class="mt-2">Response body attributes</h6>
+          <div class="table-responsive">
+            <table class="table table-dashed-borders">
+              <thead>
+                <tr>
+                  <th class="doc doc__query name"></th>
+                  <th class="doc doc__query type"></th>
+                  <th class="doc doc__query title"></th>
+                  <th class="doc doc__query optional"></th>
+                  <th class="doc doc__query description"></th>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td><b class="doc">documents_metadata</b></td>
+                      <td>
+                          <span class="doc doc--small">Type:</span> List
+                      </td>
+                      <td>
+                          <span class="doc doc--small">Title:</span> Metadata of the retrieved documents
+                      </td>
+                      <td>
+                          <span class="doc doc--small">Read only:</span> true
+                      </td>
+                      <td>
+                          Metadata of m most relevant documents sorted descending.
+                      </td>
+                  </tr>
+
+                  <tr class="no-top-border">
+                      <td colspan="5">
+
+                          <b class="doc">documents_metadata item properties</b>
+
+                          <table class="table table-dashed-borders table--second-level">
+                              <thead>
+                                  <tr>
+                                      <th class="doc doc__query name"></th>
+                                      <th class="doc doc__query type"></th>
+                                      <th class="doc doc__query title"></th>
+                                      <th class="doc doc__query optional"></th>
+                                      <th class="doc doc__query description"></th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <tr>
+                                      <td><b class="doc">document_source</b></td>
+                                      <td>
+                                          <span class="doc doc--small">Type:</span> String
+                                      </td>
+                                      <td>
+                                          <span class="doc doc--small">Title:</span> Source database
+                                      </td>
+                                      <td>
+                                          <span class="doc doc--small">Read only:</span> true
+                                      </td>
+                                      <td>
+                                          Name of the document source database.
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td><b class="doc">date</b></td>
+                                      <td>
+                                          <span class="doc doc--small">Type:</span> String
+                                      </td>
+                                      <td>
+                                          <span class="doc doc--small">Title:</span> Document date
+                                      </td>
+                                      <td>
+                                          <span class="doc doc--small">Read only:</span> true
+                                      </td>
+                                      <td>
+                                          Date of the document.
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td><b class="doc">title</b></td>
+                                      <td>
+                                          <span class="doc doc--small">Type:</span> String
+                                      </td>
+                                      <td>
+                                          <span class="doc doc--small">Title:</span> Document title
+                                      </td>
+                                      <td>
+                                          <span class="doc doc--small">Read only:</span> true
+                                      </td>
+                                      <td>
+                                          Title of the document.
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td><b class="doc">celex_num</b></td>
+                                      <td>
+                                          <span class="doc doc--small">Type:</span> String
+                                      </td>
+                                      <td>
+                                          <span class="doc doc--small">Title:</span> Celex number
+                                      </td>
+                                      <td>
+                                          <span class="doc doc--small">Read only:</span> true
+                                      </td>
+                                      <td>
+                                          Celex number of the document if exists, otherwise None.
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td><b class="doc">fulltextlink</b></td>
+                                      <td>
+                                          <span class="doc doc--small">Type:</span> String
+                                      </td>
+                                      <td>
+                                          <span class="doc doc--small">Title:</span> Document link
+                                      </td>
+                                      <td>
+                                          <span class="doc doc--small">Read only:</span> true
+                                      </td>
+                                      <td>
+                                          Link to the document text.
+                                      </td>
+                                  </tr>
+                              </tbody>
+                          </table>
+
+                      </td>
+                  </tr>
+
+               
+
+              </tbody>
+            </table>
+          </div>
+
+          <a class="anchor" id="post-create-text-embedding"></a>
+          <h5 class="doc doc__subsection mt-5 mb-3">
+              Retrieve relevant documents.
+          </h5>
+
+          <div class="table-responsive">
+            <table class="table table-borderless">
+              <thead>
+                <tr>
+                  <th class="doc doc__method request">
+                  </th><th class="doc doc__method route">
+                </th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b class="doc">POST</b></td>
+                  <td><b>/docRetrieval/retrieval</b></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Route information</p>
+          <h6 class="mt-2">Query string parameters</h6>
+          <div class="table-responsive">
+            <table class="table table-dashed-borders">
+              <thead>
+                <tr>
+                  <th class="doc doc__query name"></th>
+                  <th class="doc doc__query type"></th>
+                  <th class="doc doc__query title"></th>
+                  <th class="doc doc__query optional"></th>
+                  <th class="doc doc__query description"></th>
+                </tr>
+              </thead>
+              <tbody>
+
+                  <tr>
+                      <td><b class="doc">query</b></td>
+                      <td>
+                          <span class="doc doc--small">Type:</span> String
+                      </td>
+                      <td>
+                          <span class="doc doc--small">Title:</span> Query Text
+                      </td>
+                      <td>
+                          <span class="doc doc--small">Optional:</span> false
+                      </td>
+                      <td>
+                          The query for which we wish to retrieve documents.
+                      </td>
+                  </tr>
+
+                  <tr>
+                      <td><b class="doc">m</b></td>
+                      <td>
+                          <span class="doc doc--small">Type:</span> Integer
+                      </td>
+                      <td>
+                          <span class="doc doc--small">Title:</span> Number of retrieved documents.
+                      </td>
+                      <td>
+                          <span class="doc doc--small">Optional:</span> true
+                      </td>
+                      <td>
+                          Number of retrieved documents.
+                      </td>
+                  </tr>
+             
+
+              </tbody>
+            </table>
+          </div>
+
+          <h6 class="mt-2">Response body attributes</h6>
+          <div class="table-responsive">
+            <table class="table table-dashed-borders">
+              <thead>
+                <tr>
+                  <th class="doc doc__query name"></th>
+                  <th class="doc doc__query type"></th>
+                  <th class="doc doc__query title"></th>
+                  <th class="doc doc__query optional"></th>
+                  <th class="doc doc__query description"></th>
+                </tr>
+              </thead>
+                <tbody>
+
+                    <tr>
+                        <td><b class="doc">documents_metadata</b></td>
+                        <td>
+                            <span class="doc doc--small">Type:</span> List
+                        </td>
+                        <td>
+                            <span class="doc doc--small">Title:</span> Metadata of the retrieved documents
+                        </td>
+                        <td>
+                            <span class="doc doc--small">Read only:</span> true
+                        </td>
+                        <td>
+                            Metadata of m most relevant documents sorted descending.
+                        </td>
+                    </tr>
+
+                    <tr class="no-top-border">
+                        <td colspan="5">
+
+                            <b class="doc">documents_metadata item properties</b>
+
+                            <table class="table table-dashed-borders table--second-level">
+                                <thead>
+                                    <tr>
+                                        <th class="doc doc__query name"></th>
+                                        <th class="doc doc__query type"></th>
+                                        <th class="doc doc__query title"></th>
+                                        <th class="doc doc__query optional"></th>
+                                        <th class="doc doc__query description"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><b class="doc">document_source</b></td>
+                                        <td>
+                                            <span class="doc doc--small">Type:</span> String
+                                        </td>
+                                        <td>
+                                            <span class="doc doc--small">Title:</span> Source database
+                                        </td>
+                                        <td>
+                                            <span class="doc doc--small">Read only:</span> true
+                                        </td>
+                                        <td>
+                                            Name of the document source database.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b class="doc">date</b></td> 
+                                        <td>
+                                            <span class="doc doc--small">Type:</span> String
+                                        </td>
+                                        <td>
+                                            <span class="doc doc--small">Title:</span> Document date
+                                        </td>
+                                        <td>
+                                            <span class="doc doc--small">Read only:</span> true
+                                        </td>
+                                        <td>
+                                            Date of the document.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b class="doc">title</b></td>
+                                        <td>
+                                            <span class="doc doc--small">Type:</span> String
+                                        </td>
+                                        <td>
+                                            <span class="doc doc--small">Title:</span> Document title
+                                        </td>
+                                        <td>
+                                            <span class="doc doc--small">Read only:</span> true
+                                        </td>
+                                        <td>
+                                            Title of the document.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b class="doc">celex_num</b></td>
+                                        <td>
+                                            <span class="doc doc--small">Type:</span> String
+                                        </td>
+                                        <td>
+                                            <span class="doc doc--small">Title:</span> Celex number
+                                        </td>
+                                        <td>
+                                            <span class="doc doc--small">Read only:</span> true
+                                        </td>
+                                        <td>
+                                            Celex number of the document if exists, otherwise None.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b class="doc">fulltextlink</b></td>
+                                        <td>
+                                            <span class="doc doc--small">Type:</span> String
+                                        </td>
+                                        <td>
+                                            <span class="doc doc--small">Title:</span> Document link
+                                        </td>
+                                        <td>
+                                            <span class="doc doc--small">Read only:</span> true
+                                        </td>
+                                        <td>
+                                            Link to the document text.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </td>
+                    </tr>
+
+
+                </tbody>
+                            </table>
+</div>
+
+        </div>
+
+
+      </div>
+    </div>
+
+  </main>
+
+
+  <footer class="container">
+    <div class="row">
+      <div class="col">
+
+        <div class="container content">
+          <div class="row">
+            <div class="col text-center">
+              <span class="copyright">© AILab</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+</body>
+
+</html>

@@ -8,6 +8,8 @@ from flask import Flask
 from flask_cors import CORS
 
 from .config import config, config_logging
+from .library.supervisord import get_supervisord_proxy
+
 
 def create_app(args=None):
     # create and configure the app
@@ -15,10 +17,19 @@ def create_app(args=None):
 
     # add user provided configurations for the
     if args:
+        proxy = None
+        if "proxy" in args and args["proxy"]:
+            # get the user defined proxy config
+            proxy = args["proxy"]
+
+        if "supervisord" in args and args["supervisord"]:
+            # get the supervisord proxy config
+            proxy = get_supervisord_proxy()
+
         app.config.update(
             HOST=args["host"],
             PORT=args["port"],
-            # TODO: add additional enviroments
+            PROXY=proxy
         )
 
     # set the service environment
@@ -36,6 +47,7 @@ def create_app(args=None):
     if app.config['CORS']['origins']:
         CORS(app, origins=app.config['CORS']['origins'])
 
+    print(app.config)
     # add error handlers
     from .routes import error_handlers
     error_handlers.register(app)
@@ -48,13 +60,6 @@ def create_app(args=None):
         # add index routes
         from .routes import index
         app.register_blueprint(index.bp)
-
-        # add embedding routes
-        from .routes import service
-        app.register_blueprint(service.bp)
-
-        from .routes import database
-        app.register_blueprint(database.bp)
 
     # TODO: log start of the service
     # return the app

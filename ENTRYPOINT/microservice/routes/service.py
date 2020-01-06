@@ -34,18 +34,18 @@ def index():
 def get_embedding():
     # This is only hardcoded test:
 
-    text = request.json.get('text')
-    text_language = request.json.get('language')
+    text = request.json.get('query')
 
-    HOST = 'localhost'
-    PORT = '4200'
+    HOST = app.config.get('TEXT_EMBEDDING_HOST', 'localhost')
+    PORT = app.config.get('TEXT_EMBEDDING_PORT', '4000')
 
     data = {
-    "text": text,
-    "language": text_language
+    "query": text,
     }
 
-    r = requests.post(f"http://{HOST}:{PORT}/embeddings", json=data)
+    print(f"Making request to: http://{HOST}:{PORT}/api/v1/embeddings/expand")
+
+    r = requests.post(f"http://{HOST}:{PORT}/api/v1/embeddings/expand", json=data)
 
     return jsonify(r.json())
 

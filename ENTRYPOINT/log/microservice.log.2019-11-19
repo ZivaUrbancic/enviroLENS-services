@@ -1,0 +1,270 @@
+microservice ERROR    [2019-11-19 14:10:34,165]: Exception on /api/v1/db/document [POST]
+Traceback (most recent call last):
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 2311, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1834, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1737, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\_compat.py", line 36, in reraise
+    raise value
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1832, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1818, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "D:\Samo\text_embedding_service_entrypoint\microservice\routes\database.py", line 88, in get_document
+    DB.cursor.execute(statement, document_ids)
+IndexError: list index out of range
+microservice ERROR    [2019-11-19 14:11:40,188]: Exception on /api/v1/db/document [POST]
+Traceback (most recent call last):
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 2311, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1834, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1737, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\_compat.py", line 36, in reraise
+    raise value
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1832, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1818, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "D:\Samo\text_embedding_service_entrypoint\microservice\routes\database.py", line 88, in get_document
+    DB.cursor.execute(statement, document_ids)
+psycopg2.ProgrammingError: syntax error at or near "'{}'"
+LINE 1: SELECT * FROM documents WHERE document_id IN '{}';
+                                                     ^
+
+microservice ERROR    [2019-11-19 14:12:33,834]: Exception on /api/v1/db/document [POST]
+Traceback (most recent call last):
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 2311, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1834, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1737, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\_compat.py", line 36, in reraise
+    raise value
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1832, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1818, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "D:\Samo\text_embedding_service_entrypoint\microservice\routes\database.py", line 88, in get_document
+    DB.cursor.execute(statement, document_ids)
+psycopg2.ProgrammingError: syntax error at or near "'{}'"
+LINE 1: SELECT * FROM documents WHERE document_id IN '{}';
+                                                     ^
+
+microservice ERROR    [2019-11-19 14:13:06,781]: Exception on /api/v1/db/document [POST]
+Traceback (most recent call last):
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 2311, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1834, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1737, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\_compat.py", line 36, in reraise
+    raise value
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1832, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1818, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "D:\Samo\text_embedding_service_entrypoint\microservice\routes\database.py", line 88, in get_document
+    DB.cursor.execute(statement, document_ids)
+psycopg2.ProgrammingError: syntax error at or near "'{}'"
+LINE 1: SELECT * FROM documents WHERE document_id IN '{}';
+                                                     ^
+
+microservice ERROR    [2019-11-19 14:13:53,377]: Exception on /api/v1/db/document [POST]
+Traceback (most recent call last):
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 2311, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1834, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1737, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\_compat.py", line 36, in reraise
+    raise value
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1832, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1818, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "D:\Samo\text_embedding_service_entrypoint\microservice\routes\database.py", line 88, in get_document
+    DB.cursor.execute(statement, document_ids)
+IndexError: string index out of range
+microservice ERROR    [2019-11-19 14:14:18,582]: Exception on /api/v1/db/document [POST]
+Traceback (most recent call last):
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 2311, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1834, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1737, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\_compat.py", line 36, in reraise
+    raise value
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1832, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1818, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "D:\Samo\text_embedding_service_entrypoint\microservice\routes\database.py", line 88, in get_document
+    DB.cursor.execute(statement, document_ids)
+IndexError: string index out of range
+microservice ERROR    [2019-11-19 14:15:25,347]: Exception on /api/v1/db/document [POST]
+Traceback (most recent call last):
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 2311, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1834, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1737, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\_compat.py", line 36, in reraise
+    raise value
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1832, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1818, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "D:\Samo\text_embedding_service_entrypoint\microservice\routes\database.py", line 90, in get_document
+    DB.cursor.execute(statement, document_ids)
+IndexError: string index out of range
+microservice ERROR    [2019-11-19 14:16:04,164]: Exception on /api/v1/db/document [POST]
+Traceback (most recent call last):
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 2311, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1834, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1737, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\_compat.py", line 36, in reraise
+    raise value
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1832, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1818, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "D:\Samo\text_embedding_service_entrypoint\microservice\routes\database.py", line 90, in get_document
+    DB.cursor.execute(statement, document_ids)
+psycopg2.ProgrammingError: syntax error at or near "''"
+LINE 1: SELECT * FROM documents WHERE document_id IN '';
+                                                     ^
+
+microservice ERROR    [2019-11-19 14:27:28,517]: Exception on /api/v1/db/document [POST]
+Traceback (most recent call last):
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 2311, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1834, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1737, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\_compat.py", line 36, in reraise
+    raise value
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1832, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1818, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "D:\Samo\text_embedding_service_entrypoint\microservice\routes\database.py", line 90, in get_document
+    DB.cursor.execute(statement, document_ids)
+TypeError: not all arguments converted during string formatting
+microservice ERROR    [2019-11-19 14:29:40,477]: Exception on /api/v1/db/document [POST]
+Traceback (most recent call last):
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 2311, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1834, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1737, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\_compat.py", line 36, in reraise
+    raise value
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1832, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1818, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "D:\Samo\text_embedding_service_entrypoint\microservice\routes\database.py", line 90, in get_document
+    DB.cursor.execute(statement, (document_ids, ))
+TypeError: not all arguments converted during string formatting
+microservice ERROR    [2019-11-19 14:30:53,010]: Exception on /api/v1/db/document [POST]
+Traceback (most recent call last):
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 2311, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1834, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1737, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\_compat.py", line 36, in reraise
+    raise value
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1832, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1818, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "D:\Samo\text_embedding_service_entrypoint\microservice\routes\database.py", line 90, in get_document
+    DB.cursor.execute(statement, (document_ids, ))
+TypeError: not all arguments converted during string formatting
+microservice ERROR    [2019-11-19 14:32:32,106]: Exception on /api/v1/db/document [POST]
+Traceback (most recent call last):
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 2311, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1834, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1737, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\_compat.py", line 36, in reraise
+    raise value
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1832, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1818, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "D:\Samo\text_embedding_service_entrypoint\microservice\routes\database.py", line 90, in get_document
+    DB.cursor.execute(statement, (document_ids, ))
+psycopg2.ProgrammingError: syntax error at or near ")"
+LINE 1: SELECT * FROM documents WHERE document_id IN ();
+                                                      ^
+
+microservice ERROR    [2019-11-19 14:33:52,372]: Exception on /api/v1/db/document [POST]
+Traceback (most recent call last):
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 2311, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1834, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1737, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\_compat.py", line 36, in reraise
+    raise value
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1832, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1818, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "D:\Samo\text_embedding_service_entrypoint\microservice\routes\database.py", line 85, in get_document
+    document_ids = tuple(request.json.get('document_ids', None))
+TypeError: 'NoneType' object is not iterable
+microservice ERROR    [2019-11-19 14:40:39,147]: Exception on /api/v1/db/document [POST]
+Traceback (most recent call last):
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 2311, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1834, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1737, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\_compat.py", line 36, in reraise
+    raise value
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1832, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1818, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "D:\Samo\text_embedding_service_entrypoint\microservice\routes\database.py", line 100, in get_document
+    documents[document]['fulltext_cleaned'] = documents[document]['fulltext_cleaned'][:500]
+TypeError: list indices must be integers or slices, not dict
+microservice ERROR    [2019-11-19 14:41:44,464]: Exception on /api/v1/db/document [POST]
+Traceback (most recent call last):
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 2311, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1834, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1737, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\_compat.py", line 36, in reraise
+    raise value
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1832, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\Samo\text_embedding_service_entrypoint\venv\lib\site-packages\flask\app.py", line 1818, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "D:\Samo\text_embedding_service_entrypoint\microservice\routes\database.py", line 100, in get_document
+    documents[i]['fulltext_cleaned'] = documents[i]['fulltext_cleaned'][:500]
+TypeError: 'NoneType' object is not subscriptable
