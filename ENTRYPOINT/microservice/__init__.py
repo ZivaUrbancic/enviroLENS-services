@@ -19,7 +19,9 @@ def create_app(args=None):
             HOST=args["host"],
             PORT=args["port"],
             TEXT_EMBEDDING_HOST=args['embeddings_host'],
-            TEXT_EMBEDDING_PORT=args['embeddings_port']
+            TEXT_EMBEDDING_PORT=args['embeddings_port'],
+            RETRIEVAL_HOST=args['retrieval_host'],
+            RETRIEVAL_PORT=args['retrieval_port']
             # TODO: add additional enviroments
         )
 
@@ -57,6 +59,9 @@ def create_app(args=None):
 
         from .routes import database
         app.register_blueprint(database.bp)
+
+        from .routes import document_retrieval
+        app.register_blueprint(document_retrieval.bp)
 
     # TODO: log start of the service
     # return the app

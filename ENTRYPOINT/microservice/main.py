@@ -14,6 +14,8 @@ if __name__=='__main__':
     argparser_production.add_argument('-e', '--env', type=str, default='production', help="The microservice environment")
     argparser_production.add_argument('-teh', '--embeddings_host', type=str, default='localhost', help='The host of the text embedding microservice')
     argparser_production.add_argument('-tep', '--embeddings_port', type=str, default='4000', help='The port of the text embedding microservice')
+    argparser_production.add_argument('-drh', '--retrieval_host', type=str, default='localhost', help='The host of the document retrieval microservice')
+    argparser_production.add_argument('-drp', '--retrieval_port', type=str, default='4100', help='The port of the document retrieval microservice')
     # TODO: the model parameters
 
 
@@ -29,7 +31,9 @@ if __name__=='__main__':
             "port": args.port,
             "env": args.env,
             "embeddings_host" : args.embeddings_host,
-            "embeddings_port" : args.embeddings_port
+            "embeddings_port" : args.embeddings_port,
+            "retrieval_host" : args.retrieval_host,
+            "retrieval_port" : args.retrieval_port,
             # TODO: add additional arguments
         }
         # create the application
