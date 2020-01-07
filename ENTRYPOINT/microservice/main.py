@@ -16,6 +16,8 @@ if __name__=='__main__':
     argparser_production.add_argument('-tep', '--embeddings_port', type=str, default='4000', help='The port of the text embedding microservice')
     argparser_production.add_argument('-drh', '--retrieval_host', type=str, default='localhost', help='The host of the document retrieval microservice')
     argparser_production.add_argument('-drp', '--retrieval_port', type=str, default='4100', help='The port of the document retrieval microservice')
+    argparser_production.add_argument('-dsh', '--similarity_host', type=str, default='localhost', help='The host of the document similarity microservice')
+    argparser_production.add_argument('-dsp', '--similarity_port', type=str, default='4200', help='The port of the document similarity microservice')
     # TODO: the model parameters
 
 
@@ -34,6 +36,8 @@ if __name__=='__main__':
             "embeddings_port" : args.embeddings_port,
             "retrieval_host" : args.retrieval_host,
             "retrieval_port" : args.retrieval_port,
+            "similarity_host" : args.similarity_host,
+            "similarity_port" : args.similarity_port,
             # TODO: add additional arguments
         }
         # create the application

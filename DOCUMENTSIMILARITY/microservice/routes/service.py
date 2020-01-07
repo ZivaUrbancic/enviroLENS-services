@@ -24,10 +24,6 @@ database_password = app.config['DATABASE_PASSWORD']
 text_embedding_url = app.config['TEXT_EMBEDDING_URL']
 
 # Connect to the embeddings database and retrieve the embeddings:
-pg = PostgresQL()
-pg.connect(database=database_name, user=database_user,
-                      password=database_password)
-
 
 #################################################
 # Setup the embeddings blueprint
@@ -45,6 +41,10 @@ def index():
 @bp.route('/new_document_embedding', methods=['GET', 'POST'])
 def update_similarities():
     # TODO: write documentation
+
+    pg = PostgresQL()
+    pg.connect(database=database_name, user=database_user,
+                      password=database_password)
 
     # get document id as the parameter
     if request.method == 'GET':
@@ -140,10 +140,14 @@ def update_similarities():
 @bp.route('/get_similarities', methods=['GET', 'POST'])
 def get_similarities():
     # TODO: write documentation
+
+    pg = PostgresQL()
+    pg.connect(database=database_name, user=database_user,
+                      password=database_password)
     if request.method == 'GET':
         # retrieve the correct query parameters
         doc_id = request.args.get('document_id', default=None, type=int)
-        k = request.args.get('get_k', default=None, type=int)
+        k = request.args.get('get_k', default=5, type=int)
     elif request.method == 'POST':
         # retrieve the text posted to the route
         doc_id = request.json['document_id']
@@ -168,6 +172,7 @@ def get_similarities():
         result_indices = [entry['document2_id'] for entry in similarity_list[:k]]
         result = [(entry['document2_id'], entry['similarity_score']) for entry in similarity_list[:k]]
         finish = True
+        pg.disconnect()
     except Exception as e:
         # TODO: log exception
         # something went wrong with the request

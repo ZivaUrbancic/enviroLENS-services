@@ -21,7 +21,9 @@ def create_app(args=None):
             TEXT_EMBEDDING_HOST=args['embeddings_host'],
             TEXT_EMBEDDING_PORT=args['embeddings_port'],
             RETRIEVAL_HOST=args['retrieval_host'],
-            RETRIEVAL_PORT=args['retrieval_port']
+            RETRIEVAL_PORT=args['retrieval_port'],
+            SIMILARITY_HOST=args['similarity_host'],
+            SIMILARITY_PORT=args['similarity_port']
             # TODO: add additional enviroments
         )
 
@@ -62,6 +64,9 @@ def create_app(args=None):
 
         from .routes import document_retrieval
         app.register_blueprint(document_retrieval.bp)
+
+        from .routes import document_similarity
+        app.register_blueprint(document_similarity.bp)
 
     # TODO: log start of the service
     # return the app

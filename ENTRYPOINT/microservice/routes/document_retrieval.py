@@ -48,7 +48,7 @@ def get_embedding():
       },
       ]
 
-    Example input
+    Example request
     {BASE_URL}/api/v1/retrieval/retrieve?query=deforestation&m=10 
     will return top 10 documents matching your query.
     """
