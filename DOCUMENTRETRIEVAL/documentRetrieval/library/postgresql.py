@@ -28,7 +28,7 @@ class PostgresQL:
         output = '|'.join(query_words)
         SQL = """
                 SELECT document_id, fulltext_cleaned FROM documents
-                WHERE to_tsvector('english', fulltext_cleaned) @@ to_tsquery(""" + '\''+ output + '\');'
+                WHERE to_tsvector('english', fulltext_cleaned) @@ to_tsquery(""" + '\''+ output + '\');' #removing 'english' in isvector slows down search
         documents = self.execute(SQL)
         return(documents)
 
@@ -54,6 +54,13 @@ class PostgresQL:
             position = ids.index(id_)
             metadata_sorted[position] = {k:elt[k] for k in ('document_source', 'date', 'title', 'celex_num', 'fulltextlink')}
         return metadata_sorted
+
+    def db_nb_docs(self):
+        SQL = """
+                SELECT COUNT(*) FROM documents;"""
+        leng = self.execute(SQL)
+        leng = leng[0].get('count')
+        return(leng)
 
     def connect(self, database, password, user="postgres"):
         """Connects to the database with the provided user and password

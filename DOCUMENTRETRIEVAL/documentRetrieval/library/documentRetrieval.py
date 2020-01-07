@@ -283,7 +283,7 @@ def tfidf_score_str(tokens,texts,tfidf_function_name,m = 10,*args):
     else:
         raise Exception("Error, different function name")
 
-def tfidf_score(tokens, texts, tfidf_function,m = 10, *args):
+def tfidf_score(tokens, texts, tfidf_function,nb_all_texts_in_db,m = 10, *args):
     #final function
     """Assigns score to documents based on tfidf_function metric.
     Args:
@@ -320,7 +320,7 @@ def tfidf_score(tokens, texts, tfidf_function,m = 10, *args):
             not_appear.append(tokens_together[i])
         else:
             appear.append(tokens_together[i])    
-    l = len(texts)
+    l = nb_all_texts_in_db
 
     document_probability = {}
     for k, v in texts.items():
