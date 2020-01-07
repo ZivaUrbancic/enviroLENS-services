@@ -12,7 +12,7 @@ if __name__=='__main__':
 
     # the host and port of the documentRetrieval microservice
     argparser_production.add_argument('-H', '--host', type=str, default='127.0.0.1', help="The host of the microservice")
-    argparser_production.add_argument('-p', '--port', type=str, default='4000', help="The port of the microservice")
+    argparser_production.add_argument('-p', '--port', type=str, default='4100', help="The port of the microservice")
     argparser_production.add_argument('-e', '--env', type=str, default='production', help="The microservice environment")
 
     # to je to?
