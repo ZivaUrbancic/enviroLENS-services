@@ -97,4 +97,4 @@ Available endpoints:
 * **GET** `{HOST}/PORT/api/v1/similarity/get_similar` __query_params__ document_id, get_k
 * **GET** `{HOST}/PORT/api/v1/similarity/update_similarities` __query_params__ document_id
 * **GET** `{HOST}/PORT/api/v1/embeddings/create` __query_params__ text, language
-* **POST** `{HOST}/PORT/api/v1/db/documents` __json__ "document_ids" : (list of documents ids)
+* **POST** `{HOST}/PORT/api/v1/db/document` __json__ "document_ids" : (list of documents ids)
