@@ -99,6 +99,18 @@ def update_similarities():
             WHERE document_id={};
             """.format(document_id)
         document_text = (pg.execute(statement))[0]['fulltext_cleaned']
+        if document_text == "":
+            statement = """
+            SELECT abstract FROM documents
+            WHERE document_id={};
+            """.format(document_id)
+            document_text = (pg.execute(statement))[0]['abstract']
+            if document_text == "":
+                statement = """
+                SELECT title FROM documents
+                WHERE document_id={};
+                """.format(document_id)
+                document_text = (pg.execute(statement))[0]['title']
     except Exception as e:
         return abort(400, "Could not retrieve text of the document from the database. "+str(e))
 
