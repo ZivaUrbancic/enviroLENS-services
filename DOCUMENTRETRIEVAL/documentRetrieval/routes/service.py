@@ -49,8 +49,6 @@ def index():
 @bp.route('/retrieval', methods=['GET', 'POST'])
 def retrieval():
 
-    print('here ot not here?')
-
     query = None
     m = None
     if request.method == 'GET':
