@@ -12,8 +12,12 @@ if __name__=='__main__':
     argparser_production.add_argument('-H', '--host', type=str, default='127.0.0.1', help="The host of the microservice")
     argparser_production.add_argument('-p', '--port', type=str, default='4500', help="The port of the microservice")
     argparser_production.add_argument('-e', '--env', type=str, default='production', help="The microservice environment")
-    argparser_production.add_argument('-teh', '--embeddings_host', type=str, default='localhost', help='The host of the text embedding microservice')
-    argparser_production.add_argument('-tep', '--embeddings_port', type=str, default='4000', help='The port of the text embedding microservice')
+    argparser_production.add_argument('-teh', '--embedding_host', type=str, default='localhost', help='The host of the text embedding microservice')
+    argparser_production.add_argument('-tep', '--embedding_port', type=str, default='4001', help='The port of the text embedding microservice')
+    argparser_production.add_argument('-drh', '--retrieval_host', type=str, default='localhost', help='The host of the document retrieval microservice')
+    argparser_production.add_argument('-drp', '--retrieval_port', type=str, default='4100', help='The port of the document retrieval microservice')
+    argparser_production.add_argument('-dsh', '--similarity_host', type=str, default='localhost', help='The host of the document similarity microservice')
+    argparser_production.add_argument('-dsp', '--similarity_port', type=str, default='4200', help='The port of the document similarity microservice')
     # TODO: the model parameters
 
 
@@ -28,8 +32,12 @@ if __name__=='__main__':
             "host": args.host,
             "port": args.port,
             "env": args.env,
-            "embeddings_host" : args.embeddings_host,
-            "embeddings_port" : args.embeddings_port
+            "embedding_host" : args.embedding_host,
+            "embedding_port" : args.embedding_port,
+            "retrieval_host" : args.retrieval_host,
+            "retrieval_port" : args.retrieval_port,
+            "similarity_host" : args.similarity_host,
+            "similarity_port" : args.similarity_port,
             # TODO: add additional arguments
         }
         # create the application

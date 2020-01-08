@@ -18,9 +18,6 @@ def create_app(args=None):
         app.config.update(
             HOST=args["host"],
             PORT=args["port"],
-            DATABASE_NAME = args["database_name"],
-            DATABASE_USER = args["database_user"],
-            DATABASE_PASSWORD = args["database_password"]
         )
 
     # set the service environment

@@ -15,6 +15,10 @@ class PostgresQL:
         self.port = port
 
 
+    ## THIS IS NOT SAFE FROM SQL INJECTION ATTACKS. WE CANNOT DINAMICALLY CREATE SQL STATEMENTS AND 
+    ## EXECUTE THEM iN THIS WAY. WE HAVE TO DO THIS THE FOLOWING WAY:
+    ## cursor.execute('SELECT * FROM documents WHERE document_id=%s', (doc_id,))
+
     def db_query(self,query_words):
         """ From database returns list of dictionaries containing document IDs and text. Documents contain at least one query word.
         Args:
@@ -24,7 +28,7 @@ class PostgresQL:
         output = '|'.join(query_words)
         SQL = """
                 SELECT document_id, fulltext_cleaned FROM documents
-                WHERE to_tsvector('english', fulltext_cleaned) @@ to_tsquery('english',""" + '\''+ output + '\'' + """);"""
+                WHERE to_tsvector('english', fulltext_cleaned) @@ to_tsquery(""" + '\''+ output + '\');'
         documents = self.execute(SQL)
         return(documents)
 

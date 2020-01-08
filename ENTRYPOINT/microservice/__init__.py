@@ -18,8 +18,12 @@ def create_app(args=None):
         app.config.update(
             HOST=args["host"],
             PORT=args["port"],
-            TEXT_EMBEDDING_HOST=args['embeddings_host'],
-            TEXT_EMBEDDING_PORT=args['embeddings_port']
+            RETRIEVAL_HOST=args['retrieval_host'],
+            RETRIEVAL_PORT=args['retrieval_port'],
+            SIMILARITY_HOST=args['similarity_host'],
+            SIMILARITY_PORT=args['similarity_port'],
+            EMBEDDING_HOST=args['embedding_host'],
+            EMBEDDING_PORT=args['embedding_port'],
             # TODO: add additional enviroments
         )
 
@@ -57,6 +61,15 @@ def create_app(args=None):
 
         from .routes import database
         app.register_blueprint(database.bp)
+
+        from .routes import document_retrieval
+        app.register_blueprint(document_retrieval.bp)
+
+        from .routes import document_similarity
+        app.register_blueprint(document_similarity.bp)
+
+        from .routes import text_embedding
+        app.register_blueprint(text_embedding.bp)
 
     # TODO: log start of the service
     # return the app
