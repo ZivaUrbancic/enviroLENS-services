@@ -2,6 +2,8 @@
 # Routes related to creatiung text embeddings
 
 import sys
+import requests
+import json
 
 
 from flask import (
@@ -49,7 +51,6 @@ def index():
 @bp.route('/retrieval', methods=['GET', 'POST'])
 def retrieval():
 
-    print('here ot not here?')
 
     query = None
     m = None
@@ -70,9 +71,23 @@ def retrieval():
     if "'" in query or "\"" in query:
         raise Exception('Wrong query: do not use quotation marks') 
 
+    HOST = app.config.get('TEXT_EMBEDDING_HOST', 'localhost')
+    PORT = app.config.get('TEXT_EMBEDDING_PORT', '4000')
+
+    query_params = {'query' : query}
+    print(f"Making request to: http://{HOST}:{PORT}/api/v1/embeddings/expand")
+
+   # r = requests.post(f"http://{HOST}:{PORT}/api/v1/embeddings/expand", json=data)
+
+   # return jsonify(r.json())
+    r = requests.get(f"http://{HOST}:{PORT}/api/v1/embeddings/expand", params=query_params)
+    r = json.loads(r.text)
+    tokens = r.get("expanded_query")
+    
+
 
     try:
-        tokens= query.split() #change latere to QE
+        # tokens= query.split() #change latere to QE
         db = config_db.get_db()
         docs = db.db_query(tokens)
         nb_all_documents = db.db_nb_docs()
