@@ -9,20 +9,7 @@ from werkzeug.exceptions import abort
 
 import requests
 
-
-#################################################
-# Initialize the models
-#################################################
-
-# TODO: include the model initialization function
-
-#################################################
-# Setup the embeddings blueprint
-#################################################
-
-# TODO: provide an appropriate route name and prefix
 bp = Blueprint('similarity', __name__, url_prefix='/api/v1/similarity')
-
 
 @bp.route('/', methods=['GET'])
 def index():
@@ -115,8 +102,6 @@ def update_similarities():
     Example request:
     {BASE_URL}/api/v1/similarity/update_similarities?document_id=1000017605 
     """
-
-    document_id = request.args.get('document_id', default=None, type=int)
 
     HOST = app.config.get('SIMILARITY_HOST')
     PORT = app.config.get('SIMILARITY_PORT')

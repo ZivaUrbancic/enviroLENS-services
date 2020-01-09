@@ -10,7 +10,7 @@ if __name__=='__main__':
 
     # the host and port of the text embedding microservice
     argparser_production.add_argument('-H', '--host', type=str, default='127.0.0.1', help="The host of the microservice")
-    argparser_production.add_argument('-p', '--port', type=str, default='4000', help="The port of the microservice")
+    argparser_production.add_argument('-p', '--port', type=str, default='4001', help="The port of the microservice")
     argparser_production.add_argument('-e', '--env', type=str, default='production', help="The microservice environment")
     # the model parameters
     argparser_production.add_argument('-mp', '--model_path', type=str, help="The path to the word embedding model file")

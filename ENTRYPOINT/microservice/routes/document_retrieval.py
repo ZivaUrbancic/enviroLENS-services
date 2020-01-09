@@ -9,18 +9,6 @@ from werkzeug.exceptions import abort
 
 import requests
 
-
-#################################################
-# Initialize the models
-#################################################
-
-# TODO: include the model initialization function
-
-#################################################
-# Setup the embeddings blueprint
-#################################################
-
-# TODO: provide an appropriate route name and prefix
 bp = Blueprint('retrieval', __name__, url_prefix='/api/v1/retrieval')
 
 
@@ -30,7 +18,7 @@ def index():
     return abort(501)
 
 @bp.route('/retrieve', methods=['GET'])
-def get_embedding():
+def get_similar():
     """
     Do GET request to this endpoint and provide additional query parameters
         query : (your query), default = ""
@@ -67,31 +55,3 @@ def get_embedding():
     r = requests.get(f"http://{HOST}:{PORT}/api/v1/docRetrieval/retrieval", params=query_params)
 
     return jsonify(r.json())
-
-# TODO: add an appropriate route name
-@bp.route('/second', methods=['GET', 'POST'])
-def second():
-    # TODO: assign the appropriate variables
-    variable = None
-    if request.method == 'GET':
-        # retrieve the correct query parameters
-        variable = request.args.get('variable', default='', type=str)
-    elif request.method == 'POST':
-        # retrieve the text posted to the route
-        variable = request.json['variable']
-    else:
-        # TODO: log exception
-        return abort(405)
-
-    try:
-        # TODO: add the main functionality with the model and variable
-        finish = True
-    except Exception as e:
-        # TODO: log exception
-        # something went wrong with the request
-        return abort(400, str(e))
-    else:
-        # TODO: return the response
-        return jsonify({
-            "finish": finish
-        })
