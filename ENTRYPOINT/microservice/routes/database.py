@@ -87,7 +87,7 @@ def get_documents():
     # If the "document_ids" parameter was not set:
     if document_ids is None:
         return jsonify(
-            {'Message' : 'You need to provide json with "documents_ids" : [list of documents ids] value'}
+            {'Message' : 'You need to provide json with "document_ids" : [list of documents ids] value'}
         )
 
     statement = """SELECT * FROM documents WHERE document_id IN %s;"""

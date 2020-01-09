@@ -18,7 +18,7 @@ def index():
     return abort(501)
 
 @bp.route('/retrieve', methods=['GET'])
-def get_embedding():
+def get_similar():
     """
     Do GET request to this endpoint and provide additional query parameters
         query : (your query), default = ""
