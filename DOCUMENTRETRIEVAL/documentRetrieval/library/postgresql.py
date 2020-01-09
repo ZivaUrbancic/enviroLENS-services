@@ -15,21 +15,18 @@ class PostgresQL:
         self.port = port
 
 
-    ## THIS IS NOT SAFE FROM SQL INJECTION ATTACKS. WE CANNOT DINAMICALLY CREATE SQL STATEMENTS AND 
-    ## EXECUTE THEM iN THIS WAY. WE HAVE TO DO THIS THE FOLOWING WAY:
-    ## cursor.execute('SELECT * FROM documents WHERE document_id=%s', (doc_id,))
-
-    def db_query(self,query_words):
+    def db_query(self,query_words): 
         """ From database returns list of dictionaries containing document IDs and text. Documents contain at least one query word.
         Args:
             query_words(list): List of query words
         Returns: 
             documents(list): list of dictionaries containing document IDs and text"""
         output = '|'.join(query_words)
-        SQL = """
-                SELECT document_id, fulltext_cleaned FROM documents
-                WHERE to_tsvector('english', fulltext_cleaned) @@ to_tsquery(""" + '\''+ output + '\');' #removing 'english' in isvector slows down search
-        documents = self.execute(SQL)
+       
+        documents=  self.execute("""
+                 SELECT document_id, fulltext_cleaned FROM documents
+                 WHERE to_tsvector('english', fulltext_cleaned) @@ to_tsquery( %s )""",(output, ))
+
         return(documents)
 
     def db_return_docs_metadata(self, metric_fn_output):
@@ -98,7 +95,7 @@ class PostgresQL:
             print("PostgresQL connection ended")
 
 
-    def execute(self, statement):
+    def execute(self, statement, *placeholder_values):
         """Execute the provided statement
 
         Args:
@@ -110,11 +107,18 @@ class PostgresQL:
         """
         if self.cursor is None:
             raise Exception("The connection is not established")
+        elif placeholder_values:
+            if len(placeholder_values) == 1:
+                self.cursor.execute(statement, placeholder_values)
+                num_fields = len(self.cursor.description)
+                field_names = [i[0] for i in self.cursor.description]
+                return [{ field_names[i]: row[i] for i in range(num_fields) } for row in self.cursor.fetchall()]
+            else:
+                raise Exception("Too much arguments")
         else:
             self.cursor.execute(statement)
             num_fields = len(self.cursor.description)
             field_names = [i[0] for i in self.cursor.description]
             return [{ field_names[i]: row[i] for i in range(num_fields) } for row in self.cursor.fetchall()]
-
 
     # TODO: add project specific routes

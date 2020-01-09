@@ -77,9 +77,7 @@ def retrieval():
     query_params = {'query' : query}
     print(f"Making request to: http://{HOST}:{PORT}/api/v1/embeddings/expand")
 
-   # r = requests.post(f"http://{HOST}:{PORT}/api/v1/embeddings/expand", json=data)
 
-   # return jsonify(r.json())
     r = requests.get(f"http://{HOST}:{PORT}/api/v1/embeddings/expand", params=query_params)
     r = json.loads(r.text)
     tokens = r.get("expanded_query")
