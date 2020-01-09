@@ -42,8 +42,11 @@ class PostgresQL:
             ids.append(tupl[0])
         if ids == []:
             raise Exception('No relavant documents for the given query.')
-        t = tuple(ids)
-        SQL = """SELECT document_id,document_source, date, title, celex_num, fulltextlink FROM documents WHERE document_id IN {}""".format(t)
+        if len(ids) == 1:
+            SQL = """SELECT document_id,document_source, date, title, celex_num, fulltextlink FROM documents WHERE document_id =""" + str(ids[0])
+        else:
+            t = tuple(ids)
+            SQL = """SELECT document_id,document_source, date, title, celex_num, fulltextlink FROM documents WHERE document_id IN {}""".format(t)
         docs_metadata = self.execute(SQL)
         metadata_sorted = [None] * len(ids)
         for elt in docs_metadata:
