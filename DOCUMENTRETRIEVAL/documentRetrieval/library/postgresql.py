@@ -23,13 +23,11 @@ class PostgresQL:
             documents(list): list of dictionaries containing document IDs and text"""
         output = '|'.join(query_words)
        
-        # statement = (
-        #             "SELECT document_id, fulltext_cleaned FROM documents "
-        #             "WHERE to_tsvector('english', fulltext_cleaned) @@ to_tsquery({output});"
-        # ).format(output=output)
-        SQL = """SELECT document_id, fulltext_cleaned FROM documents
-                 WHERE to_tsvector('english', fulltext_cleaned) @@ to_tsquery({0!r})""".format(output)
-        documents=  self.execute(SQL)
+        statement = (
+            "SELECT document_id, fulltext_cleaned FROM documents "
+            "WHERE to_tsvector('english', fulltext_cleaned) @@ to_tsquery(%s);"
+        )
+        documents=  self.execute(statement, (output,))
         return(documents)
 
     def db_return_docs_metadata(self, metric_fn_output):
