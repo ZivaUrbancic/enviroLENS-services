@@ -35,7 +35,7 @@ def tokenized_query(text, stopwords):
         """
     without_punctuations = text.translate(str.maketrans('', '', string.punctuation))
     tokens = word_tokenize(without_punctuations)
-    filtered = ([lemmatizer.lemmatize(w.lower(), get_wordnet_pos(w.lower())) for w in tokens if not w in stopwords])
+    filtered = [lemmatizer.lemmatize(w.lower(), get_wordnet_pos(w.lower())) for w in tokens if not w in stopwords]
     return filtered
 
 def extend_tokens(token_list, model):

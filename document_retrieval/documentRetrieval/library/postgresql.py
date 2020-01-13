@@ -44,24 +44,26 @@ class PostgresQL:
         if ids == []:
             raise Exception('No relavant documents for the given query.')
         if len(ids) == 1:
-            SQL = ("SELECT document_id,document_source, date, title, celex_num, fulltextlink "
+            SQL = ("SELECT document_id, document_source, date, title, celex_num, fulltextlink "
             "FROM documents WHERE document_id = %s;") 
             value = str(ids[0])
             docs_metadata = self.execute(SQL, (value, ))
         else:
             t = tuple(ids)
-            SQL = ("SELECT document_id,document_source, date, title, celex_num, fulltextlink "
+            SQL = ("SELECT document_id, document_source, date, title, celex_num, fulltextlink "
             "FROM documents WHERE document_id IN %s")
-            value = t
-            docs_metadata = self.execute(SQL, value)
+            docs_metadata = self.execute(SQL, t)
         metadata_sorted = [None] * len(ids)
         for elt in docs_metadata:
             id_ = elt.get('document_id')
             position = ids.index(id_)
-            metadata_sorted[position] = {k:elt[k] for k in ('document_source', 'date', 'title', 'celex_num', 'fulltextlink')}
+            metadata_sorted[position] = { k: elt[k] for k in ('document_source', 'date', 'title', 'celex_num', 'fulltextlink') }
         return metadata_sorted
 
     def db_nb_docs(self):
+        """Count number of the documents in database.
+        Returns:
+            leng(int): Number of documents in database."""
         SQL = "SELECT COUNT(*) FROM documents;"
         leng = self.execute(SQL)
         leng = leng[0].get('count')
@@ -120,13 +122,13 @@ class PostgresQL:
                 self.cursor.execute(statement, placeholder_values)
                 num_fields = len(self.cursor.description)
                 field_names = [i[0] for i in self.cursor.description]
-                return [{ field_names[i]: row[i] for i in range(num_fields)} for row in self.cursor.fetchall()]
+                return [{ field_names[i]: row[i] for i in range(num_fields) } for row in self.cursor.fetchall()]
             else:
                 raise Exception("Too much arguments")
         else:
             self.cursor.execute(statement)
             num_fields = len(self.cursor.description)
             field_names = [i[0] for i in self.cursor.description]
-            return [{ field_names[i]: row[i] for i in range(num_fields)} for row in self.cursor.fetchall()]
+            return [{ field_names[i]: row[i] for i in range(num_fields) } for row in self.cursor.fetchall()]
 
     # TODO: add project specific routes
