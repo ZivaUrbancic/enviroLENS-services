@@ -25,12 +25,8 @@ from ..library.documentRetrieval import change_dict_structure
 from ..library.postgresql import PostgresQL
 
 
-# a dam tuki argumente ker mamo default ones, za funkcije to ni treba?
 
-#tokens = app.config['TOKENS']
-#texts = app.config['TEXTS']
-#tfidf_function = app.config['TFIDF_FUNCTION']
-#m = app.config['M']
+
 
 ## initialize text embedding model
 model = PostgresQL()
@@ -73,8 +69,8 @@ def retrieval():
     HOST = app.config.get('TEXT_EMBEDDING_HOST', 'localhost')
     PORT = app.config.get('TEXT_EMBEDDING_PORT', '4000')
 
-    query_params = {'query' : query}
-    print(f"Making request to: http://{HOST}:{PORT}/api/v1/embeddings/expand")
+    query_params = {'query': query}
+    
 
 
     r = requests.get(f"http://{HOST}:{PORT}/api/v1/embeddings/expand", params=query_params)
@@ -84,12 +80,11 @@ def retrieval():
 
 
     try:
-        # tokens= query.split() #change latere to QE
         db = config_db.get_db()
         docs = db.db_query(tokens)
         nb_all_documents = db.db_nb_docs()
         texts = change_dict_structure(docs) 
-        tfidf_score = tfidf_score_str(tokens,texts,'tfidf_sum',nb_all_documents,m) 
+        tfidf_score = tfidf_score_str(tokens, texts, 'tfidf_sum', nb_all_documents, m) 
         metadata = db.db_return_docs_metadata(tfidf_score)
 
     except Exception as e:

@@ -71,7 +71,6 @@ def create():
         })
 
 @bp.route('/expand', methods=['POST', 'GET'])
-
 def expand_query():
     if request.method == 'GET':
         # retrieve the correct query parameters
@@ -85,7 +84,7 @@ def expand_query():
 
     try:
         tokenized_query = [w[0] for w in model.tokenize(query)]
-        expanded_query = model.expand_query(query,model_format)
+        expanded_query = model.expand_query(query, model_format)
         return jsonify({
             "initial_query" : query,
             "tokenized_query" : tokenized_query,

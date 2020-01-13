@@ -9,14 +9,19 @@ from nltk.stem import WordNetLemmatizer
 lemmatizer = WordNetLemmatizer() 
 
 def get_wordnet_pos(word):
-    """Map POS tag to first character lemmatize() accepts"""
+    # code from https://www.machinelearningplus.com/nlp/lemmatization-examples-python/
+    """Map POS tag to first character lemmatize() accepts.
+    Args:
+        word(str): Word we wish to tag.
+    Returns:
+        wnl_tag(str): Tag acceptable by wordnet lemmatizer."""
     tag = nltk.pos_tag([word])[0][1][0].upper()
     tag_dict = {"J": wordnet.ADJ,
                 "N": wordnet.NOUN,
                 "V": wordnet.VERB,
                 "R": wordnet.ADV}
-
-    return tag_dict.get(tag, wordnet.NOUN)
+    wnl_tag = tag_dict.get(tag, wordnet.NOUN)
+    return wnl_tag
 
 
 
@@ -106,17 +111,17 @@ def similarity(token, token_list, model, model_format ):
     similarity = 0
     num_of_tokens = 0
     if model_format == 'word2vec':
-        for toks in token_list:
+        for tokens in token_list:
             # check if the token is in the vocabulary
-            if toks in model.vocab.keys():
+            if tokens in model.vocab.keys():
                 num_of_tokens += 1
-                similarity += model.similarity(toks, token)
+                similarity += model.similarity(tokens, token)
     elif model_format == 'fasttext':
-        for toks in token_list:
+        for tokens in token_list:
             # check if the token is in the vocabulary
-            if toks in model.wv.vocab:
+            if tokens in model.wv.vocab:
                 num_of_tokens += 1
-                similarity += model.similarity(toks, token)
+                similarity += model.similarity(tokens, token)
     else:
         raise Exception('Model type incorrect')
     return similarity/num_of_tokens
@@ -139,7 +144,7 @@ def get_similarity_pairs(tokens, candidates, wv, model_format):
     return similarity_pairs
 
 # updated function
-def pre_retrieval_KNN(query, k, wv, n, stop_words,model_format, extension=False):
+def pre_retrieval_KNN(query, k, wv, n, stop_words, model_format, extension=False):
     """Find n most similar tokens(candidates) to the given query, optional: 
         query can be extended, then the candidates are found for extended query.
         Args: 
@@ -153,11 +158,11 @@ def pre_retrieval_KNN(query, k, wv, n, stop_words,model_format, extension=False)
         """
     tokens = tokenized_query(query, stop_words)
     if extension:
-        extended = extend_tokens(tokens,wv)
-        candidates = candidate_expansion_terms(tokens+extended, k, wv,model_format)
+        extended = extend_tokens(tokens, wv)
+        candidates = candidate_expansion_terms(tokens+extended, k, wv, model_format)
         candidates_sim = get_similarity_pairs(tokens+extended, candidates, wv, model_format)
     else:
-        candidates = candidate_expansion_terms(tokens, k, wv,model_format)
+        candidates = candidate_expansion_terms(tokens, k, wv, model_format)
         candidates_sim = get_similarity_pairs(tokens, candidates, wv, model_format)
     def takeSecond(elem):
         return elem[1]

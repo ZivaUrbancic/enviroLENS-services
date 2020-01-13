@@ -15,7 +15,7 @@ class PostgresQL:
         self.port = port
 
 
-    def db_query(self,query_words): 
+    def db_query(self, query_words): 
         """ From database returns list of dictionaries containing document IDs and text. Documents contain at least one query word.
         Args:
             query_words(list): List of query words
@@ -23,10 +23,13 @@ class PostgresQL:
             documents(list): list of dictionaries containing document IDs and text"""
         output = '|'.join(query_words)
        
-        documents=  self.execute("""
-                 SELECT document_id, fulltext_cleaned FROM documents
-                 WHERE to_tsvector('english', fulltext_cleaned) @@ to_tsquery( %s )""",(output, ))
-
+        # statement = (
+        #             "SELECT document_id, fulltext_cleaned FROM documents "
+        #             "WHERE to_tsvector('english', fulltext_cleaned) @@ to_tsquery({output});"
+        # ).format(output=output)
+        SQL = """SELECT document_id, fulltext_cleaned FROM documents
+                 WHERE to_tsvector('english', fulltext_cleaned) @@ to_tsquery({0!r})""".format(output)
+        documents=  self.execute(SQL)
         return(documents)
 
     def db_return_docs_metadata(self, metric_fn_output):
@@ -43,10 +46,12 @@ class PostgresQL:
         if ids == []:
             raise Exception('No relavant documents for the given query.')
         if len(ids) == 1:
-            SQL = """SELECT document_id,document_source, date, title, celex_num, fulltextlink FROM documents WHERE document_id =""" + str(ids[0])
+            SQL = """SELECT document_id,document_source, date, title, celex_num, fulltextlink 
+            FROM documents WHERE document_id =""" + str(ids[0])
         else:
             t = tuple(ids)
-            SQL = """SELECT document_id,document_source, date, title, celex_num, fulltextlink FROM documents WHERE document_id IN {}""".format(t)
+            SQL = """SELECT document_id,document_source, date, title, celex_num, fulltextlink 
+            FROM documents WHERE document_id IN {}""".format(t)
         docs_metadata = self.execute(SQL)
         metadata_sorted = [None] * len(ids)
         for elt in docs_metadata:
@@ -56,8 +61,7 @@ class PostgresQL:
         return metadata_sorted
 
     def db_nb_docs(self):
-        SQL = """
-                SELECT COUNT(*) FROM documents;"""
+        SQL = """SELECT COUNT(*) FROM documents;"""
         leng = self.execute(SQL)
         leng = leng[0].get('count')
         return(leng)
@@ -115,13 +119,13 @@ class PostgresQL:
                 self.cursor.execute(statement, placeholder_values)
                 num_fields = len(self.cursor.description)
                 field_names = [i[0] for i in self.cursor.description]
-                return [{ field_names[i]: row[i] for i in range(num_fields) } for row in self.cursor.fetchall()]
+                return [{ field_names[i]: row[i] for i in range(num_fields)} for row in self.cursor.fetchall()]
             else:
                 raise Exception("Too much arguments")
         else:
             self.cursor.execute(statement)
             num_fields = len(self.cursor.description)
             field_names = [i[0] for i in self.cursor.description]
-            return [{ field_names[i]: row[i] for i in range(num_fields) } for row in self.cursor.fetchall()]
+            return [{ field_names[i]: row[i] for i in range(num_fields)} for row in self.cursor.fetchall()]
 
     # TODO: add project specific routes

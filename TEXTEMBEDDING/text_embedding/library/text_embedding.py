@@ -103,7 +103,7 @@ class TextEmbedding:
         """
 
         # create stopword file path
-        fname= "./data/stopwords/{}.stopwords.txt".format(self.__language)
+        fname = "./data/stopwords/{}.stopwords.txt".format(self.__language)
 
         # check if the file exists
         if not os.path.isfile(fname):
@@ -202,11 +202,11 @@ class TextEmbedding:
         """
         Uses the embedding model to expand users query. 
 
-        Srgs:
+        Args:
             query : users query
         
         Returns:
-            list of strings:  most similar tokens(candidates) to the given query
+            list of strings: most similar tokens(candidates) to the given query
         """
 
         return query_expansion.pre_retrieval_KNN(
