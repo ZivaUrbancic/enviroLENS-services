@@ -82,9 +82,9 @@ def retrieval():
     try:
         db = config_db.get_db()
         docs = db.db_query(tokens)
-        nb_all_documents = db.db_nb_docs()
+        number_all_documents = db.db_nb_docs()
         texts = change_dict_structure(docs) 
-        tfidf_score = tfidf_score_str(tokens, texts, 'tfidf_sum', nb_all_documents, m) 
+        tfidf_score = tfidf_score_str(tokens, texts, 'tfidf_sum', number_all_documents, m) 
         metadata = db.db_return_docs_metadata(tfidf_score)
 
     except Exception as e:

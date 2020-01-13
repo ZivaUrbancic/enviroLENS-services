@@ -27,7 +27,7 @@ class PostgresQL:
             "SELECT document_id, fulltext_cleaned FROM documents "
             "WHERE to_tsvector('english', fulltext_cleaned) @@ to_tsquery(%s);"
         )
-        documents=  self.execute(statement, (output,))
+        documents = self.execute(statement, (output, ))
         return(documents)
 
     def db_return_docs_metadata(self, metric_fn_output):
@@ -44,13 +44,16 @@ class PostgresQL:
         if ids == []:
             raise Exception('No relavant documents for the given query.')
         if len(ids) == 1:
-            SQL = """SELECT document_id,document_source, date, title, celex_num, fulltextlink 
-            FROM documents WHERE document_id =""" + str(ids[0])
+            SQL = ("SELECT document_id,document_source, date, title, celex_num, fulltextlink "
+            "FROM documents WHERE document_id = %s;") 
+            value = str(ids[0])
+            docs_metadata = self.execute(SQL, (value, ))
         else:
             t = tuple(ids)
-            SQL = """SELECT document_id,document_source, date, title, celex_num, fulltextlink 
-            FROM documents WHERE document_id IN {}""".format(t)
-        docs_metadata = self.execute(SQL)
+            SQL = ("SELECT document_id,document_source, date, title, celex_num, fulltextlink "
+            "FROM documents WHERE document_id IN %s")
+            value = t
+            docs_metadata = self.execute(SQL, value)
         metadata_sorted = [None] * len(ids)
         for elt in docs_metadata:
             id_ = elt.get('document_id')
@@ -59,7 +62,7 @@ class PostgresQL:
         return metadata_sorted
 
     def db_nb_docs(self):
-        SQL = """SELECT COUNT(*) FROM documents;"""
+        SQL = "SELECT COUNT(*) FROM documents;"
         leng = self.execute(SQL)
         leng = leng[0].get('count')
         return(leng)
