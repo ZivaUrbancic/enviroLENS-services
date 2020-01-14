@@ -12,16 +12,17 @@ import requests
 #################################################
 
 from ..library.document_similarity import DocumentSimilarity
-from ..library.postgresql import PostgresQL
+# from ..library.postgresql import PostgresQL
+from ..config import config_db
 
 #################################################
 # Get parameters from .config file
 #################################################
 
 # database parameters
-database_name = app.config['DATABASE_NAME']
-database_user = app.config['DATABASE_USER']
-database_password = app.config['DATABASE_PASSWORD']
+# database_name = app.config['DATABASE_NAME']
+# database_user = app.config['DATABASE_USER']
+# database_password = app.config['DATABASE_PASSWORD']
 # url to text embedding service
 text_embedding_url = app.config['TEXT_EMBEDDING_URL']
 
@@ -51,9 +52,10 @@ def index():
 def update_similarities():
     # TODO: write documentation
 
-    pg = PostgresQL()
-    pg.connect(database=database_name, user=database_user,
-                      password=database_password)
+
+    # connect to the database:
+    pg = config_db.get_db()
+
 
     # get document id as the parameter
     if request.method == 'GET':
@@ -92,18 +94,20 @@ def update_similarities():
             WHERE document_id={};
             """.format(document_id)
         document_text = (pg.execute(statement))[0]['fulltext_cleaned']
-        if document_text == "":
+        if document_text == "" or document_text is None:
             statement = """
             SELECT abstract FROM documents
             WHERE document_id={};
             """.format(document_id)
             document_text = (pg.execute(statement))[0]['abstract']
-            if document_text == "":
+            if document_text == "" or document_text is None:
                 statement = """
                 SELECT title FROM documents
                 WHERE document_id={};
                 """.format(document_id)
                 document_text = (pg.execute(statement))[0]['title']
+                if document_text == "" or document_text is None:
+                    raise Exception("Could not retrieve any text for this document.")
     except Exception as e:
         return abort(400, "Could not retrieve text of the document from the database. "+str(e))
 
@@ -114,7 +118,7 @@ def update_similarities():
     try:
         # Call the text-embedding-service and produce the embedding
         params = {'text': document_text, 'language': 'en'}
-        service_response = requests.post(url=text_embedding_url, json=params).json()
+        service_response = (requests.post(url=text_embedding_url, json=params)).json()
         new_embedding = service_response['embedding']
     except Exception as e:
         return abort(400, "Could not retrieve the embedding from the text embedding service. " + str(e))
@@ -175,9 +179,6 @@ def update_similarities():
 def get_similarities():
     # TODO: write documentation
 
-    pg = PostgresQL()
-    pg.connect(database=database_name, user=database_user,
-                      password=database_password)
     # Retrieve query parameters 'document_id' and 'get_k'
     if request.method == 'GET':
         doc_id = request.args.get('document_id', default=None, type=int)
@@ -191,9 +192,8 @@ def get_similarities():
 
     try:
         # retrieve the similarity matrix
-        pg = PostgresQL()
-        pg.connect(database=database_name, user=database_user,
-                   password=database_password)
+        # connect to the database:
+        pg = config_db.get_db()
         # TODO: change the expression if needed
         # get only the lines in table 'similarities' where the first document has id doc_id
         # sort them by the similarity column, descending
@@ -205,7 +205,7 @@ def get_similarities():
         result_indices = [entry['document2_id'] for entry in similarity_list[:k]]
         result = [(entry['document2_id'], entry['similarity_score']) for entry in similarity_list[:k]]
         finish = True
-        pg.disconnect()
+        # pg.disconnect()
     except Exception as e:
         # TODO: log exception
         # something went wrong with the request
