@@ -93,6 +93,6 @@ def get_documents():
             documents[i]['fulltext_cleaned'] = documents[i]['fulltext_cleaned'][:500]
         documents[i].pop('fulltext')
 
-    DB.close_db()
+    config_db.close_db()
 
     return jsonify(documents[:10])

@@ -75,6 +75,22 @@ You can also use custom host and port.
 * Activate virtual environment if you wish to do so
 * Navigate into `entrypoint` folder
 * Run `pip install -r requirements.txt`
+* Navigate into `microservice/config` folder
+* Create `.env` file with contents   
+```
+DEV_DATABASE_USER = 
+DEV_DATABASE_HOST = 
+DEV_DATABASE_PORT = 
+DEV_DATABASE_PASSWORD =
+DEV_DATABASE_NAME = 
+
+PROD_DATABASE_USER = 
+PROD_DATABASE_HOST = 
+PROD_DATABASE_PORT = 
+PROD_DATABASE_PASSWORD = 
+PROD_DATABASE_NAME = 
+```
+* Navigame back into `entrypoint` folder
 * Run the main service with
 ```
 python -m microservice.main start -H localhost -p 4500
