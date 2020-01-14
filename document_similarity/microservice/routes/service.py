@@ -96,14 +96,14 @@ def update_similarities():
             WHERE document_id={};
             """.format(document_id)
             document_text = (pg.execute(statement))[0]['abstract']
-            if document_text == "" or document_text is None:
-                statement = """
-                SELECT title FROM documents
-                WHERE document_id={};
-                """.format(document_id)
-                document_text = (pg.execute(statement))[0]['title']
-                if document_text == "" or document_text is None:
-                    raise Exception("Could not retrieve any text for this document.")
+        if document_text == "" or document_text is None:
+            statement = """
+            SELECT title FROM documents
+            WHERE document_id={};
+            """.format(document_id)
+            document_text = (pg.execute(statement))[0]['title']
+        if document_text == "" or document_text is None:
+            raise Exception("Could not retrieve any text for this document.")
     except Exception as e:
         return abort(400, "Could not retrieve text of the document from the database. "+str(e))
 
