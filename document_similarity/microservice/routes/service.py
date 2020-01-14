@@ -201,7 +201,7 @@ def get_similarities():
         result_indices = [entry['document2_id'] for entry in similarity_list[:k]]
         result = [(entry['document2_id'], entry['similarity_score']) for entry in similarity_list[:k]]
         finish = True
-        # pg.disconnect()
+        pg.disconnect()
     except Exception as e:
         # TODO: log exception
         # something went wrong with the request
