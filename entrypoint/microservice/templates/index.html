@@ -16,8 +16,8 @@
     <div class="container">
       <div class="row">
         <div class="col title__block">
-          <h1 class="title text-center">Microservice</h1>
-          <h5 class="title text-center">Converting text into semantic vectors</h5>
+          <h1 class="title text-center">Main service for processing, analysing and searching</h1>
+          <h5 class="title text-center">through the environmental legal documents</h5>
         </div>
       </div>
 
@@ -36,10 +36,11 @@
           </div>
 
           <h3 class="doc doc__section mt-5">
-            Text Embedding REST API
+            Main service REST API
           </h3>
           <p class="information">
-            The Text Embedding REST API allows the user to retrieve the text embeddings of a given text.
+            Main service REST API allows users to access any of the document similarity, document retrieval or text embeddings
+            microservices.
           </p>
 
           <h6 class="mt-2">
@@ -56,23 +57,38 @@
                 </th></tr>
               </thead>
               <tbody>
-                <tr class="clickable-row" data-href="#get-create-text-embedding">
+                <tr class="clickable-row" data-href="#retrieval-retrieve">
+                  <td><b class="doc">GET</b></td>
+                  <td>/retrieval/retrieve</td>
+                  <td>Get documents related to the given query</td>
+                </tr>
+                <tr class="clickable-row" data-href="#similarity-get-similar">
+                  <td><b class="doc">GET</b></td>
+                  <td>/similarity/get_similar</td>
+                  <td>Get the most similar documents to the given one</td>
+                </tr>
+                <tr class="clickable-row" data-href="#similarity-update">
+                  <td><b class="doc">GET</b></td>
+                  <td>/similarity/update_similarities</td>
+                  <td>Updates the similarities table with the provided document</td>
+                </tr>
+                <tr class="clickable-row" data-href="#create-text-embedding">
                   <td><b class="doc">GET</b></td>
                   <td>/embeddings/create</td>
                   <td>Create the text embedding</td>
                 </tr>
-                <tr class="clickable-row" data-href="#post-create-text-embedding">
+                <tr class="clickable-row" data-href="#db-document">
                     <td><b class="doc">POST</b></td>
-                    <td>/embeddings/create</td>
-                    <td>Create the text embedding (similar to the GET request)</td>
+                    <td>/db/document</td>
+                    <td>Returs requested document ids from the database</td>
                   </tr>
               </tbody>
             </table>
           </div>
 
-          <a class="anchor" id="get-create-text-embedding"></a>
+          <a class="anchor" id="retrieval-retrieve"></a>
           <h5 class="doc doc__subsection mt-5 mb-3">
-              Create the text embedding
+              Retrieve most similar documents to the given query
           </h5>
 
           <div class="table-responsive">
@@ -86,7 +102,293 @@
               <tbody>
                 <tr>
                   <td><b class="doc">GET</b></td>
-                  <td><b>/embeddings/create</b></td>
+                  <td><b>/retrieval/retrieve</b></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Route information</p>
+          <h6 class="mt-2">Query string parameters</h6>
+          <div class="table-responsive">
+            <table class="table table-dashed-borders">
+              <thead>
+                <tr>
+                  <th class="doc doc__query name"></th>
+                  <th class="doc doc__query type"></th>
+                  <th class="doc doc__query title"></th>
+                  <th class="doc doc__query optional"></th>
+                  <th class="doc doc__query description"></th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr>
+                  <td><b class="doc">query</b></td>
+                  <td>
+                    <span class="doc doc--small">Type:</span> String
+                  </td>
+                  <td>
+                    <span class="doc doc--small">Title:</span> Query Text
+                  </td>
+                  <td>
+                    <span class="doc doc--small">Optional:</span> false
+                  </td>
+                  <td>
+                    Query for which we want to find related documents for.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td><b class="doc">m</b></td>
+                  <td>
+                    <span class="doc doc--small">Type:</span> Positive Integer
+                  </td>
+                  <td>
+                    <span class="doc doc--small">Title:</span> number of results
+                  </td>
+                  <td>
+                    <span class="doc doc--small">Optional:</span> true
+                  </td>
+                  <td>
+                    Number of results that we want to get.
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+          <h6 class="mt-2">Response JSON (example)</h6>
+          <div class="doc url_baseline p-4 mb-3">
+            <p class="information">
+              <b class="doc"> 
+<pre>
+  {
+    "document_metadata" : [
+      {
+        "celex_num": "91998E001914",
+        "date": "16/06/1998",
+        "document_source": "eurlex",
+        "fulltextlink": null,
+        "title": "WRITTEN QUESTION No. 1914/98 by José APOLINÁRIO to the Commission. Implementation of Regulation (EEC) No 2080/92"
+    },
+    ]
+  }
+</pre>
+              </b>
+            </p>
+          </div>
+
+
+          <a class="anchor" id="similarity-get-similar"></a>
+          <h5 class="doc doc__subsection mt-5 mb-3">
+              Retrieve most similar documents to the given document
+          </h5>
+
+          <div class="table-responsive">
+            <table class="table table-borderless">
+              <thead>
+                <tr>
+                  <th class="doc doc__method request">
+                  </th><th class="doc doc__method route">
+                </th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b class="doc">GET</b></td>
+                  <td><b>/similarity/get_similar</b></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Route information</p>
+          <h6 class="mt-2">Query string parameters</h6>
+          <div class="table-responsive">
+            <table class="table table-dashed-borders">
+              <thead>
+                <tr>
+                  <th class="doc doc__query name"></th>
+                  <th class="doc doc__query type"></th>
+                  <th class="doc doc__query title"></th>
+                  <th class="doc doc__query optional"></th>
+                  <th class="doc doc__query description"></th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr>
+                  <td><b class="doc">document_id</b></td>
+                  <td>
+                    <span class="doc doc--small">Type:</span> String
+                  </td>
+                  <td>
+                    <span class="doc doc--small">Title:</span> Document ID
+                  </td>
+                  <td>
+                    <span class="doc doc--small">Optional:</span> false
+                  </td>
+                  <td>
+                    Id of the document to which we want to find similar documents.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h6 class="mt-2">Response JSON (example)</h6>
+          <div class="doc url_baseline p-4 mb-3">
+            <p class="information">
+              <b class="doc"> 
+<pre>
+    {
+      "finish": true,
+      "similar_documents": [
+          1000017599,
+          10,
+          1000017600,
+          1000017598,
+          7
+      ],
+      "similarities": [
+          [
+              1000017599,
+              0.199445346504904
+          ],
+          [
+              10,
+              0.194025951754158
+          ],
+          [
+              1000017600,
+              0.19275458304224
+          ],
+          [
+              1000017598,
+              0.191803893650522
+          ],
+          [
+              7,
+              0.191623877407084
+          ]
+      ]
+  }
+</pre>
+              </b>
+            </p>
+          </div>
+
+
+          <a class="anchor" id="similarity-update"></a>
+          <h5 class="doc doc__subsection mt-5 mb-3">
+              Update document similarities with the given document.
+          </h5>
+
+          <div class="table-responsive">
+            <table class="table table-borderless">
+              <thead>
+                <tr>
+                  <th class="doc doc__method request">
+                  </th><th class="doc doc__method route">
+                </th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b class="doc">GET</b></td>
+                  <td><b>/similarity/update_similarities</b></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Route information</p>
+          <h6 class="mt-2">Query string parameters</h6>
+          <div class="table-responsive">
+            <table class="table table-dashed-borders">
+              <thead>
+                <tr>
+                  <th class="doc doc__query name"></th>
+                  <th class="doc doc__query type"></th>
+                  <th class="doc doc__query title"></th>
+                  <th class="doc doc__query optional"></th>
+                  <th class="doc doc__query description"></th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr>
+                  <td><b class="doc">document_id</b></td>
+                  <td>
+                    <span class="doc doc--small">Type:</span> String
+                  </td>
+                  <td>
+                    <span class="doc doc--small">Title:</span> Document ID
+                  </td>
+                  <td>
+                    <span class="doc doc--small">Optional:</span> false
+                  </td>
+                  <td>
+                    Id of the document for which we want to do the update.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h6 class="mt-2">Response JSON (example)</h6>
+          <div class="doc url_baseline p-4 mb-3">
+            <p class="information">
+              <b class="doc"> 
+<pre>
+    {
+      "additional similarities": [
+        [
+          1000017594,
+          1000000033,
+          0.0008139415856173119
+        ],
+        [
+          1000000033,
+          1,
+          0.003766432542344395
+        ],
+        ...
+      ],
+      "embedding": [
+        0.01364873256534338,
+        -0.007460406515747309,
+        -0.0025345187168568373
+        ... (297 more lines)
+      ],
+      "finish": true,
+      "indices": [
+        1000017594,
+        1000017595,
+        1000000033,
+        ...
+      ]
+    }
+</pre>
+              </b>
+            </p>
+          </div>
+
+
+          <a class="anchor" id="create-text-embedding"></a>
+          <h5 class="doc doc__subsection mt-5 mb-3">
+              Creates text embedding from the given query.
+          </h5>
+
+          <div class="table-responsive">
+            <table class="table table-borderless">
+              <thead>
+                <tr>
+                  <th class="doc doc__method request">
+                  </th><th class="doc doc__method route">
+                </th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b class="doc">GET</b></td>
+                  <td><b>/embedding/create</b></td>
                 </tr>
               </tbody>
             </table>
@@ -112,13 +414,13 @@
                     <span class="doc doc--small">Type:</span> String
                   </td>
                   <td>
-                    <span class="doc doc--small">Title:</span> Query Text
+                    <span class="doc doc--small">Title:</span> Text
                   </td>
                   <td>
                     <span class="doc doc--small">Optional:</span> false
                   </td>
                   <td>
-                    The text for which we wish to retrieve the text embedding.
+                    Text for which we want the embedding.
                   </td>
                 </tr>
 
@@ -128,158 +430,50 @@
                     <span class="doc doc--small">Type:</span> String
                   </td>
                   <td>
-                    <span class="doc doc--small">Title:</span> Text Language
+                    <span class="doc doc--small">Title:</span> Language of the text
                   </td>
                   <td>
-                    <span class="doc doc--small">Optional:</span> true
+                    <span class="doc doc--small">Optional:</span> True
                   </td>
                   <td>
-                    The language of the provided text.
+                    Language of given text.
                   </td>
                 </tr>
-
               </tbody>
             </table>
           </div>
 
-          <h6 class="mt-2">Response body attributes</h6>
-          <div class="table-responsive">
-            <table class="table table-dashed-borders">
-              <thead>
-                <tr>
-                  <th class="doc doc__query name"></th>
-                  <th class="doc doc__query type"></th>
-                  <th class="doc doc__query title"></th>
-                  <th class="doc doc__query optional"></th>
-                  <th class="doc doc__query description"></th>
-                </tr>
-              </thead>
-              <tbody>
-
-                <tr>
-                  <td><b class="doc">language_model</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> String
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> Language Model
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Read only:</span> true
-                  </td>
-                  <td>
-                    The language model used to create the text embedding.
-                  </td>
-                </tr>
-
-                <tr>
-                  <td><b class="doc">tokens</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> Array
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> Tokens
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Read only:</span> true
-                  </td>
-                  <td>
-                    An array of objects, each representing a non-stopword token of the provided text.
-                  </td>
-                </tr>
-
-                <tr class="no-top-border">
-                  <td colspan="5">
-
-                    <b class="doc">tokens item properties</b>
-
-                    <table class="table table-dashed-borders table--second-level">
-                      <thead>
-                        <tr>
-                          <th class="doc doc__query name"></th>
-                          <th class="doc doc__query type"></th>
-                          <th class="doc doc__query title"></th>
-                          <th class="doc doc__query optional"></th>
-                          <th class="doc doc__query description"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td><b class="doc">token</b></td>
-                          <td>
-                            <span class="doc doc--small">Type:</span> String
-                          </td>
-                          <td>
-                            <span class="doc doc--small">Title:</span> Token Name
-                          </td>
-                          <td>
-                            <span class="doc doc--small">Read only:</span> true
-                          </td>
-                          <td>
-                            The non-stopword token name.
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <td><b class="doc">count</b></td>
-                          <td>
-                            <span class="doc doc--small">Type:</span> Integer
-                          </td>
-                          <td>
-                            <span class="doc doc--small">Title:</span> Token Count
-                          </td>
-                          <td>
-                            <span class="doc doc--small">Read only:</span> true
-                          </td>
-                          <td>
-                              The frequency of the token in the original text.
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-
-                  </td>
-                </tr>
-
-                <tr>
-                  <td><b class="doc">embedding</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> Array
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> Text Embedding
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Read only:</span> true
-                  </td>
-                  <td>
-                    An array of floats representing the text embedding.
-                  </td>
-                </tr>
-
-                <tr>
-                  <td><b class="doc">text</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> Array
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> Source Text
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Read only:</span> true
-                  </td>
-                  <td>
-                    The original source text.
-                  </td>
-                </tr>
-
-              </tbody>
-            </table>
+          <h6 class="mt-2">Response JSON (example)</h6>
+          <div class="doc url_baseline p-4 mb-3">
+            <p class="information">
+              <b class="doc"> 
+<pre>
+    {
+      "embedding": [
+        -0.026200000196695328,
+        0.014099999330937862,
+        ... (298 more lines)
+      ],
+      "language_model": "en",
+      "text": "ice cream",
+      "tokens": [
+        {
+          "count": 1,
+          "token": "ice"
+        },
+        {
+          "count": 1,
+          "token": "cream"
+        }
+      ]
+    }
+</pre>
+              </b>
+            </p>
           </div>
-
-          <a class="anchor" id="post-create-text-embedding"></a>
+          <a class="anchor" id="db-document"></a>
           <h5 class="doc doc__subsection mt-5 mb-3">
-              Create the text embedding
+              Fetches documents from the database
           </h5>
 
           <div class="table-responsive">
@@ -293,13 +487,13 @@
               <tbody>
                 <tr>
                   <td><b class="doc">POST</b></td>
-                  <td><b>/embeddings/create</b></td>
+                  <td><b>/db/document</b></td>
                 </tr>
               </tbody>
             </table>
           </div>
           <p>Route information</p>
-          <h6 class="mt-2">Query string parameters</h6>
+          <h6 class="mt-2">JSON body parameters</h6>
           <div class="table-responsive">
             <table class="table table-dashed-borders">
               <thead>
@@ -314,179 +508,79 @@
               <tbody>
 
                 <tr>
-                  <td><b class="doc">text</b></td>
+                  <td><b class="doc">document_ids</b></td>
                   <td>
-                    <span class="doc doc--small">Type:</span> String
+                    <span class="doc doc--small">Type:</span> List[String]
                   </td>
                   <td>
-                    <span class="doc doc--small">Title:</span> Query Text
+                    <span class="doc doc--small">Title:</span> List of documents ids
                   </td>
                   <td>
                     <span class="doc doc--small">Optional:</span> false
                   </td>
                   <td>
-                    The text for which we wish to retrieve the text embedding.
+                    Ids of the documents we want to fetch.
                   </td>
                 </tr>
-
-                <tr>
-                  <td><b class="doc">language</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> String
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> Text Language
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Optional:</span> true
-                  </td>
-                  <td>
-                    The language of the provided text.
-                  </td>
-                </tr>
-
               </tbody>
             </table>
           </div>
 
-          <h6 class="mt-2">Response body attributes</h6>
-          <div class="table-responsive">
-            <table class="table table-dashed-borders">
-              <thead>
-                <tr>
-                  <th class="doc doc__query name"></th>
-                  <th class="doc doc__query type"></th>
-                  <th class="doc doc__query title"></th>
-                  <th class="doc doc__query optional"></th>
-                  <th class="doc doc__query description"></th>
-                </tr>
-              </thead>
-              <tbody>
-
-                <tr>
-                  <td><b class="doc">language_model</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> String
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> Language Model
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Read only:</span> true
-                  </td>
-                  <td>
-                    The language model used to create the text embedding.
-                  </td>
-                </tr>
-
-                <tr>
-                  <td><b class="doc">tokens</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> Array
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> Tokens
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Read only:</span> true
-                  </td>
-                  <td>
-                    An array of objects, each representing a non-stopword token of the provided text.
-                  </td>
-                </tr>
-
-                <tr class="no-top-border">
-                  <td colspan="5">
-
-                    <b class="doc">tokens object properties</b>
-
-                    <table class="table table-dashed-borders table--second-level">
-                      <thead>
-                        <tr>
-                          <th class="doc doc__query name"></th>
-                          <th class="doc doc__query type"></th>
-                          <th class="doc doc__query title"></th>
-                          <th class="doc doc__query optional"></th>
-                          <th class="doc doc__query description"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td><b class="doc">token</b></td>
-                          <td>
-                            <span class="doc doc--small">Type:</span> String
-                          </td>
-                          <td>
-                            <span class="doc doc--small">Title:</span> Token Name
-                          </td>
-                          <td>
-                            <span class="doc doc--small">Read only:</span> true
-                          </td>
-                          <td>
-                            The non-stopword token name.
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <td><b class="doc">count</b></td>
-                          <td>
-                            <span class="doc doc--small">Type:</span> Integer
-                          </td>
-                          <td>
-                            <span class="doc doc--small">Title:</span> Token Count
-                          </td>
-                          <td>
-                            <span class="doc doc--small">Read only:</span> true
-                          </td>
-                          <td>
-                              The frequency of the token in the original text.
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-
-                  </td>
-                </tr>
-
-                <tr>
-                  <td><b class="doc">embedding</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> Array
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> Text Embedding
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Read only:</span> true
-                  </td>
-                  <td>
-                    An array of floats representing the text embedding.
-                  </td>
-                </tr>
-
-                <tr>
-                  <td><b class="doc">text</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> Array
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> Source Text
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Read only:</span> true
-                  </td>
-                  <td>
-                    The original source text.
-                  </td>
-                </tr>
-
-              </tbody>
-            </table>
+          <h6 class="mt-2">Response JSON (example)</h6>
+          <div class="doc url_baseline p-4 mb-3">
+            <p class="information">
+              <b class="doc"> 
+<pre>
+    [
+    {
+      "abstract": "<dd>The present writ petition has been filed in public interest. It paints a grim picture about the failure of the civic agencies in regard to the solid waste management in Delhi. In particular, it refers to the problems arising out of use of plastic bags in general which are posing major environmental hazard. The petition, therefore, prays for directions for upgrading the waste management system, effective means to curb the tendency to generate needless waste by strict legislative measures and also by educating the people at large about the hazards to environment arising out of absence of a scientific waste management programme. It prays for a mandamus directing the respondents to amend the provisions of the Delhi Plastic Bag (Manufacture, Sales and Usage) and Non-Biodegradable Garbage (Control) Act, 2000 and the Rules framed thereunder so as to ensure that the same apply and extend not only to prohibition but also to the manufacture and sale of all plastic bags in general.",
+      "basin": null,
+      "category": "jurisprudence",
+      "celex_num": null,
+      "classification": "jurisprudence",
+      "courtname": "High Court of Delhi",
+      "date": "Aug 7, 2008",
+      "depository": null,
+      "document_id": 2313,
+      "document_source": "ecolex",
+      "documenttype": null,
+      "entryintoforce": null,
+      "entryintoforcenotes": null,
+      "fieldofapplication": null,
+      "form": null,
+      "fulltext_cleaned": "",
+      "fulltextlink": "https://www.informea.org/sites/default/files/court-decisions/COU-156254.pdf",
+      "isbn": null,
+      "issn": null,
+      "journalseries": null,
+      "meetinglink": null,
+      "meetingname": null,
+      "name": "Vinod Kumar Jain vs Union Of India And Anr.",
+      "pages": null,
+      "placeofadoption": null,
+      "placepublication": null,
+      "publisher": null,
+      "referencenumber": null,
+      "seatofcourt": null,
+      "sourceid": null,
+      "sourcelink": "https://www.informea.org/en/court-decision/vinod-kumar-jain-vs-union-india-and-anr",
+      "sourcename": "UNEP",
+      "status": null,
+      "title": null,
+      "treatylink": null,
+      "treatyname": null,
+      "typeofcourt": "National - higher court",
+      "website": null,
+      "websitelink": null
+    }
+  ]
+</pre>
+              </b>
+            </p>
           </div>
+
 
         </div>
-
-
       </div>
     </div>
 
