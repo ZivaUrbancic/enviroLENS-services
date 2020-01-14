@@ -19,10 +19,6 @@ from ..config import config_db
 # Get parameters from .config file
 #################################################
 
-# database parameters
-# database_name = app.config['DATABASE_NAME']
-# database_user = app.config['DATABASE_USER']
-# database_password = app.config['DATABASE_PASSWORD']
 # url to text embedding service
 text_embedding_url = app.config['TEXT_EMBEDDING_URL']
 
