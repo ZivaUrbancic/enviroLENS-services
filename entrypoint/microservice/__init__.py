@@ -7,7 +7,7 @@ import os
 from flask import Flask
 from flask_cors import CORS
 
-from .config import config, config_logging
+from .config import config, config_logging, config_db
 
 def create_app(args=None):
     # create and configure the app
@@ -45,6 +45,9 @@ def create_app(args=None):
     # add error handlers
     from .routes import error_handlers
     error_handlers.register(app)
+
+    # add database configuration
+    config_db.init_app(app)
 
     # create context: components are using app.config
     with app.app_context():

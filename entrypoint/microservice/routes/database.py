@@ -9,16 +9,9 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from ..library import postgresql
+# from ..library import postgresql
+from ..config import config_db
 
-
-#################################################
-# Setup the database object
-#################################################
-
-DB_HOST = app.config.get('DB_HOST', 'localhost')
-DB_PORT = app.config.get('DB_PORT', 5432)
-DB = postgresql.PostgresQL(DB_HOST, DB_PORT)
 
 #################################################
 # Setup the index blueprint
@@ -69,15 +62,8 @@ def get_documents():
     output maximum of 10 documents.
     """
 
-    DB_USER = app.config.get('DB_USER', 'postgres')
-    DB_PASSWORD = app.config.get('DB_PASSWORD', 'dbpass')
-    DB_NAME = app.config.get('DB_NAME', 'envirolens')
-
-    DB.connect(
-        database=DB_NAME,
-        user=DB_USER,
-        password=DB_PASSWORD
-    )
+    # connect to the database:
+    DB = config_db.get_db()
 
     if DB.cursor is None:
         return jsonify({'Error' : 'The connection could not be established'})
@@ -98,7 +84,7 @@ def get_documents():
     field_names = [i[0] for i in DB.cursor.description]
     documents = [{ field_names[i]: row[i] for i in range(num_fields) } for row in DB.cursor.fetchall()]
     
-    # Cleaning the ouput:
+    # Cleaning the output:
     # - removing fulltext field
     # - slicing down the fulltext_cleaned field to 500 chars
     # - we return only the first 10 results
@@ -107,6 +93,6 @@ def get_documents():
             documents[i]['fulltext_cleaned'] = documents[i]['fulltext_cleaned'][:500]
         documents[i].pop('fulltext')
 
-    DB.disconnect()
+    DB.close_db()
 
     return jsonify(documents[:10])

@@ -1,5 +1,5 @@
 # Embedding Route
-# Routes related to creatiung text embeddings
+# Routes related to creating text embeddings
 
 import sys
 

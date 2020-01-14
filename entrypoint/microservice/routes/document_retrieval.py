@@ -41,7 +41,7 @@ def get_similar():
     will return top 10 documents matching your query.
     """
     
-    text = request.json.get('query')
+    text = request.args.get('query')
 
     HOST = app.config.get('RETRIEVAL_HOST')
     PORT = app.config.get('RETRIEVAL_PORT')

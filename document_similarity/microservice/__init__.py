@@ -7,7 +7,7 @@ import os
 from flask import Flask
 from flask_cors import CORS
 
-from .config import config, config_logging
+from .config import config, config_logging, config_db
 
 def create_app(args=None):
     # create and configure the app
@@ -30,6 +30,9 @@ def create_app(args=None):
         app.config.from_object(config.DevelopmentConfig)
     elif SERVICE_ENV == 'testing':
         app.config.from_object(config.TestingConfig)
+
+    # add database configuration
+    config_db.init_app(app)
 
     # setup the cors configurations
     if app.config['CORS']['origins']:
