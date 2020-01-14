@@ -16,13 +16,18 @@ def get_db():
     """
 
     if 'db' not in g:
-        # ! modify for different database
+
+        host = current_app.config.get('DB_HOST')
+        port = current_app.config.get('DB_PORT')
+
         # initialize db object
-        g.db = PostgresQL()
+        g.db = PostgresQL(host=host, port=port)
+
         # get database and password for establishing the conncetion
-        database = current_app.config['DATABASE_NAME']
-        user = current_app.config['DATABASE_USER']
-        password = current_app.config['DATABASE_PASSWORD']
+        database = current_app.config['DB_NAME']
+        user = current_app.config['DB_USER']
+        password = current_app.config['DB_PASSWORD']
+
         # connect to the database
         g.db.connect(database, user=user, password=password)
 
