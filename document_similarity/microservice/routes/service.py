@@ -19,10 +19,6 @@ from ..config import config_db
 # Get parameters from .config file
 #################################################
 
-# database parameters
-# database_name = app.config['DATABASE_NAME']
-# database_user = app.config['DATABASE_USER']
-# database_password = app.config['DATABASE_PASSWORD']
 # url to text embedding service
 text_embedding_url = app.config['TEXT_EMBEDDING_URL']
 
@@ -76,9 +72,8 @@ def update_similarities():
 
     try:
         # get embeddings from postgres
-        loaded_embedding = pg.execute("""
-            SELECT * FROM document_embeddings;
-            """)
+        loaded_embedding = pg.retrieve('document_embeddings')
+
         # Separate the result into a list of indices and a matrix of embeddings
         indices = [embedding['document_id'] for embedding in loaded_embedding]
         embeddings = [embedding['vector'] for embedding in loaded_embedding]
@@ -89,25 +84,21 @@ def update_similarities():
     # Retrieve the document's text from the database
 
     try:
-        statement = """
-            SELECT fulltext_cleaned FROM documents
-            WHERE document_id={};
-            """.format(document_id)
-        document_text = (pg.execute(statement))[0]['fulltext_cleaned']
+        # Retrieve the full text, the abstract and the title of the document.
+        retrieved = pg.retrieve('documents',
+                                names_of_columns='fulltext_cleaned, abstract, title',
+                                constraints="""WHERE document_id={}""".format(document_id))
+
+        # Take the first that is not empty or None (priorities: full text > abstract > title).
+        document_text = retrieved[0]['fulltext_cleaned']
         if document_text == "" or document_text is None:
-            statement = """
-            SELECT abstract FROM documents
-            WHERE document_id={};
-            """.format(document_id)
-            document_text = (pg.execute(statement))[0]['abstract']
-            if document_text == "" or document_text is None:
-                statement = """
-                SELECT title FROM documents
-                WHERE document_id={};
-                """.format(document_id)
-                document_text = (pg.execute(statement))[0]['title']
-                if document_text == "" or document_text is None:
-                    raise Exception("Could not retrieve any text for this document.")
+            document_text = retrieved[0]['abstract']
+        if document_text == "" or document_text is None:
+            document_text = retrieved[0]['title']
+
+        # If none of those are useful, raise an exception
+        if document_text == "" or document_text is None:
+            raise Exception("Could not retrieve any text for this document.")
     except Exception as e:
         return abort(400, "Could not retrieve text of the document from the database. "+str(e))
 
@@ -138,11 +129,9 @@ def update_similarities():
     # Insert the new embedding into the database
 
     try:
-        pg.execute("""
-            INSERT INTO document_embeddings
-            VALUES ({}, ARRAY{});
-            """.format(document_id, new_embedding))
-        pg.commit()
+        # Insert the new embedding (indexed by document_id) into 'document_embeddings' table
+        values = """VALUES ({}, ARRAY{})""".format(document_id, new_embedding)
+        pg.insert('document_embeddings', values)
     except Exception as e:
         return abort(400, "Could not add the new embedding into the table 'document_embeddings'. " + str(e))
 
@@ -151,11 +140,10 @@ def update_similarities():
 
     try:
         for i, j, sim in additional_similarities:
-            pg.execute("""
-                INSERT INTO similarities
-                VALUES ({}, {}, {});
-                """.format(i, j, sim))
-            pg.commit()
+            # Insert the similarity score 'sim' between document with id 'i' and document with id 'j' into
+            # 'similarities' table
+            values = """VALUES ({}, {}, {})""".format(i, j, sim)
+            pg.insert('similarities', values)
     except Exception as e:
         return abort(400, "Could not add the additional similarities into the table 'similarities'. " + str(e))
 
@@ -197,15 +185,21 @@ def get_similarities():
         # TODO: change the expression if needed
         # get only the lines in table 'similarities' where the first document has id doc_id
         # sort them by the similarity column, descending
-        similarity_list = pg.execute("""
-            SELECT document2_id, similarity_score FROM similarities
-            WHERE document1_id = {}
-            ORDER BY similarity_score DESC;
-            """.format(doc_id))
+
+        # SQL constraints:
+        constraints = """WHERE document1_id = {}
+            ORDER BY similarity_score DESC""".format(doc_id)
+
+        # Retrieving from postgres using constraints
+        similarity_list=pg.retrieve('similarities',
+                                    names_of_columns='document2_id, similarity_score',
+                                    constraints=constraints)
+
+        # Taking only indices of k most similar documents
         result_indices = [entry['document2_id'] for entry in similarity_list[:k]]
         result = [(entry['document2_id'], entry['similarity_score']) for entry in similarity_list[:k]]
         finish = True
-        # pg.disconnect()
+        pg.disconnect()
     except Exception as e:
         # TODO: log exception
         # something went wrong with the request

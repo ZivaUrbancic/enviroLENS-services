@@ -72,6 +72,47 @@ class PostgresQL:
             else:
                 return None
 
+    def retrieve(self, name_of_table, names_of_columns='*', constraints=None):
+        """Returns values of columns with names in 'names_of_columns' that satisfy given constraints.
+
+        Args:
+            name_of_table (string): Name of the table we want to retrieve from.
+            names_of_columns (string): List of names of columns we want to retrieve from, separated by a comma.
+                (Default='*')
+            constraints (string): Constraints on our query, written in SQL. (Default = None)
+
+        Returns:
+            (json object): json object with retrieved data.
+            """
+
+
+        if constraints is None:
+            statement = """
+            SELECT {} FROM {};
+            """.format(names_of_columns, name_of_table)
+        else:
+            statement = """
+            SELECT {} FROM {}
+            {};
+            """.format(names_of_columns, name_of_table, constraints)
+        return self.execute(statement)
+
+    def insert(self, name_of_table, values):
+        """Inserts values to a table.
+
+        Args:
+            name_of_table (string): Name of the table we want to insert into.
+            values (string): SQL code describing values to insert. Example:
+                        '''VALUES (variable1, variable2, ARRAY variable3)'''
+            """
+
+        statement ="""
+            INSERT INTO {}
+            {};
+            """.format(name_of_table, values)
+        self.execute(statement)
+        self.commit()
+
     def commit(self):
         if self.connection:
             self.connection.commit()
