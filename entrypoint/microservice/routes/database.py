@@ -69,9 +69,12 @@ def get_documents():
     output maximum of 10 documents.
     """
 
-    DB_USER = app.config.get('DB_USER', 'postgres')
-    DB_PASSWORD = app.config.get('DB_PASSWORD', 'dbpass')
-    DB_NAME = app.config.get('DB_NAME', 'envirolens')
+    DB_USER = app.config.get('DB_USER')
+    DB_PASSWORD = app.config.get('DB_PASSWORD')
+    DB_NAME = app.config.get('DB_NAME')
+
+    if DB_USER is None or DB_NAME is None or DB_PASSWORD is None:
+        return abort(400, "Database connection failed.")
 
     DB.connect(
         database=DB_NAME,

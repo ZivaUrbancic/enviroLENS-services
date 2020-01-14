@@ -22,6 +22,11 @@ class ProductionConfig(Config):
     # TODO: add required secret configurations
     ENV='production'
     SECRET_KEY=os.getenv('PROD_SECRET_KEY')
+    DB_USER = os.getenv('DEVELOPMENT_DATABASE_USER')
+    DB_HOST = os.getenv('DEVELOPMENT_DATABASE_HOST')
+    DB_PORT = os.getenv('DEVELOPMENT_DATABASE_PORT')
+    DB_PASSWORD = os.getenv('DEVELOPMENT_DATABASE_PASSWORD')
+    DB_NAME = os.getenv('DEVELOPMENT_DATABASE_NAME')
 
 
 class DevelopmentConfig(Config):

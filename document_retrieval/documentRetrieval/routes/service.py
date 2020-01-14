@@ -50,8 +50,8 @@ def retrieval():
     query = None
     m = None
     if request.method == 'GET':
-        query=request.args.get('query', default='', type=str)
-        m= request.args.get('m', default=5, type=int)
+        query = request.args.get('query', default='', type=str)
+        m = request.args.get('m', default=5, type=int)
 
     elif request.method == 'POST':
         query=request.json['query']
