@@ -195,3 +195,11 @@ Available endpoints:
   #### Example request:
   ```{BASE_URL}/api/v1/db/document```
   With the **POST** request at this endpoint along with the json given above, you will receive documents data for documents ids given in the json.
+
+
+# Acknowledgments
+This work is developed by [AILab](http://ailab.ijs.si/) at [Jozef Stefan Institute](https://www.ijs.si/).
+
+The work is supported by the [EnviroLENS project](https://envirolens.eu/),
+a project that demonstrates and promotes the use of Earth observation as direct evidence for environmental law enforcement,
+including in a court of law and in related contractual negotiations.
