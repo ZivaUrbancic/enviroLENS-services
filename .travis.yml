@@ -1,11 +1,6 @@
 matrix:
   include:
-    - language: python
-      python:
-        - "3.6"
-        - "3.7"
-
     - language: bash
       before_script:
       - cd ./scripts && curl -L "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/shunit2/shunit2-2.1.6.tgz" | tar zx
-      script: bash scripts/validate.sh
+      script: cd ../ && bash scripts/validate.sh
