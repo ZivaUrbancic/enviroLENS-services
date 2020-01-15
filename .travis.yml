@@ -1,5 +1,20 @@
 matrix:
   include:
+    - language: python
+      before_install:
+        - python -m venv venv
+        - . venv/bin/activate
+        - pip install -r document_retrieval/requirements.txt
+        - pip install -r document_similarity/requirements.txt
+        - pip install -r text_embeddings/requirements.txt
+        - pip install -r entrypoint/requirements.txt
+      install: pip install pylint
+      script:
+        - pylint --errors-only document_retrieval
+        - pylint --errors-only document_similarity
+        - pylint --errors-only text_embeddings
+        - pylint --errors-only entrypoint
+
     - language: bash
       before_script:
       - cd ./scripts
