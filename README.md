@@ -39,7 +39,7 @@ Currently you are able to run only one version of the text embedding so that it 
   pip install -r requirements.txt
   ```
 * Place a copy of your `word2vec` or `fasttext` word embeddings in the [data/embeddings](text_embeddings/data/embeddings) folder
-* Execute
+* Navigate back to the base of the `text_embeddings` folder and run the service with
   ```bash
   # linux or mac
   python -m text_embedding.main start \
