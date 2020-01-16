@@ -1,14 +1,15 @@
 matrix:
   include:
     - language: python
-      before_install:
-        - python -m venv venv
-        - . venv/bin/activate
+      os:
+        - windows
+        - linux
+      install:
         - pip install -r document_retrieval/requirements.txt
         - pip install -r document_similarity/requirements.txt
         - pip install -r text_embeddings/requirements.txt
         - pip install -r entrypoint/requirements.txt
-      install: pip install pylint
+        - pip install pylint
       script:
         - pylint --errors-only document_retrieval
         - pylint --errors-only document_similarity
@@ -16,6 +17,9 @@ matrix:
         - pylint --errors-only entrypoint
 
     - language: bash
+      os:
+          - windows
+          - linux
       before_script:
       - cd ./scripts
       - curl -L "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/shunit2/shunit2-2.1.6.tgz" | tar zx
