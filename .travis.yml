@@ -2,7 +2,6 @@ matrix:
   include:
     - language: python
       os:
-        - windows
         - linux
       install:
         - pip install -r document_retrieval/requirements.txt
@@ -18,8 +17,8 @@ matrix:
 
     - language: bash
       os:
-          - windows
-          - linux
+        - windows
+        - linux
       before_script:
       - cd ./scripts
       - curl -L "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/shunit2/shunit2-2.1.6.tgz" | tar zx
