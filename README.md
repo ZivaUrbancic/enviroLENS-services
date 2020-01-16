@@ -107,7 +107,7 @@ If you want you can also run the service on custom host and port.
   DEV_DATABASE_PASSWORD =
   DEV_TEXT_EMBEDDING_URL =
   ```
-* Set the text embedding url to `{HOST}:{PORT}/api/v1/embeddings/create` where HOST and PORT are the values used to run text embedding microservice
+* Set the text embedding url to `http://{HOST}:{PORT}/api/v1/embeddings/create` where HOST and PORT are the values used to run text embedding microservice
 * Navigate back into the base of the `document_similarity` folder and run the service with
   ```bash
   # linux or mac
@@ -175,7 +175,7 @@ You can also use custom host and port.
 ### Usage:
 
 Available endpoints:
-* **GET** `{HOST}/{PORT}/api/v1/retrieval/retrieve` __query_params__ query, m)
+* **GET** `{HOST}/{PORT}/api/v1/retrieval/retrieve` __query_params__ query, m
   * query -> your text query
   * m -> number of results
 
