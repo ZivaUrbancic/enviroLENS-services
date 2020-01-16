@@ -10,10 +10,10 @@ matrix:
         - pip install -r entrypoint/requirements.txt
         - pip install pylint
       script:
-        - pylint --errors-only document_retrieval
-        - pylint --errors-only document_similarity
-        - pylint --errors-only text_embeddings
-        - pylint --errors-only entrypoint
+        - pylint document_retrieval
+        - pylint document_similarity
+        - pylint text_embeddings
+        - pylint entrypoint
 
     - language: bash
       os:
