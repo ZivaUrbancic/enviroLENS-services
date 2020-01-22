@@ -9,13 +9,13 @@ The eLENS miner system retrieves, processes and analyzes legal documents and map
 
 The system follows the microservice architecture and is written in Python 3. It consists of the following microservices:
 
-* [Document Retrieval.](/document_retrieval) The service responsible for providing documents based on the user's query. It leverages [query expansion](https://en.wikipedia.org/wiki/Query_expansion) to improve the query results.
+* [Document Retrieval.](document_retrieval) The service responsible for providing documents based on the user's query. It leverages [query expansion](https://en.wikipedia.org/wiki/Query_expansion) to improve the query results.
 
-* [Document Similarity.](/document_similarity) This service calculates the semantic similarity of the documents and can provide a list of most similar documents to a user selected one. Here, we integrate state-of-the-art methods using word and document embeddings to capture the semantic meaning of the documents and use it to compare the documents.
+* [Document Similarity.](document_similarity) This service calculates the semantic similarity of the documents and can provide a list of most similar documents to a user selected one. Here, we integrate state-of-the-art methods using word and document embeddings to capture the semantic meaning of the documents and use it to compare the documents.
 
-* [Text Embeddings.](/text_embeddings) The service is a collection of text embedding methods. For a given text it generates the text embedding which is then used in the previous microservices.
+* [Text Embeddings.](text_embeddings) The service is a collection of text embedding methods. For a given text it generates the text embedding which is then used in the previous microservices.
 
-* [Entrypoint.](/entrypoint) This service is the interface and connects the previous microservices together. It is the entrypoint for the users to access the services.
+* [Entrypoint.](entrypoint) This service is the interface and connects the previous microservices together. It is the entrypoint for the users to access the services.
 
 ## Prerequisites
 
