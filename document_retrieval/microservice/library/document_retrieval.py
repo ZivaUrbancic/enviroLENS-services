@@ -161,12 +161,11 @@ def probability_score(tokens, texts, probability_function, m, *args):
     Returns:
         document_probability (list): Tuples of document ids and scores that measure document relavance. Returns n tuples with highest score.
     """
-
+​
     #args[0] == top_expansion
     #args[1] == alpha
     #args[2] == wv
 
-    break_loop = False
     document_probability = {}
     for k, v in texts.items():
         n = len(v)
@@ -181,10 +180,7 @@ def probability_score(tokens, texts, probability_function, m, *args):
                     probability = probability_sum_weight(probability, token_frequency, n,tokens[i], args[1], tokens, args[0], args[2])
                 document_probability.update({k: probability})
             else:
-                break_loop = True
-                break
-        elif break_loop:
-            break
+                raise Exception("Error, number of arguments does not match.")
         elif probability_function == probability_sum or probability_function == probability_multiply:
             if len(args) == 0:
                 for i in range(len(tokens)):
@@ -192,12 +188,9 @@ def probability_score(tokens, texts, probability_function, m, *args):
                     probability = probability_function(probability, token_frequency, n)
                 document_probability.update({k: probability})
             else:
-                break_loop = True
-                break
-        elif break_loop:
-            break
+                raise Exception("Error, number of arguments does not match.")
         else:
-            break
+            raise Exception("Error, metric function not defined.")
 
     if m == 0:
         return [(k, v) for k, v in document_probability.items()]
@@ -326,8 +319,7 @@ def tfidf_score(tokens, texts, tfidf_function, number_all_texts_in_db, m=10, *ar
     #args[0] == top_expansion
     #args[1] == alpha
     #args[2] == wv
-
-    break_loop = False
+​
     if len(args):
         tokens_together = tokens+args[0]
     else:
@@ -336,16 +328,17 @@ def tfidf_score(tokens, texts, tfidf_function, number_all_texts_in_db, m=10, *ar
     filtered_nb_docs_tokens_appeared = [elt for elt in nb_docs_tokens_appeared if not elt == 0]
     not_appear = []
     appear = []
-
+​
     for i in range(len(nb_docs_tokens_appeared)):
         if nb_docs_tokens_appeared[i] == 0:
             not_appear.append(tokens_together[i])
         else:
             appear.append(tokens_together[i])
     l = number_all_texts_in_db
-
+​
     document_probability = {}
     for k, v in texts.items():
+​
         n = len(v)
         probability = 0
         for i in range(len(appear)):
@@ -355,20 +348,17 @@ def tfidf_score(tokens, texts, tfidf_function, number_all_texts_in_db, m=10, *ar
                 if len(args) == 0:
                     probability = tfidf_sum(probability, token_frequency, n, idf)
                 else:
-                    break_loop = True
-                    break
+                    raise Exception("Error, number of arguments does not match")
             elif tfidf_function == tfidf_sum_weight:
                 if len(args) == 3:
                     probability = tfidf_sum_weight(probability, token_frequency, n, idf,appear[i], args[1], tokens, args[0], args[2])
                 else:
-                    break_loop = True
-                    break
-        if break_loop:
-            break
+                    raise Exception("Error, number of arguments does not match")
         document_probability.update({k: probability})
 
     if m == 0:
         return [(k, v) for k, v in document_probability.items()]
     else:
         document_probability = top_positives(document_probability,m)
+​
         return document_probability
