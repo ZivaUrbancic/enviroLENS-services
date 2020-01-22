@@ -15,14 +15,14 @@ class PostgresQL:
         self.port = port
 
 
-    def db_query(self, query_words): 
+    def db_query(self, query_words):
         """ From database returns list of dictionaries containing document IDs and text. Documents contain at least one query word.
         Args:
             query_words(list): List of query words
-        Returns: 
+        Returns:
             documents(list): list of dictionaries containing document IDs and text"""
         output = '|'.join(query_words)
-       
+
         statement = (
             "SELECT document_id, fulltext_cleaned FROM documents "
             "WHERE to_tsvector('english', fulltext_cleaned) @@ to_tsquery(%s);"
@@ -34,7 +34,7 @@ class PostgresQL:
         """From database returns document metadata.
         Args:
             metric_fn_output(list): List of tuples (output of metric function). First tuple element is document ID, second id document metric score.
-        Returns: 
+        Returns:
             docs_metadata(list): list of dictionaries containing document source, date, title, celex_num and full text link (docs sorted by relavance)."""
 
         ids = []
@@ -42,16 +42,20 @@ class PostgresQL:
         for tupl in metric_fn_output:
             ids.append(tupl[0])
         if ids == []:
-            raise Exception('No relavant documents for the given query.')
+            raise Exception('No relevant documents for the given query.')
         if len(ids) == 1:
-            SQL = ("SELECT document_id, document_source, date, title, celex_num, fulltextlink "
-            "FROM documents WHERE document_id = %s;") 
+            SQL = (
+                "SELECT document_id, document_source, date, title, celex_num, fulltextlink "
+                "FROM documents WHERE document_id = %s;"
+            )
             value = str(ids[0])
             docs_metadata = self.execute(SQL, (value, ))
         else:
             t = tuple(ids)
-            SQL = ("SELECT document_id, document_source, date, title, celex_num, fulltextlink "
-            "FROM documents WHERE document_id IN %s")
+            SQL = (
+                "SELECT document_id, document_source, date, title, celex_num, fulltextlink "
+                "FROM documents WHERE document_id IN %s;"
+            )
             docs_metadata = self.execute(SQL, t)
         metadata_sorted = [None] * len(ids)
         for elt in docs_metadata:
@@ -93,7 +97,6 @@ class PostgresQL:
 
         except (Exception, psycopg2.Error) as error:
             # notify the user about the error
-            print ("Error while connecting to PostgreSQL", error)
             self.cursor = None
 
 
@@ -102,7 +105,6 @@ class PostgresQL:
         if self.connection:
             self.cursor.close()
             self.connection.close()
-            print("PostgresQL connection ended")
 
 
     def execute(self, statement, *placeholder_values):

@@ -1,9 +1,9 @@
+import string
 from gensim.models import KeyedVectors, FastText
 import numpy as np
 import nltk
-from nltk.corpus   import stopwords
+from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-import string
 from nltk.corpus import wordnet
 from nltk.stem import WordNetLemmatizer
 lemmatizer = WordNetLemmatizer()

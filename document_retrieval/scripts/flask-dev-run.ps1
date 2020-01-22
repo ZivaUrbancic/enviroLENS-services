@@ -12,7 +12,7 @@ if ("$FLASK_ENV" -eq "") {
 }
 
 # set the flask environment variables
-$env:FLASK_APP="documentRetrieval"
+$env:FLASK_APP="document_retrieval"
 $env:FLASK_ENV="$FLASK_ENV"
 
 Set-Location ../

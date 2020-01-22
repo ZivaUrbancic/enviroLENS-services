@@ -13,7 +13,7 @@ if "%FLASK_ENV%"=="" (
 )
 
 :: set the flask environment variables
-set FLASK_APP=documentRetrieval
+set FLASK_APP=document_retrieval
 
 cd ..
 :: run the flask app (with autoreload)

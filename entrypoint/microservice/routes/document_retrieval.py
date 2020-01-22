@@ -1,13 +1,11 @@
 # Routes related to document retrieval microservice
 
 import sys
-
+import requests
 from flask import (
     Blueprint, flash, g, redirect, request, session, url_for, jsonify, current_app as app
 )
 from werkzeug.exceptions import abort
-
-import requests
 
 bp = Blueprint('retrieval', __name__, url_prefix='/api/v1/retrieval')
 
@@ -37,21 +35,14 @@ def get_similar():
       ]
 
     Example request
-    {BASE_URL}/api/v1/retrieval/retrieve?query=deforestation&m=10 
+    {BASE_URL}/api/v1/retrieval/retrieve?query=deforestation&m=10
     will return top 10 documents matching your query.
     """
-    
     text = request.args.get('query')
-
     HOST = app.config.get('RETRIEVAL_HOST')
     PORT = app.config.get('RETRIEVAL_PORT')
-
-    print(f"Making request to: http://{HOST}:{PORT}/api/v1/docRetrieval/retrieval")
-
     query_params = {
         'query' : request.args.get('query', "")
     }
-
     r = requests.get(f"http://{HOST}:{PORT}/api/v1/docRetrieval/retrieval", params=query_params)
-
     return jsonify(r.json())

@@ -47,7 +47,6 @@ def create_app(args=None):
     if app.config['CORS']['origins']:
         CORS(app, origins=app.config['CORS']['origins'])
 
-    print(app.config)
     # add error handlers
     from .routes import error_handlers
     error_handlers.register(app)
