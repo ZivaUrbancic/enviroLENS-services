@@ -1,5 +1,10 @@
 # eLENS Miner System
 
+[![License](https://img.shields.io/badge/License-BSD%202--Clause-green.svg)](https://opensource.org/licenses/BSD-2-Clause)
+[![Build Status](https://travis-ci.org/JozefStefanInstitute/eLENS-miner-system.svg?branch=master)](https://travis-ci.org/JozefStefanInstitute/eLENS-miner-system)
+[![Python 3.6](https://img.shields.io/badge/python-3.6+-green.svg)](https://www.python.org/downloads/release/python-360/)
+![Platform](https://img.shields.io/badge/platform-linux-green.svg)
+
 The eLENS miner system retrieves, processes and analyzes legal documents and maps them to specific geographical areas.
 
 The system follows the microservice architecture and is written in Python 3. It consists of the following microservices:
