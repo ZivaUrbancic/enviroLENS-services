@@ -2,8 +2,8 @@
 # Routes related to creatiung text embeddings
 
 import sys
-import requests
 import json
+import requests
 
 
 from flask import (
@@ -20,8 +20,8 @@ from ..config import config_db
 
 
 
-from ..library.documentRetrieval import tfidf_score_str
-from ..library.documentRetrieval import change_dict_structure
+from ..library.document_retrieval import tfidf_score_str
+from ..library.document_retrieval import change_dict_structure
 from ..library.postgresql import PostgresQL
 
 
@@ -62,29 +62,29 @@ def retrieval():
         return abort(405)
 
     if query == '':
-        raise Exception('Missing input: query') 
+        raise Exception('Missing input: query')
     if "'" in query or "\"" in query:
-        raise Exception('Wrong query: do not use quotation marks') 
+        raise Exception('Wrong query: do not use quotation marks')
 
     HOST = app.config.get('TEXT_EMBEDDING_HOST', 'localhost')
     PORT = app.config.get('TEXT_EMBEDDING_PORT', '4000')
 
     query_params = {'query': query}
-    
+
 
 
     r = requests.get(f"http://{HOST}:{PORT}/api/v1/embeddings/expand", params=query_params)
     r = json.loads(r.text)
     tokens = r.get("expanded_query")
-    
+
 
 
     try:
         db = config_db.get_db()
         docs = db.db_query(tokens)
         number_all_documents = db.db_nb_docs()
-        texts = change_dict_structure(docs) 
-        tfidf_score = tfidf_score_str(tokens, texts, 'tfidf_sum', number_all_documents, m) 
+        texts = change_dict_structure(docs)
+        tfidf_score = tfidf_score_str(tokens, texts, 'tfidf_sum', number_all_documents, m)
         metadata = db.db_return_docs_metadata(tfidf_score)
 
     except Exception as e:
@@ -96,4 +96,3 @@ def retrieval():
         return jsonify({
             "documents_metadata": metadata
         })
-

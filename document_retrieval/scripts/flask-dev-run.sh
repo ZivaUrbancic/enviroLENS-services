@@ -13,7 +13,7 @@ if [$FLASK_ENV -eq ""]; then
 fi
 
 # set the flask environment variables
-export FLASK_APP=documentRetrieval
+export FLASK_APP=document_retrieval
 export FLASK_ENV=$FLASK_ENV
 
 cd ..

@@ -3,10 +3,9 @@
 # file and creates the configuration objects -
 # one for each environment.
 
+import os
 from dotenv import load_dotenv
 load_dotenv()
-
-import os
 
 class Config(object):
     DEBUG = False
@@ -15,10 +14,8 @@ class Config(object):
         'origins': os.getenv('CORS_ORIGINS').split(',') if os.getenv('CORS_ORIGINS') else None
     }
 
-
 class ProductionConfig(Config):
     """Production configuration"""
-
     # TODO: add required secret configurations
     ENV='production'
     SECRET_KEY=os.getenv('PROD_SECRET_KEY')
@@ -28,10 +25,8 @@ class ProductionConfig(Config):
     DB_PASSWORD = os.getenv('PROD_DATABASE_PASSWORD')
     DB_NAME = os.getenv('PROD_DATABASE_NAME')
 
-
 class DevelopmentConfig(Config):
     """Development configuration"""
-
     # TODO: add required secret configurations
     ENV='development'
     DEBUG = True
@@ -42,10 +37,8 @@ class DevelopmentConfig(Config):
     DB_PASSWORD = os.getenv('DEV_DATABASE_PASSWORD')
     DB_NAME = os.getenv('DEV_DATABASE_NAME')
 
-
 class TestingConfig(Config):
     """Testing configuration"""
-
     # TODO: add required secret configurations
     ENV='testing'
     TESTING = True

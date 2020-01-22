@@ -3,10 +3,9 @@
 # file and creates the configuration objects -
 # one for each environment.
 
+import os
 from dotenv import load_dotenv
 load_dotenv()
-
-import os
 
 class Config(object):
     DEBUG = False
@@ -14,7 +13,6 @@ class Config(object):
     CORS = {
         'origins': os.getenv('CORS_ORIGINS').split(',') if os.getenv('CORS_ORIGINS') else None
     }
-
 
 class ProductionConfig(Config):
     """Production configuration"""
@@ -46,7 +44,6 @@ class DevelopmentConfig(Config):
 
     # Url to text embedding service
     TEXT_EMBEDDING_URL=os.getenv('DEV_TEXT_EMBEDDING_URL')
-
 
 class TestingConfig(Config):
     """Testing configuration"""

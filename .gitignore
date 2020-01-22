@@ -2,3 +2,5 @@
 **venv/
 **.venv/
 *.env
+
+scripts/shunit2-2.1.6

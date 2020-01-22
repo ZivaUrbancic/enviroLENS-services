@@ -3,10 +3,9 @@
 # file and creates the configuration objects -
 # one for each environment.
 
+import os
 from dotenv import load_dotenv
 load_dotenv()
-
-import os
 
 class Config(object):
     DEBUG = False

@@ -1,13 +1,11 @@
 # Routes related to document similarity microservice
 
 import sys
-
+import requests
 from flask import (
     Blueprint, flash, g, redirect, request, session, url_for, jsonify, current_app as app
 )
 from werkzeug.exceptions import abort
-
-import requests
 
 bp = Blueprint('similarity', __name__, url_prefix='/api/v1/similarity')
 
@@ -74,23 +72,18 @@ def get_embedding():
     }
 
     Example request
-    {BASE_URL}/api/v1/similarity/get_similar?document_id=1000017605&get_k=5 
+    {BASE_URL}/api/v1/similarity/get_similar?document_id=1000017605&get_k=5
     will return top 5 similar documents to document with id 1000017605.
     """
-
     HOST = app.config.get('SIMILARITY_HOST')
     PORT = app.config.get('SIMILARITY_PORT')
-
-    print(f"Making request to: http://{HOST}:{PORT}/api/v1/similarity/get_similarities")
-
     query_params = {
         'document_id' : request.args.get('document_id', "1"),
         'get_k' : request.args.get('get_k', 5)
     }
-
     r = requests.get(f"http://{HOST}:{PORT}/api/v1/similarity/get_similarities", params=query_params)
-
     return jsonify(r.json())
+
 
 @bp.route('/update_similarities', methods=['GET'])
 def update_similarities():
@@ -100,18 +93,12 @@ def update_similarities():
         document_id : {id of the document}
 
     Example request:
-    {BASE_URL}/api/v1/similarity/update_similarities?document_id=1000017605 
+    {BASE_URL}/api/v1/similarity/update_similarities?document_id=1000017605
     """
-
     HOST = app.config.get('SIMILARITY_HOST')
     PORT = app.config.get('SIMILARITY_PORT')
-
-    print(f"Making request to: http://{HOST}:{PORT}/api/v1/similarity/new_document_embedding")
-
     query_params = {
         'document_id' :request.args.get('document_id', default=None, type=int),
     }
-
     r = requests.get(f"http://{HOST}:{PORT}/api/v1/similarity/new_document_embedding", params=query_params)
-    
     return jsonify(r.json())
