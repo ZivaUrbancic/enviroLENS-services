@@ -2,13 +2,11 @@
 # Routes related to creating text embeddings
 
 import sys
-
+import requests
 from flask import (
     Blueprint, flash, g, redirect, request, session, url_for, jsonify, current_app as app
 )
 from werkzeug.exceptions import abort
-
-import requests
 
 
 #################################################
@@ -30,24 +28,20 @@ def index():
     # TODO: provide an appropriate output
     return abort(501)
 
+
 @bp.route('/embedding', methods=['POST'])
 def get_embedding():
     # This is only hardcoded test:
 
     text = request.json.get('query')
-
     HOST = app.config.get('TEXT_EMBEDDING_HOST', 'localhost')
     PORT = app.config.get('TEXT_EMBEDDING_PORT', '4000')
-
     data = {
-    "query": text,
+        "query": text,
     }
-
-    print(f"Making request to: http://{HOST}:{PORT}/api/v1/embeddings/expand")
-
     r = requests.post(f"http://{HOST}:{PORT}/api/v1/embeddings/expand", json=data)
-
     return jsonify(r.json())
+
 
 # TODO: add an appropriate route name
 @bp.route('/second', methods=['GET', 'POST'])

@@ -44,7 +44,7 @@ def register(app):
         })
 
     @app.errorhandler(501)
-    def method_not_allowed(e):
+    def method_not_implemented(e):
         # TODO: possible webpage for error
         return jsonify({
             "error": {

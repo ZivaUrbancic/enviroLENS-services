@@ -47,8 +47,8 @@ To start the microservice one must first initialize some global variables.
 ### Linux and Mac
 
 ```bash
-export FLASK_APP=documentRetrieval
-export FLASK_ENV=development
+export FLASK_APP=document_retrieval
+export FLASK_ENV=document_retrieval
 ```
 
 ### Windows
@@ -56,14 +56,14 @@ export FLASK_ENV=development
 For Windows cmd, use `set` instead of `export`:
 
 ```cmd
-set FLASK_APP=documentRetrieval
+set FLASK_APP=document_retrieval
 set FLASK_ENV=development
 ```
 
 For Windows PowerShell, use `$env:` instead of `export`:
 
 ```PowerShell
-$env:FLASK_APP="documentRetrieval"
+$env:FLASK_APP="document_retrieval"
 $env:FLASK_ENV="development"
 ```
 
@@ -87,7 +87,7 @@ python -m flask run
 One will see output similar to this:
 
 ```bash
- * Serving Flask app "documentRetrieval" (lazy loading)
+ * Serving Flask app "document_retrieval" (lazy loading)
  * Environment: development
  * Debug mode: on
  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)

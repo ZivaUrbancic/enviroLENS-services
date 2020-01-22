@@ -3,11 +3,10 @@
 # file and creates the configuration objects -
 # one for each environment.
 
-from dotenv import load_dotenv
-load_dotenv()
-
 import os
 import ast
+from dotenv import load_dotenv
+load_dotenv()
 
 class Config(object):
     DEBUG = False
@@ -16,12 +15,10 @@ class Config(object):
         'origins': os.getenv('CORS_ORIGINS').split(',') if os.getenv('CORS_ORIGINS') else None
     }
 
-
 class ProductionConfig(Config):
     """Production configuration"""
     ENV='production'
     SECRET_KEY=os.getenv('PROD_SECRET_KEY'),
-
 
 class DevelopmentConfig(Config):
     """Development configuration"""
@@ -29,7 +26,6 @@ class DevelopmentConfig(Config):
     DEBUG = True
     SECRET_KEY=os.getenv('DEV_SECRET_KEY')
     PROXY=ast.literal_eval(os.getenv('DEV_PROXY')) if os.getenv('DEV_PROXY') else None
-
 
 class TestingConfig(Config):
     """Testing configuration"""
