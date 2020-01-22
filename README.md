@@ -39,17 +39,18 @@ Currently you are able to run only one version of the text embedding so that it 
   pip install -r requirements.txt
   ```
 * Place a copy of your `word2vec` or `fasttext` word embeddings in the [data/embeddings](text_embeddings/data/embeddings) folder
-* Execute
+* Navigate back to the base of the `text_embeddings` folder and run the service with
   ```bash
   # linux or mac
   python -m text_embedding.main start \
+         -e production \
          -H localhost \
          -p 4001 \
          -mp (path to the model) \
          -ml (language of the model)
 
   # windows
-  python -m text_embedding.main start -H localhost -p 4001 -mp (path to the model) -ml (language of the model)
+  python -m text_embedding.main start -e production -H localhost -p 4001 -mp (path to the model) -ml (language of the model)
   ```
 
 
@@ -61,7 +62,7 @@ Currently you are able to run only one version of the text embedding so that it 
   ```bash
   pip install -r requirements.txt
   ```
-* Navigate into documentRetrieval/config folder
+* Navigate into `microservice/config` folder
 * Create `.env` file and inside define the following variables:
   ```bash
   PROD_PG_DATABASE={name_of_the_db}
@@ -70,15 +71,16 @@ Currently you are able to run only one version of the text embedding so that it 
   DEV_PG_DATABASE={name_of_the_db}
   DEV_PG_PASSWORD={pasword}
   ```
-* Navigate into `documentRetrieval` folder and run the service with:
+* Navigate to the base of `document_retrieval` folder and run the service with:
   ```bash
   # linux or mac
-  python -m main start \
+  python -m microservice.main start \
+         -e production \
          -H localhost \
-         -p 4100 \
+         -p 4100
 
   # windows
-  python -m main start -H localhost -p 4100
+  python -m microservice.main start -e production -H localhost -p 4100
   ```
 
 If you want you can also run the service on custom host and port.
@@ -105,16 +107,17 @@ If you want you can also run the service on custom host and port.
   DEV_DATABASE_PASSWORD =
   DEV_TEXT_EMBEDDING_URL =
   ```
-* Set the text embedding url to `{HOST}:{PORT}/api/v1/embeddings/create` where HOST and PORT are the values used to run text embedding microservice
-* Navigate back into microservice folder and run the service with
+* Set the text embedding url to `http://{HOST}:{PORT}/api/v1/embeddings/create` where HOST and PORT are the values used to run text embedding microservice
+* Navigate back into the base of the `document_similarity` folder and run the service with
   ```bash
   # linux or mac
-  python -m main start \
+  python -m microservice.main start \
+         -e production \
          -H localhost \
          -p 4200
 
-  #windows
-  python -m main start -H localhost -p 4200
+  # windows
+  python -m microservice.main start -e production -H localhost -p 4200
   ```
 
 You can also use custom host and port.
@@ -144,24 +147,35 @@ You can also use custom host and port.
   ```
 * Navigame back into `entrypoint` folder
 * Run the main service with
+  ```bash
+  # linux or mac
+  python -m microservice.main start \
+         -e production \
+         -H localhost \
+         -p 4500
+
+  # windows
+  python -m microservice.main start -e production -H localhost -p 4500
   ```
-  python -m microservice.main start -H localhost -p 4500
-  ```
-However if you routed other microservices to different hosts/ports, you can provide this values in the following way:
-  ```
-  python -m microservice.main start -H localhost -p 4500
-    -teh {host of the text embedding microservice}
-    -tep {port of the text embedding microservice}
-    -drh {host of the document retrieval microservice}
-    -drp {port of the document retrieval microservice}
-    -dsh {host of the document similarity microservice}
+  However if you routed other microservices to different hosts/ports, you can provide this values in the following way:
+  ```bash
+  # linux or mac
+  python -m microservice.main start -H localhost -p 4500 \
+    -teh {host of the text embedding microservice} \
+    -tep {port of the text embedding microservice} \
+    -drh {host of the document retrieval microservice} \
+    -drp {port of the document retrieval microservice} \
+    -dsh {host of the document similarity microservice} \
     -dsp {port of the document similarity microservice}
+
+  # windows
+  python -m microservice.main start -H localhost -p 4500 -teh {host of the text embedding microservice} -tep {port of the text embedding microservice} -drh {host of the document retrieval microservice} -drp {port of the document retrieval microservice} -dsh {host of the document similarity microservice} -dsp {port of the document similarity microservice}
   ```
 
 ### Usage:
 
 Available endpoints:
-* **GET** `{HOST}/{PORT}/api/v1/retrieval/retrieve` __query_params__ query, m)
+* **GET** `{HOST}/{PORT}/api/v1/retrieval/retrieve` __query_params__ query, m
   * query -> your text query
   * m -> number of results
 
