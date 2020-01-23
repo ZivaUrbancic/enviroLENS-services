@@ -67,19 +67,14 @@ def retrieval():
         raise Exception('Wrong query: do not use quotation marks')
 
     HOST = app.config.get('TEXT_EMBEDDING_HOST', 'localhost')
-    PORT = app.config.get('TEXT_EMBEDDING_PORT', '4000')
+    PORT = app.config.get('TEXT_EMBEDDING_PORT', '4222')
 
     query_params = {'query': query}
 
-
-
-    r = requests.get(f"http://{HOST}:{PORT}/api/v1/embeddings/expand", params=query_params)
-    r = json.loads(r.text)
-    tokens = r.get("expanded_query")
-
-
-
     try:
+        r = requests.get(f"http://{HOST}:{PORT}/api/v1/embeddings/expand", params=query_params)
+        r = json.loads(r.text)
+        tokens = r.get("expanded_query")
         db = config_db.get_db()
         docs = db.db_query(tokens)
         number_all_documents = db.db_nb_docs()

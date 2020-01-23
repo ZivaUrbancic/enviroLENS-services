@@ -22,6 +22,8 @@ class ProductionConfig(Config):
         'database': os.getenv('PROD_PG_DATABASE'),
         'password': os.getenv('PROD_PG_PASSWORD')
     }
+    TEXT_EMBEDDING_HOST = os.getenv('PROD_TEXT_EMBEDDING_HOST')
+    TEXT_EMBEDDING_PORT = os.getenv('PROD_TEXT_EMBEDDING_PORT')
 
 class DevelopmentConfig(Config):
     """Development configuration"""
@@ -33,6 +35,9 @@ class DevelopmentConfig(Config):
         'password': os.getenv('DEV_PG_PASSWORD')
     }
 
+    TEXT_EMBEDDING_HOST = os.getenv('DEV_TEXT_EMBEDDING_HOST')
+    TEXT_EMBEDDING_PORT = os.getenv('DEV_TEXT_EMBEDDING_PORT')
+
 class TestingConfig(Config):
     """Testing configuration"""
     ENV='testing'
@@ -42,3 +47,6 @@ class TestingConfig(Config):
         'database': os.getenv('TEST_PG_DATABASE'),
         'password': os.getenv('TEST_PG_PASSWORD')
      }
+
+    TEXT_EMBEDDING_HOST = os.getenv('TEST_TEXT_EMBEDDING_HOST')
+    TEXT_EMBEDDING_PORT = os.getenv('TEST_TEXT_EMBEDDING_PORT')
