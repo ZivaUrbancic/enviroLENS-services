@@ -161,10 +161,7 @@ def probability_score(tokens, texts, probability_function, m, *args):
     Returns:
         document_probability (list): Tuples of document ids and scores that measure document relavance. Returns n tuples with highest score.
     """
-​
-    #args[0] == top_expansion
-    #args[1] == alpha
-    #args[2] == wv
+
 
     document_probability = {}
     for k, v in texts.items():
@@ -319,7 +316,7 @@ def tfidf_score(tokens, texts, tfidf_function, number_all_texts_in_db, m=10, *ar
     #args[0] == top_expansion
     #args[1] == alpha
     #args[2] == wv
-​
+
     if len(args):
         tokens_together = tokens+args[0]
     else:
@@ -328,17 +325,17 @@ def tfidf_score(tokens, texts, tfidf_function, number_all_texts_in_db, m=10, *ar
     filtered_nb_docs_tokens_appeared = [elt for elt in nb_docs_tokens_appeared if not elt == 0]
     not_appear = []
     appear = []
-​
+
     for i in range(len(nb_docs_tokens_appeared)):
         if nb_docs_tokens_appeared[i] == 0:
             not_appear.append(tokens_together[i])
         else:
             appear.append(tokens_together[i])
     l = number_all_texts_in_db
-​
+
     document_probability = {}
     for k, v in texts.items():
-​
+
         n = len(v)
         probability = 0
         for i in range(len(appear)):
@@ -360,5 +357,5 @@ def tfidf_score(tokens, texts, tfidf_function, number_all_texts_in_db, m=10, *ar
         return [(k, v) for k, v in document_probability.items()]
     else:
         document_probability = top_positives(document_probability,m)
-​
+
         return document_probability

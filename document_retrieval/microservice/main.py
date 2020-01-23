@@ -1,5 +1,5 @@
 import argparse
-from document_retrieval import create_app
+from microservice import create_app
 
 if __name__=='__main__':
     # parse command line arguments

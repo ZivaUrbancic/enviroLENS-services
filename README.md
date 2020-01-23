@@ -43,6 +43,10 @@ Currently you are able to run only one version of the text embedding so that it 
   ```bash
   pip install -r requirements.txt
   ```
+* Run   
+  ```bash
+  python -m nltk.downloader all
+  ```
 * Place a copy of your `word2vec` or `fasttext` word embeddings in the [data/embeddings](text_embeddings/data/embeddings) folder
 * Navigate back to the base of the `text_embeddings` folder and run the service with
   ```bash
@@ -70,11 +74,15 @@ Currently you are able to run only one version of the text embedding so that it 
 * Navigate into `microservice/config` folder
 * Create `.env` file and inside define the following variables:
   ```bash
-  PROD_PG_DATABASE={name_of_the_db}
-  PROD_PG_PASSWORD={password}
+  PROD_PG_DATABASE=
+  PROD_PG_PASSWORD=
+  PROD_TEXT_EMBEDDING_HOST=
+  PROD_TEXT_EMBEDDING_PORT=
 
-  DEV_PG_DATABASE={name_of_the_db}
-  DEV_PG_PASSWORD={pasword}
+  DEV_PG_DATABASE=
+  DEV_PG_PASSWORD=
+  DEV_TEXT_EMBEDDING_HOST=
+  DEV_TEXT_EMBEDDING_PORT=
   ```
 * Navigate to the base of `document_retrieval` folder and run the service with:
   ```bash
