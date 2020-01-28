@@ -1,18 +1,21 @@
+"""
+get_content(url_suffix, print_data=False) is a function that will collect the relevant data for documents of type 'TREATY DECISIONS'.
+"""
+
 import re
 import requests
 import json
-from helperFunctions import get_value_or_none, remove_forbidden_characters, get_list_or_none
+from helper_functions import get_value_or_none, remove_forbidden_characters, get_list_or_none
 
-#: get_content(url, print_data=False) is a function that will grab the relevant data for documents of type 'TREATY DECISIONS'
 
-base_link = r'https://www.ecolex.org'
+BASE_URL = r'https://www.ecolex.org'
 
-def get_content(suffix, print_data = False):
+def get_content(suffix, print_data=False):
     """
-    From the page ( 'ecolex.org'+ suffix ) we grab the relevant data that is (type, document Type, name, reference, number,
+    From the page ( 'ecolex.org'+ suffix ) we grab the relevant metadata (eg. type, document Type, name, reference, number,
     date, source name and source link, status, subject, keywords, treaty name and link, meeting name and link, website, abstract,
     ...).
-    The data is then saved into a dictionary with parameter names as keys and the grabbed result as the value.
+    The data is then saved into a dictionary with parameter names as keys and the grabbed results as the values.
 
     Example:
 
@@ -22,17 +25,22 @@ def get_content(suffix, print_data = False):
     In the end the dictionary is saved into a json file named (data["name"] without forbidden characters and 
     length limited to 100).json
 
-    :suffix:        the suffix of the url from which we are extracting the data. The suffix string is everything that comes 
-                    after the 'ecolex.org'
-    :print_data:    Optional parameter that is by default set to False. In case it is set to True, the function will at the end 
-                    also print what it managed to extract from the page.
+    Parameters:
+        suffix : string
+            the suffix of the url from which we are extracting the data. The suffix string is everything that comes 
+            after the 'ecolex.org'
 
-    returns None
+        print_data : boolean 
+            Optional parameter that is by default set to False. In case it is set to True, the function will at the end 
+            also print what it managed to extract from the page.
+
+    Returns 
+        None
     """
 
     data = dict()
 
-    get_page = requests.get(base_link + suffix)
+    get_page = requests.get(BASE_URL + suffix)
     if get_page.status_code != 200:
         print('Request Denied!', suffix)
         #: in case request is denied, we can't do anything
@@ -63,12 +71,12 @@ def get_content(suffix, print_data = False):
     }
 
     for parameter_name, regex_pattern in string_parameters.items():
-        re_pat = re.compile(regex_pattern)
-        data[parameter_name] = get_value_or_none(re_pat, page_text)
+        pattern = re.compile(regex_pattern)
+        data[parameter_name] = get_value_or_none(pattern, page_text)
 
     for parameter_name, regex_pattern in list_parameters.items():
-        re_pat = re.compile(regex_pattern)
-        data[parameter_name] = get_list_or_none(re_pat, page_text)
+        pattern = re.compile(regex_pattern)
+        data[parameter_name] = get_list_or_none(pattern, page_text)
 
     # Parameters below are special and are done separately: 
 
@@ -98,28 +106,18 @@ def get_content(suffix, print_data = False):
 
     re_abstract = re.compile(r'Abstract<\/dt>\s*<dd>\s*<div.*?>(.*?)<\/div>')
     abstract_text = get_value_or_none(re_abstract, page_text)
-
-    if abstract_text is not None:
-
-        all_tags = re.compile(r'<.*?>')
-        cleaned_text = re.sub(all_tags, '', abstract_text)
-
-        data['abstract'] = cleaned_text
-    else:
-        data['abstract'] = None
+    data['abstract'] = abstract_text
 
     ########################################################################
     ########################################################################
 
     if print_data:
-        for key in data:
-            print(key  + ' : ' + str(data[key]))
+        for key, value in data.items():
+            print(key  + ' : ' + str(value))
     
     with open('treaty decisions\\' + data['name'][:150] + '.json', 'w') as outfile:
-        json.dump(data, outfile)
+        json.dump(data, outfile, indent=2)
 
-if __name__ == '__main__':
-    pass
 
 
 
