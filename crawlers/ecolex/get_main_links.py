@@ -53,7 +53,7 @@ def get_main_links(filterSLO=True):
                 file_links.write(hit + '\n')
 
             if page % 20 == 0:
-                print(page, round(time() - start_time, 6))
+                print("Successfully downloaded {}/{} pages. Time taken:".format(page, pages), round(time() - start_time, 6))
 
 if __name__ == '__main__':
     get_main_links(filterSLO=True)

@@ -102,7 +102,7 @@ def get_content(suffix, print_data=False):
     re_treatyLink = re.compile(r'Treaty<\/dt>\s*<dd>\s*<a href="(.*?)"')
     data['treatyLink'] = get_value_or_none(re_treatyLink, page_text)
     if data['treatyLink'] is not None:
-        data['treatyLink'] = base_link + data['treatyLink']
+        data['treatyLink'] = BASE_URL + data['treatyLink']
 
     ###: ABSTRACT, type : string
     #: In the current implementation all html tags are removed from the text. It might make sense to keep the paragraphs tags.  
