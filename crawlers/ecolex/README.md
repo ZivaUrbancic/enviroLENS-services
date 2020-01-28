@@ -31,7 +31,7 @@ For each document a new **JSON** file will be created. Depending on type of the 
     * jurisprudence  
     * literature
 
-Data from a single document will be saved into a file with name `{url_suffix}.json`.
+Data from a single document will be saved into a file with name `{document_name}.json`.
 
 Inside the JSON file will be a single dictionary having different property names as keys and corresponding values as values. If the property does not exist for a particular document, its value will be shown as `None`.
 

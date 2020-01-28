@@ -14,7 +14,7 @@ from collections import deque
 # PARAMETERS:
 
 GET_SLOVENIA_RELATED_DOCUMENTS = True
-THREADS = 5
+THREADS = 3
 
 class Worker(threading.Thread):
 
@@ -35,7 +35,7 @@ class Worker(threading.Thread):
                 break
 
             # Check to see how we are progressing
-            if queue_length % 100 == 0:
+            if queue_length % 10 == 0:
                 print('{} documents remaining. Time taken: '.format(queue_length), time.time() - self.start_time)
 
             suffix_url = self.queue.popleft()
