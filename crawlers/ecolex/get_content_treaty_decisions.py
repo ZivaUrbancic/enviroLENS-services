@@ -39,6 +39,7 @@ def get_content(suffix, print_data=False):
     """
 
     data = dict()
+    data['URL'] = BASE_URL + suffix
 
     get_page = requests.get(BASE_URL + suffix)
     if get_page.status_code != 200:

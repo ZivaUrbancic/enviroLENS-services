@@ -1,20 +1,23 @@
+"""
+get_content(url, print_data=False) is a function that will grab the relevant data for documents of type 'TREATY'.
+"""
+
 import re
 import requests
 import json
 from bs4 import BeautifulSoup
-from helperFunctions import get_value_or_none, remove_forbidden_characters, get_list_or_none
+from helper_functions import get_value_or_none, remove_forbidden_characters, get_list_or_none
 
 
-#: get_content(url, print_data=False) is a function that will grab the relevant data for documents of type 'TREATY'
 
-base_link = r'https://www.ecolex.org'
+BASE_URL = r'https://www.ecolex.org'
 
 def get_content(suffix, print_data=False):
     """
-    From the page ( 'ecolex.org'+ suffix ) we grab the relevant data that is (type, document Type, name, reference, number,
+    From the page ( 'ecolex.org'+ suffix ) we grab the relevant metadata (eg. type, document Type, name, reference, number,
     date, source name and source link, status, subject, keywords, treaty name and link, meeting name and link, website, abstract,
     ...).
-    The data is then saved into a dictionary with parameter names as keys and the grabbed result as the value.
+    The data is then saved into a dictionary with parameter names as keys and the grabbed results as the values.
 
     Example:
 
@@ -24,18 +27,24 @@ def get_content(suffix, print_data=False):
     In the end the dictionary is saved into a json file named (data["name"] without forbidden characters and 
     length limited to 100).json
 
-    :suffix:        the suffix of the url from which we are extracting the data. The suffix string is everything that comes 
-                    after the 'ecolex.org'
-    :print_data:    Optional parameter that is by default set to False. In case it is set to True, the function will at the end 
-                    also print what it managed to extract from the page.
+    Parameters:
+        suffix : string
+            the suffix of the url from which we are extracting the data. The suffix string is everything that comes 
+            after the 'ecolex.org'
 
-    returns None
+        print_data : boolean 
+            Optional parameter that is by default set to False. In case it is set to True, the function will at the end 
+            also print what it managed to extract from the page.
+
+    Returns 
+        None
     """
 
     data = dict()
+    data['URL'] = BASE_URL + suffix
 
     # We request the page. If the requests was successful we take the content of the page and save it into page_text
-    get_page = requests.get(base_link + suffix)
+    get_page = requests.get(BASE_URL + suffix)
     if get_page.status_code != 200:
         print('Request Denied!', suffix)
     page_text = get_page.text
@@ -73,12 +82,12 @@ def get_content(suffix, print_data=False):
     }
 
     for parameter_name, regex_pattern in string_parameters.items():
-        re_pat = re.compile(regex_pattern)
-        data[parameter_name] = get_value_or_none(re_pat, important_text)
+        re_pattern = re.compile(regex_pattern)
+        data[parameter_name] = get_value_or_none(re_pattern, important_text)
 
     for parameter_name, regex_pattern in list_parameters.items():
-        re_pat = re.compile(regex_pattern)
-        data[parameter_name] = get_list_or_none(re_pat, important_text)
+        re_pattern = re.compile(regex_pattern)
+        data[parameter_name] = get_list_or_none(re_pattern, important_text)
 
 
     data['category'] = 'treaty'
@@ -130,16 +139,12 @@ def get_content(suffix, print_data=False):
     ########################################################################
 
     if print_data:
-        for key in data:
-            print(key  + ' : ' + str(data[key]))
+        for key, value in data.items():
+            print(key  + ' : ' + str(value))
     
     with open('treaty\\' + data['name'][:150] + '.json', 'w') as outfile:
-        json.dump(data, outfile)
+        json.dump(data, outfile, indent=2)
 
-    
-if __name__ == '__main__':
-    tlink = r'/details/treaty/agreement-on-cooperation-on-marine-oil-pollution-preparedness-and-response-in-the-arctic-tre-160032/?type=treaty'
-    get_content(tlink, True)
         
             
 
