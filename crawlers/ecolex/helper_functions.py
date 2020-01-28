@@ -4,10 +4,14 @@ def get_value_or_none(pattern, text):
     """
     Given a regex pattern and a text, the function will return the match or None if no match will be found.
 
-    :Pattern:   regex pattern of type re.compile(...)
-    :text:      type string in which we are looking for a match
+    Parameters:
+        pattern : regex pattern (re.compile(...))
+            pattern that we are looking for in the text
+        text : string
+            the text inside which we are looking for specific patterns
 
-    In case a match is found, it returns it, otherwise it returns None.
+    Returns:
+        In case a match is found, it returns it, otherwise it returns None.
     """
 
     temp = re.findall(pattern, text)
@@ -27,10 +31,14 @@ def get_list_or_none(pattern, text):
     This function will try to find the match and it will also split the string
     if the match is found. 
 
-    :pattern:   regex pattern 
-    :text:      the text in which we are looking for a match
+    Parameters:
+        pattern : regex pattern
+            pattern that we are looking for
+        text : string
+            the text in which we are looking for a match
 
-    returns list of strings or None if no match is found.
+    Returns
+        list of strings or None if no match is found.
     """
 
     temp = re.findall(pattern, text)
@@ -42,12 +50,14 @@ def get_list_or_none(pattern, text):
 
 def remove_forbidden_characters(name):
     """ 
-    A function that will remove all the forbidden characters out of the string. The forbidden characters are the ones
+    A function that will remove all the forbidden characters from the string. The forbidden characters are the ones
     that are not allowed to be used in the names of windows files. Those are  --> r'/*=:<>"|\'.
 
-    :name:     a string
-
-    returns the string name without the forbidden characters. 
+    Parameters:
+        name : string
+    
+    Returns
+        `name` without the forbidden characters
     """
 
     new_name = ""
