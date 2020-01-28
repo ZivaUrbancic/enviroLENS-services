@@ -1,0 +1,12 @@
+jurisprudence/*
+!jurisprudence/.*
+legislation/*
+!legislation/.*
+treaty/*
+!treaty/.*
+treaty decisions/*
+!treaty decisions/.*
+literature/*
+!literature/.*
+
+__pycache__/
