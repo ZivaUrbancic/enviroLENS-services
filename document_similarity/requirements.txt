@@ -25,3 +25,4 @@ Werkzeug==0.15.4
 wincertstore==0.2
 numpy==1.14.5
 matplotlib==3.0.3
+waitress==1.4.2
