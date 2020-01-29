@@ -8,8 +8,6 @@ import json
 from bs4 import BeautifulSoup
 from helper_functions import get_value_or_none, remove_forbidden_characters, get_list_or_none
 
-
-
 BASE_URL = r'https://www.ecolex.org'
 
 def get_content(suffix, print_data=False):
@@ -73,12 +71,10 @@ def get_content(suffix, print_data=False):
         'fullTextLink' : r'Full text.*\s*.*\s*<a href="(.*?)"',
         'websiteLink' : r'Website.*\s*.*\s*<a href="(.*?)"',
         'website' : r'Website.*\s*.*\s*.*\s*.*?>(.*)<',
-
     }
 
     list_parameters = {
         'language' : r'anguage.*\s*<dd>(.*?)<',
-
     }
 
     for parameter_name, regex_pattern in string_parameters.items():
@@ -88,7 +84,6 @@ def get_content(suffix, print_data=False):
     for parameter_name, regex_pattern in list_parameters.items():
         re_pattern = re.compile(regex_pattern)
         data[parameter_name] = get_list_or_none(re_pattern, important_text)
-
 
     data['category'] = 'treaty'
 
@@ -124,7 +119,6 @@ def get_content(suffix, print_data=False):
                 'entryIntoForceDate' : r'Entry into force date">\s*(.*)',
                 'ratificationDate' : r'Ratification date".*\s*(.*)',
                 'simpleSignatureDate' : r'Simple signature date">\s*(.*)',
-                
             }
 
             column_data = dict()
@@ -144,8 +138,3 @@ def get_content(suffix, print_data=False):
     
     with open('treaty\\' + data['name'][:150] + '.json', 'w') as outfile:
         json.dump(data, outfile, indent=2)
-
-        
-            
-
-

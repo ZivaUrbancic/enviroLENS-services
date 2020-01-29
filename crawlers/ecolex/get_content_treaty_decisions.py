@@ -7,7 +7,6 @@ import requests
 import json
 from helper_functions import get_value_or_none, remove_forbidden_characters, get_list_or_none
 
-
 BASE_URL = r'https://www.ecolex.org'
 
 def get_content(suffix, print_data=False):
@@ -118,8 +117,3 @@ def get_content(suffix, print_data=False):
     
     with open('treaty decisions\\' + data['name'][:150] + '.json', 'w') as outfile:
         json.dump(data, outfile, indent=2)
-
-
-
-
-

@@ -71,7 +71,6 @@ def get_content(suffix, print_data=False):
         'fieldOfApplication' : r'Field of application.*\s*<dd>(.*?)<',
         'DOI' : r'DOI.*\s*.*\s*<a href="(.*?)"',
         'journal/series' : r'Journal\/Series.*\s*<dd>\s*(.*\s*\|.*)',
-
     }
 
     list_parameters = {
@@ -80,7 +79,6 @@ def get_content(suffix, print_data=False):
         'country/Territory' : r'Country\/Territory.*\s*<dd>(.*?)<',
         'subject' : r'Subject.*\s*<dd>(.*?)<',
         'geographicalArea' : r'Geographical area.*\s*<dd>(.*?)<',
-
     }
 
     for parameter_name, regex_pattern in string_parameters.items():
@@ -90,7 +88,6 @@ def get_content(suffix, print_data=False):
     for parameter_name, regex_pattern in list_parameters.items():
         re_pat = re.compile(regex_pattern)
         data[parameter_name] = get_list_or_none(re_pat, important_text)
-
 
     data['category'] = 'literature'
 
@@ -144,7 +141,7 @@ def get_content(suffix, print_data=False):
                 'refDate' : r'Date:(.*?)"',
                 'refSourceID' : r'source.*\s*.*?ID:(.*?)<',
                 'refSourceLink' : r'source.*\s*.*?href="(.*?)"',
-                'refSourceName' : r'source.*\s*.*?href.*?>(.*?)<',
+                'refSourceName' : r'source.*\s*.*?href.*?>(.*?)<'
             }
 
             ref_list_parameters = {
@@ -203,7 +200,6 @@ def get_content(suffix, print_data=False):
 
             data['literature_references'].append(single_reference)
 
-
     if print_data:
         for key, value in data.items():
             print(key  + ' : ' + str(value))
@@ -211,11 +207,8 @@ def get_content(suffix, print_data=False):
     with open('literature\\' + data['name'][:150] + '.json', 'w') as outfile:
         json.dump(data, outfile, indent=2)
 
-
 if __name__ == '__main__':
     tlink = r'/details/literature/marine-protected-areas-and-ocean-stewardship-a-legal-perspective-ana-093555/?type=literature&page=15'
     tlink = r'/details/literature/recognition-of-enviromental-services-in-the-icjs-first-award-of-compensation-for-international-environmental-damage-ana-093549/?type=literature&page=15'
     tlink = r'/details/literature/legal-aspects-of-land-purchasesale-disputes-in-indonesia-ana-093552/?type=literature&page=15'
     get_content(tlink, True)
-
-

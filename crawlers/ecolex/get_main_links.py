@@ -26,7 +26,7 @@ def get_main_links(filterSLO=True):
 
     if filterSLO:
         filename = 'main_links_SLO.txt'
-        # NUMBER OF PAGES WHEN WE FILTER FOR SLOVENIA RELEVANT DOCUMENTS
+        # NUMBER OF PAGES WHEN WE FILTER FOR SLOVENIA RELATED DOCUMENTS
         pages = 620
         link = LINK_SLO
     else:
@@ -57,5 +57,3 @@ def get_main_links(filterSLO=True):
 
 if __name__ == '__main__':
     get_main_links(filterSLO=True)
-
-

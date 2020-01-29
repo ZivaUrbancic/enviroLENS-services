@@ -80,7 +80,6 @@ def get_content(suffix, print_data=False):
         re_pat = re.compile(regex_pattern)
         data[parameter_name] = get_list_or_none(re_pat, page_text)
 
-
     data['category'] = 'jurisprudence'
 
     #: NAME, type : string
@@ -111,4 +110,3 @@ def get_content(suffix, print_data=False):
     
     with open('jurisprudence\\' + data['name'][:150] + '.json', 'w') as outfile:
         json.dump(data, outfile, indent=2)
-

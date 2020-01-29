@@ -183,7 +183,3 @@ def get_content(suffix, print_data=False):
     
     with open('legislation\\' + data['name'][:150] + '.json', 'w') as outfile:
         json.dump(data, outfile, indent=2)
-
-
-
-
