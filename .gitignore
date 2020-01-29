@@ -4,3 +4,17 @@
 *.env
 
 scripts/shunit2-2.1.6
+
+crawlers/ecolex/jurisprudence/*
+crawlers/ecolex/!jurisprudence/.*
+crawlers/ecolex/legislation/*
+crawlers/ecolex/!legislation/.*
+crawlers/ecolex/treaty/*
+crawlers/ecolex/!treaty/.*
+crawlers/ecolex/treaty decisions/*
+crawlers/ecolex/!treaty decisions/.*
+crawlers/ecolex/literature/*
+crawlers/ecolex/!literature/.*
+
+**__pycache__/
+**.__pycache__/
