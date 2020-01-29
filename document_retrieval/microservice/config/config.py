@@ -3,10 +3,9 @@
 # file and creates the configuration objects -
 # one for each environment.
 
+import os
 from dotenv import load_dotenv
 load_dotenv()
-
-import os
 
 class Config(object):
     DEBUG = False
@@ -15,24 +14,19 @@ class Config(object):
         'origins': os.getenv('CORS_ORIGINS').split(',') if os.getenv('CORS_ORIGINS') else None
     }
 
-
 class ProductionConfig(Config):
     """Production configuration"""
-
-
-    # done
     ENV='production'
     SECRET_KEY=os.getenv('PROD_SECRET_KEY')
     DATABASE={
         'database': os.getenv('PROD_PG_DATABASE'),
         'password': os.getenv('PROD_PG_PASSWORD')
     }
-
+    TEXT_EMBEDDING_HOST = os.getenv('PROD_TEXT_EMBEDDING_HOST')
+    TEXT_EMBEDDING_PORT = os.getenv('PROD_TEXT_EMBEDDING_PORT')
 
 class DevelopmentConfig(Config):
     """Development configuration"""
-
-    # done
     ENV='development'
     DEBUG = True
     SECRET_KEY=os.getenv('DEV_SECRET_KEY')
@@ -41,11 +35,11 @@ class DevelopmentConfig(Config):
         'password': os.getenv('DEV_PG_PASSWORD')
     }
 
+    TEXT_EMBEDDING_HOST = os.getenv('DEV_TEXT_EMBEDDING_HOST')
+    TEXT_EMBEDDING_PORT = os.getenv('DEV_TEXT_EMBEDDING_PORT')
 
 class TestingConfig(Config):
     """Testing configuration"""
-
-    # done
     ENV='testing'
     TESTING = True
     SECRET_KEY=os.getenv('TEST_SECRET_KEY')
@@ -53,3 +47,6 @@ class TestingConfig(Config):
         'database': os.getenv('TEST_PG_DATABASE'),
         'password': os.getenv('TEST_PG_PASSWORD')
      }
+
+    TEXT_EMBEDDING_HOST = os.getenv('TEST_TEXT_EMBEDDING_HOST')
+    TEXT_EMBEDDING_PORT = os.getenv('TEST_TEXT_EMBEDDING_PORT')

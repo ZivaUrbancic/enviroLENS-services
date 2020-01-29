@@ -1,22 +1,18 @@
 import argparse
-from documentRetrieval import create_app
+from microservice import create_app
 
 if __name__=='__main__':
-    print('test here')
-       
     # parse command line arguments
     argparser = argparse.ArgumentParser(description="Document retrieval microservice")
     subparsers = argparser.add_subparsers()
 
     argparser_production = subparsers.add_parser('start', help="Runs the service in the production environment")
 
-    # the host and port of the documentRetrieval microservice
+    # the host and port of the document_retrieval microservice
     argparser_production.add_argument('-H', '--host', type=str, default='127.0.0.1', help="The host of the microservice")
     argparser_production.add_argument('-p', '--port', type=str, default='4100', help="The port of the microservice")
     argparser_production.add_argument('-e', '--env', type=str, default='production', help="The microservice environment")
 
-    # to je to?
-    
     argparser_production.set_defaults(command='start')
 
     # parse the arguments and call whatever function was selected

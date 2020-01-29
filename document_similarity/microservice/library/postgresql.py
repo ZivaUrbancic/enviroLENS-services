@@ -39,7 +39,6 @@ class PostgresQL:
 
         except (Exception, psycopg2.Error) as error:
             # notify the user about the error
-            print ("Error while connecting to PostgreSQL", error)
             self.cursor = None
 
 
@@ -48,7 +47,6 @@ class PostgresQL:
         if self.connection:
             self.cursor.close()
             self.connection.close()
-            print("PostgresQL connection ended")
 
 
     def execute(self, statement):
@@ -116,7 +114,6 @@ class PostgresQL:
     def commit(self):
         if self.connection:
             self.connection.commit()
-            print("The changes have been commited.")
 
 
     # TODO: add project specific routes

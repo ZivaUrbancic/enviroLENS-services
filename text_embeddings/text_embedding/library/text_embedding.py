@@ -6,23 +6,14 @@
 #    common information with the calculated projection
 #    matrix (link: https://openreview.net/pdf?id=SyK00v5xx)
 
-# for directory creation
 import os
-
-# for model loading
 import pickle
-
-# used for model loading and processing text
+import operator
 from gensim.models import KeyedVectors, FastText
 from gensim.parsing.preprocessing import preprocess_string, strip_punctuation
-from langdetect import detect
-
-# used for calculating the projection matrix
 from sklearn.decomposition import PCA
-
-# utility libraries
 import numpy as np
-import operator
+from langdetect import detect
 
 from ..library import query_expansion
 
@@ -77,7 +68,7 @@ class TextEmbedding:
             raise Exception("TextEmbedding.__load_model: Model '{}' not supported (must be 'word2vec' or 'fasttext').".format(model_format) +
                             " Cannot load word embedding model.")
 
-        
+
         # calculate the default projection matrix
         v = np.zeros(self.__embedding.vector_size, dtype=np.float32)
         self.__projection_matrix = np.outer(v, v)
@@ -107,7 +98,6 @@ class TextEmbedding:
 
         # check if the file exists
         if not os.path.isfile(fname):
-            print("No stopword list for language {}".format(self.__language))
             return []
 
         # retrieve stopwords based on the language
@@ -200,11 +190,11 @@ class TextEmbedding:
 
     def expand_query(self, query, model_format):
         """
-        Uses the embedding model to expand users query. 
+        Uses the embedding model to expand users query.
 
         Args:
             query : users query
-        
+
         Returns:
             list of strings: most similar tokens(candidates) to the given query
         """

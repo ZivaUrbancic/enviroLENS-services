@@ -1,0 +1,16 @@
+# Each line is a file pattern followed by one or more owners.
+
+# The whole enviroLENS team is the owner of the
+* @JozefStefanInstitute/envirolens
+
+# owner of the document retrieval subproject
+/document_retrieval/ @SaraBrezec
+
+# owner of the document similarity subproject
+/document_similarity/ @ZivaUrbancic
+
+# owner of the entrypoint subproject
+/entrypoint/ @SamoKralj
+
+# owner of the text embeddings subproject
+/text_embeddings/ @ErikNovak

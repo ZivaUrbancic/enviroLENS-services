@@ -1,101 +1,197 @@
-# TEXT EMBEDDING MICROSERVICE
+# eLENS Miner System
 
-Main repository for text embedding microservice. Inside this repository you can find:
-* document_retrieval microservice
-* document_similarity microservice
-* text_embeddings microservice
-* the main microservice that will connect all of the above components
+[![License](https://img.shields.io/badge/License-BSD%202--Clause-green.svg)](https://opensource.org/licenses/BSD-2-Clause)
+[![Build Status](https://travis-ci.org/JozefStefanInstitute/eLENS-miner-system.svg?branch=master)](https://travis-ci.org/JozefStefanInstitute/eLENS-miner-system)
+[![Python 3.6](https://img.shields.io/badge/python-3.6+-green.svg)](https://www.python.org/downloads/release/python-360/)
+![Platform](https://img.shields.io/badge/platform-linux-green.svg)
 
-## HOW TO SETUP:
+The eLENS miner system retrieves, processes and analyzes legal documents and maps them to specific geographical areas.
 
-You will run each service separately. You can then use each service for themself or use the `entrypoint` microservice that connects all of the mentioned microservices. Here you will find instructions how to set up each of them.
+The system follows the microservice architecture and is written in Python 3. It consists of the following microservices:
 
-You may want to create separate virtual environments for each of the microservices or you can create one for all of them. It is advisable to use virtual environments if you are developing multiple projects with Python since the dependencies can clash between eachother. (Suppose one project only supports numpy < 1.0 and the other needs numpy=1.5).
+* [Document Retrieval.](document_retrieval) The service responsible for providing documents based on the user's query. It leverages [query expansion](https://en.wikipedia.org/wiki/Query_expansion) to improve the query results.
 
-To create a virtual environment navigate to the desired directory (usually the main folder of the repository) and write
-`python -m venv venv`
-To activate this virtual environment navigate into venv/Scripts and then execute `activate`.
-To deactivate a virtual environment execute `deactivate`.
+* [Document Similarity.](document_similarity) This service calculates the semantic similarity of the documents and can provide a list of most similar documents to a user selected one. Here, we integrate state-of-the-art methods using word and document embeddings to capture the semantic meaning of the documents and use it to compare the documents.
+
+* [Text Embeddings.](text_embeddings) The service is a collection of text embedding methods. For a given text it generates the text embedding which is then used in the previous microservices.
+
+* [Entrypoint.](entrypoint) This service is the interface and connects the previous microservices together. It is the entrypoint for the users to access the services.
+
+## Prerequisites
+
+You may want to create separate virtual environments for each of the microservices or you can create one for all of them. We advise to use virtual environments if you are developing multiple projects with Python, due to clashing of dependencies between projects. (Suppose one project only supports numpy < 1.0 and the other needs numpy=1.5).
+
+To create a virtual environment navigate to the desired directory (usually the main folder of the project) and write
+```bash
+python -m venv venv
+```
+To activate this virtual environment navigate into venv/Scripts and then execute `activate`. To deactivate a virtual environment execute `deactivate`.
 
 You can see that your virtual environment is being used if you see __(venv)__ before the command line.
 
-### DOCUMENT RETRIEVAL MICROSERVICE
+Each microservice must be run separately. Each service can be used for themself or one can employ the `entrypoint` microservice that connects all of the microservices together.
 
-* Activate virtual environment if you wish to do so
-* Navigate into `document_retrieval` folder
-* run `pip install -r requirements.txt`
-* Navigate into documentRetrieval/config folder
-* Create `.env` file and inside define the following variables:
-```
-PROD_PG_DATABASE={name_of_the_db}
-PROD_PG_PASSWORD={password}
+What follows is a short description of how to run each microservice. A more detailed description of the microservice can be found in their designated folders.
 
-DEV_PG_DATABASE={name_of_the_db}
-DEV_PG_PASSWORD={pasword}
-```
-* Navigate into `documentRetrieval` folder and run the service with:
-`python -m main start -H localhost -p 4100`
-If you want you can also run the service on custom host and port.
-
-### TEXT EMBEDDING
+### Text Embeddings Microservice
 
 Currently you are able to run only one version of the text embedding so that it will be connected to the main component. But later you will be able to connect more.
 
 * Activate virtual environment if you wish to do so
 * Navigate into `text_embeddings` folder
-* run `pip install -r requirements.txt`
-* Place a copy of your Word2Vec or fasttext word embeddings in data/embeddings folder
-* run `python -m text_embedding.main start -H localhost -p 4001 -mp (path to the model) -ml (language of the model)`
+* Execute
+  ```bash
+  pip install -r requirements.txt
+  ```
+* Run   
+  ```bash
+  python -m nltk.downloader all
+  ```
+* Place a copy of your `word2vec` or `fasttext` word embeddings in the [data/embeddings](text_embeddings/data/embeddings) folder
+* Navigate back to the base of the `text_embeddings` folder and run the service with
+  ```bash
+  # linux or mac
+  python -m text_embedding.main start \
+         -e production \
+         -H localhost \
+         -p 4001 \
+         -mp (path to the model) \
+         -ml (language of the model)
 
-### DOCUMENT SIMILARITY MICROSERVICE
+  # windows
+  python -m text_embedding.main start -e production -H localhost -p 4001 -mp (path to the model) -ml (language of the model)
+  ```
+
+
+### Document Retrieval Microservice
+
+* Activate virtual environment if you wish to do so
+* Navigate into `document_retrieval` folder
+* Execute
+  ```bash
+  pip install -r requirements.txt
+  ```
+* Navigate into `microservice/config` folder
+* Create `.env` file and inside define the following variables:
+  ```bash
+  PROD_PG_DATABASE=
+  PROD_PG_PASSWORD=
+  PROD_TEXT_EMBEDDING_HOST=
+  PROD_TEXT_EMBEDDING_PORT=
+
+  DEV_PG_DATABASE=
+  DEV_PG_PASSWORD=
+  DEV_TEXT_EMBEDDING_HOST=
+  DEV_TEXT_EMBEDDING_PORT=
+  ```
+* Navigate to the base of `document_retrieval` folder and run the service with:
+  ```bash
+  # linux or mac
+  python -m microservice.main start \
+         -e production \
+         -H localhost \
+         -p 4100
+
+  # windows
+  python -m microservice.main start -e production -H localhost -p 4100
+  ```
+
+If you want you can also run the service on custom host and port.
+
+
+### Document Similarity Microservice
 
 * Activate virtual environment if you wish to do so
 * Navigate into `document_similarity` folder
-* run `pip install -r requirements.txt`
+* Execute
+  ```
+  pip install -r requirements.txt
+  ```
 * Navigate into microservice/config folder
 * Create a `.env` file with the following variables
-```
-PROD_DATABASE_NAME =
-PROD_DATABASE_USER =
-PROD_DATABASE_PASSWORD =
-PROD_TEXT_EMBEDDING_URL =
+  ```
+  PROD_DATABASE_NAME =
+  PROD_DATABASE_USER =
+  PROD_DATABASE_PASSWORD =
+  PROD_TEXT_EMBEDDING_URL =
 
-DEV_DATABASE_NAME =
-DEV_DATABASE_USER =
-DEV_DATABASE_PASSWORD =
-DEV_TEXT_EMBEDDING_URL =
-```
-* Set the text embedding url to {HOST}:{PORT}/api/v1/embeddings/create where HOST and PORT are the values used to run text embedding microservice
-* Navigate back into microservice folder and run the service with
-`python -m main start -H localhost -p 4200`
+  DEV_DATABASE_NAME =
+  DEV_DATABASE_USER =
+  DEV_DATABASE_PASSWORD =
+  DEV_TEXT_EMBEDDING_URL =
+  ```
+* Set the text embedding url to `http://{HOST}:{PORT}/api/v1/embeddings/create` where HOST and PORT are the values used to run text embedding microservice
+* Navigate back into the base of the `document_similarity` folder and run the service with
+  ```bash
+  # linux or mac
+  python -m microservice.main start \
+         -e production \
+         -H localhost \
+         -p 4200
+
+  # windows
+  python -m microservice.main start -e production -H localhost -p 4200
+  ```
+
 You can also use custom host and port.
 
-### MAIN COMPONENT
+### Entrypoint
 
 * Activate virtual environment if you wish to do so
 * Navigate into `entrypoint` folder
-* Run `pip install -r requirements.txt`
-* Run the main service with
-```
-python -m microservice.main start -H localhost -p 4500
-```
-However if you routed other microservices to different hosts/ports, you can provide this values in the following way:
-```
-python -m microservice.main start -H localhost -p 4500
-  -teh {host of the text embedding microservice}
-  -tep {port of the text embedding microservice}
-  -drh {host of the document retrieval microservice}
-  -drp {port of the document retrieval microservice}
-  -dsh {host of the document similarity microservice}
-  -dsp {port of the document similarity microservice}
-```
+* Run
+  ```
+  pip install -r requirements.txt
+  ```
+* Navigate into `microservice/config` folder
+* Create `.env` file with contents
+  ```
+  DEV_DATABASE_USER =
+  DEV_DATABASE_HOST =
+  DEV_DATABASE_PORT =
+  DEV_DATABASE_PASSWORD =
+  DEV_DATABASE_NAME =
 
-## Usage:
+  PROD_DATABASE_USER =
+  PROD_DATABASE_HOST =
+  PROD_DATABASE_PORT =
+  PROD_DATABASE_PASSWORD =
+  PROD_DATABASE_NAME =
+  ```
+* Navigame back into `entrypoint` folder
+* Run the main service with
+  ```bash
+  # linux or mac
+  python -m microservice.main start \
+         -e production \
+         -H localhost \
+         -p 4500
+
+  # windows
+  python -m microservice.main start -e production -H localhost -p 4500
+  ```
+  However if you routed other microservices to different hosts/ports, you can provide this values in the following way:
+  ```bash
+  # linux or mac
+  python -m microservice.main start -H localhost -p 4500 \
+    -teh {host of the text embedding microservice} \
+    -tep {port of the text embedding microservice} \
+    -drh {host of the document retrieval microservice} \
+    -drp {port of the document retrieval microservice} \
+    -dsh {host of the document similarity microservice} \
+    -dsp {port of the document similarity microservice}
+
+  # windows
+  python -m microservice.main start -H localhost -p 4500 -teh {host of the text embedding microservice} -tep {port of the text embedding microservice} -drh {host of the document retrieval microservice} -drp {port of the document retrieval microservice} -dsh {host of the document similarity microservice} -dsp {port of the document similarity microservice}
+  ```
+
+### Usage:
 
 Available endpoints:
 * **GET** `{HOST}/{PORT}/api/v1/retrieval/retrieve` __query_params__ query, m
   * query -> your text query
   * m -> number of results
+
   #### Example request:
   ```{BASE_URL}/api/v1/retrieval/retrieve?query=deforestation&m=10```
   You will receive top 10 documents similar to query "deforestation"
@@ -126,3 +222,11 @@ Available endpoints:
   #### Example request:
   ```{BASE_URL}/api/v1/db/document```
   With the **POST** request at this endpoint along with the json given above, you will receive documents data for documents ids given in the json.
+
+
+# Acknowledgments
+This work is developed by [AILab](http://ailab.ijs.si/) at [Jozef Stefan Institute](https://www.ijs.si/).
+
+The work is supported by the [EnviroLENS project](https://envirolens.eu/),
+a project that demonstrates and promotes the use of Earth observation as direct evidence for environmental law enforcement,
+including in a court of law and in related contractual negotiations.

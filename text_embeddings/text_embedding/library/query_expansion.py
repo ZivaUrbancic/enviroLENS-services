@@ -1,12 +1,13 @@
+import string
 from gensim.models import KeyedVectors, FastText
 import numpy as np
 import nltk
-from nltk.corpus   import stopwords
+from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-import string
 from nltk.corpus import wordnet
-from nltk.stem import WordNetLemmatizer 
-lemmatizer = WordNetLemmatizer() 
+from nltk.stem import WordNetLemmatizer
+lemmatizer = WordNetLemmatizer()
+
 
 def get_wordnet_pos(word):
     # code from https://www.machinelearningplus.com/nlp/lemmatization-examples-python/
@@ -24,12 +25,11 @@ def get_wordnet_pos(word):
     return wnl_tag
 
 
-
 def tokenized_query(text, stopwords):
     """Tokenizes, lowers words and removes stopwords from the document.
         Args:
             text (str): Text we want to tokenize.
-            stopwords (list): List of words we want to remove from the tokenized text. 
+            stopwords (list): List of words we want to remove from the tokenized text.
         Returns:
             filtered_tokens (list): List of low case tokens wich does not contain stop words.
         """
@@ -38,9 +38,10 @@ def tokenized_query(text, stopwords):
     filtered = [lemmatizer.lemmatize(w.lower(), get_wordnet_pos(w.lower())) for w in tokens if not w in stopwords]
     return filtered
 
-def extend_tokens(token_list, model):
+
+def extend_tokens(token_list, model, model_format):
     """Extends token list by summing consecutive vector pairs.
-        Args: 
+        Args:
             token_list (list): List of tokens we want to extend.
         Returns:
             extension (list): List of extensions.
@@ -64,9 +65,10 @@ def extend_tokens(token_list, model):
     extention = list(extention)
     return extention
 
+
 def candidate_expansion_terms(tokens, k, model, model_format):
     """Gets the candidates for expansion based on kNN.
-        Args: 
+        Args:
             tokens (list): List of tokens we want to expand.
             k (int): Number of nearest neighbours.
             wv (Word2VecKeyedVectors): Word embeddings.
@@ -98,9 +100,10 @@ def candidate_expansion_terms(tokens, k, model, model_format):
     candidates = list(candidates)
     return candidates
 
+
 def similarity(token, token_list, model, model_format ):
     """Calculates the similarity between token and list of tokens.
-        Args: 
+        Args:
             token (str): String for wich we are calculating similarity.
             token_list (list): List of tokens to wich we are calculating similarity of token.
             wv (Word2VecKeyedVectors): Word embeddings.
@@ -129,7 +132,7 @@ def similarity(token, token_list, model, model_format ):
 
 def get_similarity_pairs(tokens, candidates, wv, model_format):
     """Calculates similarity to tokens for list of candidates.
-        Args: 
+        Args:
             tokens (list): List of tokens to wich similarity is calculated
             candidates (list): List of tokens for wich similarity is calculated.
             wv (Word2VecKeyedVectors): Word embeddings.
@@ -143,22 +146,22 @@ def get_similarity_pairs(tokens, candidates, wv, model_format):
     # return the list of expansion terms with their similarities
     return similarity_pairs
 
-# updated function
+
 def pre_retrieval_KNN(query, k, wv, n, stop_words, model_format, extension=False):
-    """Find n most similar tokens(candidates) to the given query, optional: 
+    """Find n most similar tokens(candidates) to the given query, optional:
         query can be extended, then the candidates are found for extended query.
-        Args: 
+        Args:
             query (string): User query we want to expand.
             k (int): Number of nearest neighbours.
             wv (Word2VecKeyedVectors): Word embeddings.
             n (int): Number of candidates (with the highest simiarity) that is returned.
-            stopwords (list): List of words we want to remove from the tokenized text. 
+            stopwords (list): List of words we want to remove from the tokenized text.
         Returns:
             candidate_list (list): List of n candidates with the highest similarity to query tokens.
         """
     tokens = tokenized_query(query, stop_words)
     if extension:
-        extended = extend_tokens(tokens, wv)
+        extended = extend_tokens(tokens, wv, model_format)
         candidates = candidate_expansion_terms(tokens+extended, k, wv, model_format)
         candidates_sim = get_similarity_pairs(tokens+extended, candidates, wv, model_format)
     else:

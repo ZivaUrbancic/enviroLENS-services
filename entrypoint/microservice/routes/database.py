@@ -2,14 +2,11 @@
 # Routes related with interaction with the database
 
 import os
-
 from flask import (
     Blueprint, flash, g, request, jsonify, current_app as app, render_template, url_for,
     Response
 )
 from werkzeug.exceptions import abort
-
-# from ..library import postgresql
 from ..config import config_db
 
 
@@ -32,6 +29,7 @@ def dated_url_for(endpoint, **values):
             values['q'] = int(os.stat(file_path).st_mtime)
     return url_for(endpoint, **values)
 
+
 # TODO: setup the index route
 @bp.route('/', methods=['GET'])
 def index():
@@ -39,14 +37,13 @@ def index():
     # TODO: get appropriate app configurations
     HOST = app.config['HOST'] if 'HOST' in app.config else '127.0.0.1'
     PORT = app.config['PORT'] if 'PORT' in app.config else '5000'
-
     result = {
         "host": HOST,
         "port": PORT
     }
-
     # render the html file
     return render_template('index.html', result=result)
+
 
 @bp.route('/document', methods=['POST'])
 def get_documents():
@@ -58,14 +55,13 @@ def get_documents():
         "document_ids" : [list of document ids]
     }
 
-    The function returns a JSON response with the data of the documents. It is limited to 
+    The function returns a JSON response with the data of the documents. It is limited to
     output maximum of 10 documents.
     """
 
     # connect to the database:
-    DB = config_db.get_db()
-
-    if DB.cursor is None:
+    db = config_db.get_db()
+    if db.cursor is None:
         return jsonify({'Error' : 'The connection could not be established'})
 
     document_ids = request.json.get('document_ids', None)
@@ -76,14 +72,14 @@ def get_documents():
             {'Message' : 'You need to provide json with "document_ids" : [list of documents ids] value'}
         )
 
-    statement = """SELECT * FROM documents WHERE document_id IN %s;"""
-    DB.cursor.execute(statement, (tuple(document_ids), )) 
+    statement = "SELECT * FROM documents WHERE document_id IN %s;"
+    db.cursor.execute(statement, (tuple(document_ids), ))
 
     # Enumerating the fields
-    num_fields = len(DB.cursor.description)
-    field_names = [i[0] for i in DB.cursor.description]
-    documents = [{ field_names[i]: row[i] for i in range(num_fields) } for row in DB.cursor.fetchall()]
-    
+    num_fields = len(db.cursor.description)
+    field_names = [i[0] for i in db.cursor.description]
+    documents = [{ field_names[i]: row[i] for i in range(num_fields) } for row in db.cursor.fetchall()]
+
     # Cleaning the output:
     # - removing fulltext field
     # - slicing down the fulltext_cleaned field to 500 chars
@@ -92,7 +88,5 @@ def get_documents():
         if documents[i]['fulltext_cleaned'] is not None:
             documents[i]['fulltext_cleaned'] = documents[i]['fulltext_cleaned'][:500]
         documents[i].pop('fulltext')
-
-    DB.close_db()
-
+    config_db.close_db()
     return jsonify(documents[:10])
