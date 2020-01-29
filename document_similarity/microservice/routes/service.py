@@ -108,9 +108,14 @@ def update_similarities():
     # TODO: add language_model parameter
     try:
         # Call the text-embedding-service and produce the embedding
-        params = {'text': document_text, 'language': 'en'}
+        params = {'text': document_text, 'language': 'EN'}
         service_response = (requests.post(url=text_embedding_url, json=params)).json()
-        new_embedding = service_response['embedding']
+        if 'embedding' in service_response:
+            new_embedding = service_response['embedding']
+        elif 'error' in service_response:
+            raise Exception(str(service_response['error']))
+        else:
+            raise Exception("Something went terribly wrong.")
     except Exception as e:
         return abort(400, "Could not retrieve the embedding from the text embedding service. " + str(e))
 
