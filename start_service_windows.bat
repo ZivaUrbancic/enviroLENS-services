@@ -5,7 +5,6 @@
 :: Activating document retrieval microservice
 start cmd /k "venv\Scripts\activate.bat && cd document_retrieval && python -m microservice.main start -H localhost -p 4100"
 
-<<<<<<< Updated upstream
 :: Activating document similarity microservice
 start cmd /k "venv\Scripts\activate.bat && cd document_similarity && python -m microservice.main start -H localhost -p 4200"
 
