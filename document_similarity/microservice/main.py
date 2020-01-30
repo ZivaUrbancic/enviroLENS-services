@@ -1,4 +1,5 @@
 import argparse
+from waitress import serve
 from microservice import create_app
 
 if __name__=='__main__':
@@ -31,7 +32,10 @@ if __name__=='__main__':
         # create the application
         app = create_app(args=arguments)
         # run the application
-        app.run(host=arguments["host"], port=arguments["port"])
+        if args.env == 'production':
+            serve(app, host=arguments["host"], port=arguments["port"])
+        elif args.env == 'development':
+            app.run(host=arguments["host"], port=arguments["port"])
 
     else:
         raise Exception('Argument command is unknown: {}'.format(args.command))

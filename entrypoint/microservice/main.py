@@ -1,4 +1,5 @@
 import argparse
+from waitress import serve
 from microservice import create_app
 
 if __name__=='__main__':
@@ -38,12 +39,14 @@ if __name__=='__main__':
             "retrieval_port" : args.retrieval_port,
             "similarity_host" : args.similarity_host,
             "similarity_port" : args.similarity_port,
-            # TODO: add additional arguments
         }
         # create the application
         app = create_app(args=arguments)
         # run the application
-        app.run(host=arguments["host"], port=arguments["port"], debug=True)
+        if args.env == 'production':
+            serve(app, host=arguments["host"], port=arguments["port"])
+        elif args.env == 'development':
+            app.run(host=arguments["host"], port=arguments["port"], debug=True)
 
     else:
         raise Exception('Argument command is unknown: {}'.format(args.command))
