@@ -53,10 +53,11 @@ def update_similarities():
     pg = config_db.get_db()
 
 
-    # get document id as the parameter
+    # get document id (and optionally language) as the parameter
     if request.method == 'GET':
         try:
             document_id = request.args.get('document_id', default=None, type=int)
+            language = request.args.get('language', default='EN', type=str)
         except Exception as e:
             return abort(401, "Could not retrieve parameter 'document_id', method = 'GET'. " + str(e))
     elif request.method == 'POST':
@@ -105,10 +106,9 @@ def update_similarities():
 
     # Construct the new document's embedding
 
-    # TODO: add language_model parameter
     try:
         # Call the text-embedding-service and produce the embedding
-        params = {'text': document_text, 'language': 'EN'}
+        params = {'text': document_text, 'language': language}
         service_response = (requests.post(url=text_embedding_url, json=params)).json()
         if 'embedding' in service_response:
             new_embedding = service_response['embedding']
