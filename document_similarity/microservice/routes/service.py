@@ -86,9 +86,10 @@ def update_similarities():
 
     try:
         # Retrieve the full text, the abstract and the title of the document.
-        retrieved = pg.retrieve('documents',
+        retrieved = pg.retrieve(name_of_table='documents',
                                 names_of_columns='fulltext_cleaned, abstract, title',
-                                constraints="""WHERE document_id={}""".format(document_id))
+                                constraints="WHERE document_id=%s",
+                                user_input=[document_id])
 
         # Take the first that is not empty or None (priorities: full text > abstract > title).
         document_text = retrieved[0]['fulltext_cleaned']
@@ -135,8 +136,10 @@ def update_similarities():
 
     try:
         # Insert the new embedding (indexed by document_id) into 'document_embeddings' table
-        values = """VALUES ({}, ARRAY{})""".format(document_id, new_embedding)
-        pg.insert('document_embeddings', values)
+        values = "VALUES (%s, %s)"
+        pg.insert(name_of_table='document_embeddings',
+                  values=values,
+                  user_input=[document_id, new_embedding])
     except Exception as e:
         return abort(400, "Could not add the new embedding into the table 'document_embeddings'. " + str(e))
 
@@ -147,8 +150,10 @@ def update_similarities():
         for i, j, sim in additional_similarities:
             # Insert the similarity score 'sim' between document with id 'i' and document with id 'j' into
             # 'similarities' table
-            values = """VALUES ({}, {}, {})""".format(i, j, sim)
-            pg.insert('similarities', values)
+            values = "VALUES (%s, %s, %s)"
+            pg.insert(name_of_table='similarities',
+                      values=values,
+                      user_input=[i, j, sim])
     except Exception as e:
         return abort(400, "Could not add the additional similarities into the table 'similarities'. " + str(e))
 
@@ -192,19 +197,22 @@ def get_similarities():
         # sort them by the similarity column, descending
 
         # SQL constraints:
-        constraints = """WHERE document1_id = {}
-            ORDER BY similarity_score DESC""".format(doc_id)
+        constraints = """
+            WHERE document1_id = %s
+            ORDER BY similarity_score DESC
+        """
 
         # Retrieving from postgres using constraints
-        similarity_list=pg.retrieve('similarities',
-                                    names_of_columns='document2_id, similarity_score',
-                                    constraints=constraints)
+        similarity_list = pg.retrieve(name_of_table='similarities',
+                                      names_of_columns='document2_id, similarity_score',
+                                      constraints=constraints,
+                                      user_input=[doc_id])
 
         # Taking only indices of k most similar documents
         result_indices = [entry['document2_id'] for entry in similarity_list[:k]]
         result = [(entry['document2_id'], entry['similarity_score']) for entry in similarity_list[:k]]
         finish = True
-        pg.disconnect()
+        # pg.disconnect()
     except Exception as e:
         # TODO: log exception
         # something went wrong with the request

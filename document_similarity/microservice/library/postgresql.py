@@ -49,11 +49,12 @@ class PostgresQL:
             self.connection.close()
 
 
-    def execute(self, statement):
+    def execute(self, statement, params=None):
         """Execute the provided statement
 
         Args:
             statement (str): The postgresql statement to be executed.
+            params (tuple): values to be formatted into the statement. (Default = None)
 
         Returns:
             list: a list of tuples containing the postgresql records.
@@ -62,7 +63,10 @@ class PostgresQL:
         if self.cursor is None:
             raise Exception("The connection is not established")
         else:
-            self.cursor.execute(statement)
+            if params is None:
+                self.cursor.execute(statement)
+            else:
+                self.cursor.execute(statement, params)
             if self.cursor.description is not None:
                 num_fields = len(self.cursor.description)
                 field_names = [i[0] for i in self.cursor.description]
@@ -70,45 +74,54 @@ class PostgresQL:
             else:
                 return None
 
-    def retrieve(self, name_of_table, names_of_columns='*', constraints=None):
+    def retrieve(self, name_of_table, names_of_columns='*', constraints=None, user_input=None):
         """Returns values of columns with names in 'names_of_columns' that satisfy given constraints.
 
         Args:
             name_of_table (string): Name of the table we want to retrieve from.
             names_of_columns (string): List of names of columns we want to retrieve from, separated by a comma.
                 (Default='*')
-            constraints (string): Constraints on our query, written in SQL. (Default = None)
+            constraints (string): SQL statement describing the constraints on our query. Example:
+                '''ORDERED BY {} DESC'''
+                (Default = None)
+            user_input (tuple(miscellaneous)): values to be formatted into the statement. It has to be None when
+                'constraints' is None. (Default: None)
 
         Returns:
             (json object): json object with retrieved data.
-            """
+        """
 
 
         if constraints is None:
             statement = """
             SELECT {} FROM {};
-            """.format(names_of_columns, name_of_table)
+            """
+            print(statement)
+            return self.execute(statement.format(names_of_columns, name_of_table))
         else:
             statement = """
             SELECT {} FROM {}
-            {};
-            """.format(names_of_columns, name_of_table, constraints)
-        return self.execute(statement)
+            """ + constraints + ";"
+            print(statement)
+            if user_input is None:
+                return self.execute(statement.format(names_of_columns, name_of_table))
+            else:
+                return self.execute(statement.format(names_of_columns, name_of_table), (*user_input,))
 
-    def insert(self, name_of_table, values):
+    def insert(self, name_of_table, values, user_input):
         """Inserts values to a table.
 
         Args:
             name_of_table (string): Name of the table we want to insert into.
             values (string): SQL code describing values to insert. Example:
-                        '''VALUES (variable1, variable2, ARRAY variable3)'''
-            """
+                '''VALUES ({}, {}, ARRAY {})'''
+            user_input (list(miscellaneous)): values to be formatted into the statement.
+        """
 
         statement ="""
             INSERT INTO {}
-            {};
-            """.format(name_of_table, values)
-        self.execute(statement)
+            """ + values + ";"
+        self.execute(statement.format(name_of_table), (*user_input,))
         self.commit()
 
     def commit(self):
