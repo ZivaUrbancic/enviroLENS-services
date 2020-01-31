@@ -96,13 +96,11 @@ class PostgresQL:
             statement = """
             SELECT {} FROM {};
             """
-            print(statement)
             return self.execute(statement.format(names_of_columns, name_of_table))
         else:
             statement = """
             SELECT {} FROM {}
             """ + constraints + ";"
-            print(statement)
             if user_input is None:
                 return self.execute(statement.format(names_of_columns, name_of_table))
             else:
