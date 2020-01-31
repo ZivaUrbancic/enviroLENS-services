@@ -29,12 +29,30 @@ The parameters that can be set in this file can be found [here](../../README.md#
 # session secret
 PROD_SESSION_KEY=session-key
 
+# PARAMETERS FOR CONNECTING TO POSTGRES
+PROD_DATABASE_NAME=database_name
+PROD_DATABASE_USER=database_user
+PROD_DATABASE_PASSWORD=database_password
+
+# Url to text embedding service
+PROD_TEXT_EMBEDDING_URL=text_embedding_url
+
+
 #######################################
 ### Development variables
 #######################################
 
 # session secret
 DEV_SESSION_KEY=session-key
+
+# PARAMETERS FOR CONNECTING TO POSTGRES
+DEV_DATABASE_NAME=database_name
+DEV_DATABASE_USER=database_user
+DEV_DATABASE_PASSWORD=database_password
+
+# Url to text embedding service
+DEV_TEXT_EMBEDDING_URL=text_embedding_url
+
 
 #######################################
 ### Test variables
@@ -43,9 +61,20 @@ DEV_SESSION_KEY=session-key
 # session secret
 TEST_SESSION_KEY=session-key
 
+# PARAMETERS FOR CONNECTING TO POSTGRES
+TEST_DATABASE_NAME=database_name
+TEST_DATABASE_USER=database_user
+TEST_DATABASE_PASSWORD=database_password
+
+# Url to text embedding service
+TEST_TEXT_EMBEDDING_URL=text_embedding_url
+
 ######################################
 # Common variables
 ######################################
+
+# SIMILARITY_HOST=host
+# SIMILARITY_PORT=port
 
 # comma separated origins that will access the service
 CORS_ORIGINS=origin1,origin2,origin3 (optional)
