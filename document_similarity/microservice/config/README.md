@@ -52,31 +52,15 @@ DEV_DATABASE_PASSWORD=database_password
 
 # Url to text embedding service
 DEV_TEXT_EMBEDDING_URL=text_embedding_url
-
-
-#######################################
-### Test variables
-#######################################
-
-# session secret
-TEST_SESSION_KEY=session-key
-
-# PARAMETERS FOR CONNECTING TO POSTGRES
-TEST_DATABASE_NAME=database_name
-TEST_DATABASE_USER=database_user
-TEST_DATABASE_PASSWORD=database_password
-
-# Url to text embedding service
 TEST_TEXT_EMBEDDING_URL=text_embedding_url
 
 ######################################
 # Common variables
 ######################################
 
-# SIMILARITY_HOST=host
-# SIMILARITY_PORT=port
-
 # comma separated origins that will access the service
 CORS_ORIGINS=origin1,origin2,origin3 (optional)
 
 ```
+
+Set the text embedding url to `http://{HOST}:{PORT}/api/v1/embeddings/create` where HOST and PORT are the values used to run text embedding microservice.
