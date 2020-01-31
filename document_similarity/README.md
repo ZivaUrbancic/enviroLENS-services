@@ -1,6 +1,5 @@
-# Python Microservice Template
-This repository is intended as a template for microservices developed in the Python
-programming language.
+# Document Comparison Microservice
+This part of the enviroLENS-services repository is a selfstanding microservice. Below you can read how to set it up, run it and use it.
 
 ## Prerequisites
 
