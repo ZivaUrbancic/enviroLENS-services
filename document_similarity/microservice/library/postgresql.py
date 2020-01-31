@@ -82,7 +82,7 @@ class PostgresQL:
             names_of_columns (string): List of names of columns we want to retrieve from, separated by a comma.
                 (Default='*')
             constraints (string): SQL statement describing the constraints on our query. Example:
-                '''ORDERED BY {} DESC'''
+                '''ORDERED BY name_of_column DESC'''
                 (Default = None)
             user_input (tuple(miscellaneous)): values to be formatted into the statement. It has to be None when
                 'constraints' is None. (Default: None)
@@ -112,7 +112,7 @@ class PostgresQL:
         Args:
             name_of_table (string): Name of the table we want to insert into.
             values (string): SQL code describing values to insert. Example:
-                '''VALUES ({}, {}, ARRAY {})'''
+                '''VALUES (%s, %s)'''
             user_input (list(miscellaneous)): values to be formatted into the statement.
         """
 
