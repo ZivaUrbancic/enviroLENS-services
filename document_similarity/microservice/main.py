@@ -33,7 +33,7 @@ if __name__=='__main__':
         app = create_app(args=arguments)
         # run the application
         if args.env == 'production':
-            serve(app, host=args.host, port=args.port)
+            serve(app, host=arguments["host"], port=arguments["port"])
         elif args.env == 'development':
             app.run(host=arguments["host"], port=arguments["port"])
 
