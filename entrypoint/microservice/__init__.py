@@ -54,24 +54,13 @@ def create_app(args=None):
         # add logger configuration
         config_logging.init_app(app)
 
-        # add index routes
-        from .routes import index
+        # Register routes
+        from .routes import index, service, database, documents, document_similarity, text_embedding
         app.register_blueprint(index.bp)
-
-        # add embedding routes
-        from .routes import service
         app.register_blueprint(service.bp)
-
-        from .routes import database
         app.register_blueprint(database.bp)
-
-        from .routes import documents
         app.register_blueprint(documents.bp)
-
-        from .routes import document_similarity
         app.register_blueprint(document_similarity.bp)
-
-        from .routes import text_embedding
         app.register_blueprint(text_embedding.bp)
 
     # TODO: log start of the service
