@@ -1,7 +1,3 @@
-# Main microservice script
-# Retrieves, configures and connects all of the
-# components of the microservice
-
 import os
 
 from flask import Flask
@@ -17,10 +13,7 @@ def create_app(args=None):
     if args:
         app.config.update(
             HOST=args["host"],
-            PORT=args["port"],
-
-            # tako je ok?
-
+            PORT=args["port"]
         )
 
     # set the service environment

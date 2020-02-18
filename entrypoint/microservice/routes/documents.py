@@ -217,5 +217,3 @@ def find_documents():
     }
     r = requests.get(f"http://{HOST}:{PORT}/api/v1/docRetrieval/retrieval", params=query_params)
     return jsonify(r.json())
-
-
