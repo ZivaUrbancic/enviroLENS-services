@@ -16,5 +16,10 @@ crawlers/ecolex/!treaty decisions/.*
 crawlers/ecolex/literature/*
 crawlers/ecolex/!literature/.*
 
+crawlers/eurlex/celex_nums/*
+crawlers/eurlex!celex_nums/.*
+
+crawlers/eurlex/files/*
+
 **__pycache__/
 **.__pycache__/
