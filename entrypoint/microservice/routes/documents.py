@@ -3,7 +3,7 @@
 #   /documents
 #   /documents/id
 #   /documents/id/similar
-#   /documents/id/similar/update
+#   /documents/id/similarity_update
 #   /documents/retrieve
 
 import sys
@@ -94,6 +94,96 @@ def retrieve_document(doc_id):
         return jsonify(output), 200
     else:
         return jsonify(output), 400
+
+@bp.route('/<doc_id>/similar', methods=['GET'])
+def get_similar_documents(doc_id):
+    """
+    At this endpoint you will be able to get documents similar to document `doc_id`.
+    You can provide additional query_parameter:
+        * get_k int (number of results), default = 5
+    
+    In response you will receive json of the following format:
+
+    {
+    "finish": true,
+    "similar_documents": [
+        1000017599,
+        1000017600,
+        1000017598,
+        1000017597,
+        1000017596,
+        1000017593,
+        1000017595,
+        1000017594
+    ],
+    "similarities": [
+        [
+            1000017599,
+            0.199445346504904
+        ],
+        [
+            1000017600,
+            0.19275458304224
+        ],
+        [
+            1000017598,
+            0.191803893650522
+        ],
+        [
+            1000017597,
+            0.190294593704065
+        ],
+        [
+            1000017596,
+            0.190035190653879
+        ],
+        [
+            1000017593,
+            0.189315287176367
+        ],
+        [
+            1000017595,
+            0.189190944259772
+        ],
+        [
+            1000017594,
+            0.184603884562228
+        ]
+    ]
+    }
+
+    Example request
+    {BASE_URL}/api/v1/documents/123?get_k=5
+    will return top 5 similar documents to document with id 123.
+    """
+
+    HOST = app.config.get('SIMILARITY_HOST')
+    PORT = app.config.get('SIMILARITY_PORT')
+    
+    query_params = {
+        'document_id' : doc_id,
+        'get_k' : request.args.get('get_k', 5)
+    }
+    
+    r = requests.get(f"http://{HOST}:{PORT}/api/v1/similarity/get_similarities", params=query_params)
+    return jsonify(r.json())
+
+@bp.route('/<doc_id>/similarity_update', methods=['GET'])
+def update_document_similarities(doc_id):
+    """
+    Make a request with GET method to this endpoint.
+
+    Example request:
+    {BASE_URL}/api/v1/documents/id/similarity_update
+    """
+
+    HOST = app.config.get('SIMILARITY_HOST')
+    PORT = app.config.get('SIMILARITY_PORT')
+    query_params = {
+        'document_id': doc_id,
+    }
+    r = requests.get(f"http://{HOST}:{PORT}/api/v1/similarity/new_document_embedding", params=query_params)
+    return jsonify(r.json())
 
 @bp.route('/retrieve', methods=['GET'])
 def retrieve():
