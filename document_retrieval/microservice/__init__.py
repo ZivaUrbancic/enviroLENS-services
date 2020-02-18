@@ -48,11 +48,8 @@ def create_app(args=None):
         config_logging.init_app(app)
 
         # add index routes
-        from .routes import index
+        from .routes import index, service
         app.register_blueprint(index.bp)
-
-        # add embedding routes
-        from .routes import service
         app.register_blueprint(service.bp)
 
     # TODO: log start of the service
