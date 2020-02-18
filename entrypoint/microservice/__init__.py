@@ -65,8 +65,8 @@ def create_app(args=None):
         from .routes import database
         app.register_blueprint(database.bp)
 
-        from .routes import document_retrieval
-        app.register_blueprint(document_retrieval.bp)
+        from .routes import documents
+        app.register_blueprint(documents.bp)
 
         from .routes import document_similarity
         app.register_blueprint(document_similarity.bp)
