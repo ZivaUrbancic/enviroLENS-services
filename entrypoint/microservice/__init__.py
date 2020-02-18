@@ -55,12 +55,9 @@ def create_app(args=None):
         config_logging.init_app(app)
 
         # Register routes
-        from .routes import index, service, database, documents, document_similarity, text_embedding
+        from .routes import index, documents, text_embedding
         app.register_blueprint(index.bp)
-        app.register_blueprint(service.bp)
-        app.register_blueprint(database.bp)
         app.register_blueprint(documents.bp)
-        app.register_blueprint(document_similarity.bp)
         app.register_blueprint(text_embedding.bp)
 
     # TODO: log start of the service
