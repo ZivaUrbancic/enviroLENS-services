@@ -1,4 +1,10 @@
-# Routes related to document retrieval microservice
+# All routes related to /documents endpoint
+# We will provide the following routes:
+#   /documents
+#   /documents/id
+#   /documents/id/similar
+#   /documents/id/similar/update
+#   /documents/retrieve
 
 import sys
 import requests
@@ -10,24 +16,57 @@ from werkzeug.exceptions import abort
 
 bp = Blueprint('documents', __name__, url_prefix='/api/v1/documents')
 
+def get_documents_from_db(document_ids):
+    """
+    Function receives a list of document ids and returns a list of dictionaries of documents data.
+
+    Parameters:
+        documents_ids : list(int)
+            list of document ids
+    
+    Returns:
+        success (boolean), list of dictionaries of document data if the extraction from the database was successful.
+    """
+
+    db = config_db.get_db()
+    if db.cursor is None:
+        return False, {'Error' : 'The connection could not be established'}
+    
+    statement = "SELECT * FROM documents WHERE document_id IN %s;"
+    try:
+        db.cursor.execute(statement, (tuple(document_ids),))
+    except:
+        return False, {'Error' : 'You provided invalid document ids.'}
+    
+    # Enumerating the fields
+    num_fields = len(db.cursor.description)
+    field_names = [i[0] for i in db.cursor.description]
+    documents = [{ field_names[i]: row[i] for i in range(num_fields) } for row in db.cursor.fetchall()]
+
+    # Cleaning the output:
+    # - removing fulltext field
+    # - slicing down the fulltext_cleaned field to 500 chars
+    # - we return only the first 10 results
+    for i in range(len(documents)):
+        if documents[i]['fulltext_cleaned'] is not None:
+            documents[i]['fulltext_cleaned'] = documents[i]['fulltext_cleaned'][:500]
+        documents[i].pop('fulltext')
+    config_db.close_db()
+
+    return True, documents[:10]
+
+
 @bp.route('/', methods=['GET'])
 def get_documents():
     """
-    At this endpoint you get the documents that you provided in the JSON body.
+    At this endpoint you get the documents that you provided in the query parameters.
 
-    JSON structure:
-    {
-        "document_ids" : [list of document ids]
-    }
+    query parameters:
+        * document_ids : Space separated set of document ids
 
     The function returns a JSON response with the data of the documents. It is limited to
     output maximum of 10 documents.
     """
-
-    # connect to the database:
-    db = config_db.get_db()
-    if db.cursor is None:
-        return jsonify({'Error' : 'The connection could not be established'})
 
     document_ids = request.args.get('document_ids', None)
 
@@ -37,24 +76,11 @@ def get_documents():
             {'Message' : 'You need to provide query param "document_ids" : [comma separated set of documents ids]'}
         )
 
-    statement = "SELECT * FROM documents WHERE document_id IN %s;"
-    db.cursor.execute(statement, (tuple(document_ids.split(',')), ))
-
-    # Enumerating the fields
-    num_fields = len(db.cursor.description)
-    field_names = [i[0] for i in db.cursor.description]
-    documents = [{ field_names[i]: row[i] for i in range(num_fields) } for row in db.cursor.fetchall()]
-
-    # Cleaning the output:
-    # - removing fulltext field
-    # - slicing down the fulltext_cleaned field to 500 chars
-    # - we return only the first 10 results
-    for i in range(len(documents)):
-        if documents[i]['fulltext_cleaned'] is not None:
-            documents[i]['fulltext_cleaned'] = documents[i]['fulltext_cleaned'][:500]
-        documents[i].pop('fulltext')
-    config_db.close_db()
-    return jsonify(documents[:10])
+    success, output = get_documents_from_db(document_ids.split(','))
+    if success:
+        return jsonify(output), 200
+    else:
+        return jsonify(output), 400
 
 @bp.route('/<doc_id>', methods=['GET'])
 def retrieve_document(doc_id):
@@ -63,35 +89,11 @@ def retrieve_document(doc_id):
     documents/<document_id> will return you the JSON of the document of the specified id.
     """
 
-    db = config_db.get_db()
-    if db.cursor is None:
-        return jsonify({'Error' : 'The connection could not be established'}), 400
-    
-    try:
-        statement = "SELECT * FROM documents WHERE document_id= %s;"
-        db.cursor.execute(statement, tuple([doc_id]))
-    except:
-        return jsonify({'Error' : 'You provided invalid document id.'}), 400
-
-    # Enumerating the fields
-    num_fields = len(db.cursor.description)
-    field_names = [i[0] for i in db.cursor.description]
-    documents = [{ field_names[i]: row[i] for i in range(num_fields) } for row in db.cursor.fetchall()]
-
-    # If we found no results:
-    if len(documents) == 0:
-        return jsonify({'Error' : 'Document with given id does not exist'}), 400
-
-    # Cleaning the output:
-    # - removing fulltext field
-    # - slicing down the fulltext_cleaned field to 500 chars
-    # - we return only the first 10 results
-    for i in range(len(documents)):
-        if documents[i]['fulltext_cleaned'] is not None:
-            documents[i]['fulltext_cleaned'] = documents[i]['fulltext_cleaned'][:500]
-        documents[i].pop('fulltext')
-    config_db.close_db()
-    return jsonify(documents[:1])
+    success, output = get_documents_from_db([doc_id])
+    if success:
+        return jsonify(output), 200
+    else:
+        return jsonify(output), 400
 
 @bp.route('/retrieve', methods=['GET'])
 def retrieve():
