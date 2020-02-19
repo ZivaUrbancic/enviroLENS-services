@@ -73,7 +73,6 @@ def get_similar_documents(doc_id):
     In response you will receive json of the following format:
 
     {
-    "finish": true,
     "similar_documents": [
         1000017599,
         1000017600,
@@ -134,7 +133,24 @@ def get_similar_documents(doc_id):
     }
     
     r = requests.get(f"http://{HOST}:{PORT}/api/v1/similarity/get_similarities", params=query_params)
-    return jsonify(r.json())
+    json_response = r.json()
+    if 'similar_documents' in json_response:
+        # If request was successful, we get the documents from the db and and similarities to them.
+        documents_ids = json_response.get('similar_documents', [])
+        similarities = json_response.get('similarities', [])
+        similarities_dictionary = {doc_id : sim for doc_id, sim in similarities}
+
+        db = config_db.get_db()
+        success, output = db.get_documents_from_db(documents_ids)
+        if success:
+            for doc in output:
+                document_id = doc['document_id']
+                doc['similarity'] = similarities_dictionary[document_id]
+            return jsonify(output), 200
+        else:
+            return jsonify(output), 400
+    else:
+        return jsonify(json_response), 400
 
 @bp.route('/<doc_id>/similarity_update', methods=['POST'])
 def update_document_similarities(doc_id):
