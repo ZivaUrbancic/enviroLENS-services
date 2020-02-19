@@ -171,7 +171,7 @@ def get_similar_documents(doc_id):
 @bp.route('/<doc_id>/similarity_update', methods=['POST'])
 def update_document_similarities(doc_id):
     """
-    Make a request with GET method to this endpoint.
+    Make a request with POST method to this endpoint.
 
     Example request:
     {BASE_URL}/api/v1/documents/id/similarity_update
@@ -185,8 +185,8 @@ def update_document_similarities(doc_id):
     r = requests.get(f"http://{HOST}:{PORT}/api/v1/similarity/new_document_embedding", params=query_params)
     return jsonify(r.json())
 
-@bp.route('/find', methods=['GET'])
-def find_documents():
+@bp.route('/search', methods=['GET'])
+def search_documents():
     """
     Do GET request to this endpoint and provide additional query parameters
         query : (your query), default = ""

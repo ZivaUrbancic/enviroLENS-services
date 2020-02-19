@@ -188,12 +188,12 @@ You can also use custom host and port.
 ### Usage:
 
 Available endpoints:
-* **GET** `{HOST}/{PORT}/api/v1/documents/find` __query_params__ query, m
+* **GET** `{HOST}/{PORT}/api/v1/documents/search` __query_params__ query, m
   * query -> your text query
   * m -> number of results
 
   #### Example request:
-  ```{BASE_URL}/api/v1/documents/find?query=deforestation&m=10```
+  ```{BASE_URL}/api/v1/documents/search?query=deforestation&m=10```
   You will receive top 10 documents similar to query "deforestation".
 * **GET** `{HOST}/{PORT}/api/v1/documents/<document_id>/similar` __query_params__ get_k
   * document_id -> id of the document
@@ -215,12 +215,12 @@ Available endpoints:
 * **GET** `{HOST}/{PORT}/api/v1/documents` __query_params__  document_ids
   * document_ids : (comma separated document ids)
   #### Example request:
-  ```{BASE_URL}/api/v1/db/documents?document_ids=1,3,17```
+  ```{BASE_URL}/api/v1/documents?document_ids=1,3,17```
   With the **GET** request at this endpoint you will receive documents data for documents ids 1, 3 and 17.
 * **GET** `{HOST}/{PORT}/api/v1/documents/<document_id>`
   * document_id : (id of the document)
   #### Example request:
-  ```{BASE_URL}/api/v1/db/documents/3```
+  ```{BASE_URL}/api/v1/documents/3```
   With the **GET** request at this endpoint you will receive documents data for document with id 3.
 
 
