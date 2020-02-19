@@ -72,52 +72,16 @@ def get_similar_documents(doc_id):
     
     In response you will receive json of the following format:
 
-    {
-    "similar_documents": [
-        1000017599,
-        1000017600,
-        1000017598,
-        1000017597,
-        1000017596,
-        1000017593,
-        1000017595,
-        1000017594
-    ],
-    "similarities": [
-        [
-            1000017599,
-            0.199445346504904
-        ],
-        [
-            1000017600,
-            0.19275458304224
-        ],
-        [
-            1000017598,
-            0.191803893650522
-        ],
-        [
-            1000017597,
-            0.190294593704065
-        ],
-        [
-            1000017596,
-            0.190035190653879
-        ],
-        [
-            1000017593,
-            0.189315287176367
-        ],
-        [
-            1000017595,
-            0.189190944259772
-        ],
-        [
-            1000017594,
-            0.184603884562228
-        ]
+    [
+        {
+            ... document metadata ...
+            similarity : x.abcdefgh
+        },
+        {
+            ... document metadata ...
+            similarity : x.abcdefgh
+        },
     ]
-    }
 
     Example request
     {BASE_URL}/api/v1/documents/123?get_k=5
