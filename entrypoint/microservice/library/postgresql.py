@@ -68,4 +68,39 @@ class PostgresQL:
             return [{ field_names[i]: row[i] for i in range(num_fields) } for row in self.cursor.fetchall()]
 
 
-    # TODO: add project specific routes
+    def get_documents_from_db(self, document_ids):
+        """
+        Function receives a list of document ids and returns a list of dictionaries of documents data.
+
+        Parameters:
+            documents_ids : list(int)
+                list of document ids
+        
+        Returns:
+            success (boolean), list of dictionaries of document data if the extraction from the database was successful.
+        """
+
+        if self.cursor is None:
+            return False, {'Error' : 'The connection could not be established'}
+        
+        statement = "SELECT * FROM documents WHERE document_id IN %s;"
+        try:
+            self.cursor.execute(statement, (tuple(document_ids),))
+        except:
+            return False, {'Error' : 'You provided invalid document ids.'}
+        
+        # Enumerating the fields
+        num_fields = len(self.cursor.description)
+        field_names = [i[0] for i in self.cursor.description]
+        documents = [{ field_names[i]: row[i] for i in range(num_fields) } for row in self.cursor.fetchall()]
+
+        # Cleaning the output:
+        # - removing fulltext field
+        # - slicing down the fulltext_cleaned field to 500 chars
+        # - we return only the first 10 results
+        for i in range(len(documents)):
+            if documents[i]['fulltext_cleaned'] is not None:
+                documents[i]['fulltext_cleaned'] = documents[i]['fulltext_cleaned'][:500]
+            documents[i].pop('fulltext')
+
+        return True, documents[:10]
