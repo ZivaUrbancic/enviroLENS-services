@@ -25,7 +25,7 @@ def get_documents():
         * document_ids : Space separated set of document ids
 
     The function returns a JSON response with the data of the documents. It is limited to
-    output maximum of 10 documents.
+    output maximum of 100 documents.
 
     If query was successful, you will receive JSON list of dictionaries, each containing metadata of specific document.
     Otherwise you will receive JSON dictionary with an `error` attribute, showing the error.
@@ -40,10 +40,14 @@ def get_documents():
         )
 
     db = config_db.get_db()
-    success, output = db.get_documents_from_db(document_ids.split(','))
+    # We allows a maximum of 100 documents per query.
+    success, output = db.get_documents_from_db(document_ids.split(',')[:100])
     if success:
-        return jsonify(output), 200
+        return jsonify({
+            "documents" : output
+        }), 200
     else:
+        # Output is already a dictionary with an error message.
         return jsonify(output), 400
 
 @bp.route('/<doc_id>', methods=['GET'])
@@ -59,7 +63,9 @@ def retrieve_document(doc_id):
     db = config_db.get_db()
     success, output = db.get_documents_from_db([doc_id])
     if success:
-        return jsonify(output), 200
+        return jsonify({
+            "documents" : output
+        }), 200
     else:
         return jsonify(output), 400
 
@@ -110,7 +116,9 @@ def get_similar_documents(doc_id):
             for doc in output:
                 document_id = doc['document_id']
                 doc['similarity'] = similarities_dictionary[document_id]
-            return jsonify(output), 200
+            return jsonify({
+                "documents" : output
+                }), 200
         else:
             return jsonify(output), 400
     else:

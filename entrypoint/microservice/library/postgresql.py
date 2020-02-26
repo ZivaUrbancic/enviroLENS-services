@@ -103,4 +103,4 @@ class PostgresQL:
                 documents[i]['fulltext_cleaned'] = documents[i]['fulltext_cleaned'][:500]
             documents[i].pop('fulltext')
 
-        return True, documents[:10]
+        return True, documents
