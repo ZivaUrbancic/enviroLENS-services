@@ -46,7 +46,7 @@ def get_embedding():
     {BASE_URL}/api/v1/embedding/create?text=ice cream&language=en
     will return the embedding of the word ice cream.
     """
-    
+
     HOST = app.config.get('EMBEDDING_HOST')
     PORT = app.config.get('EMBEDDING_PORT')
     query_params = {

@@ -11,8 +11,8 @@ import requests
 from flask import (
     Blueprint, flash, g, redirect, request, session, url_for, jsonify, current_app as app
 )
-from ..config import config_db
 from werkzeug.exceptions import abort
+from ..config import config_db
 
 bp = Blueprint('documents', __name__, url_prefix='/api/v1/documents')
 
@@ -53,7 +53,7 @@ def get_documents():
 @bp.route('/<doc_id>', methods=['GET'])
 def retrieve_document(doc_id):
     """
-    At this endpoint you will retrieve a single document, if it exist. GET method on route 
+    At this endpoint you will retrieve a single document, if it exist. GET method on route
     documents/<document_id> will return you the JSON of the document of the specified id.
 
     If query was successful, you will receive JSON list containing a single dictionary of document metadata.
@@ -75,7 +75,7 @@ def get_similar_documents(doc_id):
     At this endpoint you will be able to get documents similar to document `doc_id`.
     You can provide additional query_parameter:
         * get_k int (number of results), default = 5
-    
+
     In response you will receive json of the following format:
 
     [
@@ -96,12 +96,12 @@ def get_similar_documents(doc_id):
 
     HOST = app.config.get('SIMILARITY_HOST')
     PORT = app.config.get('SIMILARITY_PORT')
-    
+
     query_params = {
         'document_id' : doc_id,
         'get_k' : request.args.get('get_k', 5)
     }
-    
+
     r = requests.get(f"http://{HOST}:{PORT}/api/v1/similarity/get_similarities", params=query_params)
     json_response = r.json()
     if 'similar_documents' in json_response:

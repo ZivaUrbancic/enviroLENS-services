@@ -75,20 +75,20 @@ class PostgresQL:
         Parameters:
             documents_ids : list(int)
                 list of document ids
-        
+
         Returns:
             success (boolean), list of dictionaries of document data if the extraction from the database was successful.
         """
 
         if self.cursor is None:
             return False, {'Error' : 'The connection could not be established'}
-        
+
         statement = "SELECT * FROM documents WHERE document_id IN %s;"
         try:
             self.cursor.execute(statement, (tuple(document_ids),))
         except:
             return False, {'Error' : 'You provided invalid document ids.'}
-        
+
         # Enumerating the fields
         num_fields = len(self.cursor.description)
         field_names = [i[0] for i in self.cursor.description]
