@@ -6,6 +6,7 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 import requests
+# from psycopg2.sql import SQL, Identifier
 
 #################################################
 # Initialize the models
@@ -57,12 +58,13 @@ def update_similarities():
     if request.method == 'GET':
         try:
             document_id = request.args.get('document_id', default=None, type=int)
-            language = request.args.get('language', default='EN', type=str)
+            language = request.args.get('language', default='en', type=str)
         except Exception as e:
             return abort(401, "Could not retrieve parameter 'document_id', method = 'GET'. " + str(e))
     elif request.method == 'POST':
         try:
             document_id = request.json['document_id']
+            language = request.json['language']
         except Exception as e:
             return abort(401, "Could not retrieve parameter 'document_id', method = 'POST'. " + str(e))
     else:
@@ -72,12 +74,8 @@ def update_similarities():
     # Retrieve the embeddings from the database
 
     try:
-        # get embeddings from postgres
-        loaded_embedding = pg.retrieve('document_embeddings')
-
-        # Separate the result into a list of indices and a matrix of embeddings
-        indices = [embedding['document_id'] for embedding in loaded_embedding]
-        embeddings = [embedding['vector'] for embedding in loaded_embedding]
+        # Retrieve IDs and embeddings of documents in the database
+        indices, embeddings = pg.retrieve_embeddings()
     except Exception as e:
         return abort(404, "Could not retrieve document embeddings from the database. " + str(e))
 
@@ -85,22 +83,19 @@ def update_similarities():
     # Retrieve the document's text from the database
 
     try:
-        # Retrieve the full text, the abstract and the title of the document.
-        retrieved = pg.retrieve(name_of_table='documents',
-                                names_of_columns='fulltext_cleaned, abstract, title',
-                                constraints="WHERE document_id=%s",
-                                user_input=[document_id])
+        # Retrieve a vocabulary containing the full text, the abstract and the title of the document from the database.
+        retrieved = pg.retrieve_textual_data(document_id)
 
         # Take the first that is not empty or None (priorities: full text > abstract > title).
-        document_text = retrieved[0]['fulltext_cleaned']
+        document_text = retrieved['fulltext_cleaned']
         if document_text == "" or document_text is None:
-            document_text = retrieved[0]['abstract']
+            document_text = retrieved['abstract']
         if document_text == "" or document_text is None:
-            document_text = retrieved[0]['title']
+            document_text = retrieved['title']
 
         # If none of those are useful, raise an exception
         if document_text == "" or document_text is None:
-            raise Exception("Could not retrieve any text for this document.")
+            raise Exception("Could not retrieve any text for the document with ID {}.".format(document_id))
     except Exception as e:
         return abort(400, "Could not retrieve text of the document from the database. "+str(e))
 
@@ -136,10 +131,7 @@ def update_similarities():
 
     try:
         # Insert the new embedding (indexed by document_id) into 'document_embeddings' table
-        values = "VALUES (%s, %s)"
-        pg.insert(name_of_table='document_embeddings',
-                  values=values,
-                  user_input=[document_id, new_embedding])
+        pg.insert_new_embedding(document_id, new_embedding)
     except Exception as e:
         return abort(400, "Could not add the new embedding into the table 'document_embeddings'. " + str(e))
 
@@ -150,23 +142,17 @@ def update_similarities():
         for i, j, sim in additional_similarities:
             # Insert the similarity score 'sim' between document with id 'i' and document with id 'j' into
             # 'similarities' table
-            values = "VALUES (%s, %s, %s)"
-            pg.insert(name_of_table='similarities',
-                      values=values,
-                      user_input=[i, j, sim])
+            pg.insert_new_similarity(i, j, sim)
     except Exception as e:
         return abort(400, "Could not add the additional similarities into the table 'similarities'. " + str(e))
 
 
     # Return the result
-
-    finish = True
     return jsonify({
-            "embedding": new_embedding,
-            "additional similarities": additional_similarities,
-            "indices": indices,
-            "finish": finish
-        })
+        "embedding": new_embedding,
+        "additional similarities": additional_similarities,
+        "indices": indices
+    })
 
 
 #################################################
@@ -191,35 +177,20 @@ def get_similarities():
     try:
         # retrieve the similarity matrix
         # connect to the database:
-        pg = config_db.get_db()
+        try:
+            pg = config_db.get_db()
+        except Exception as e:
+            return abort(400, str(e) + ' Accessing the database')
         # TODO: change the expression if needed
-        # get only the lines in table 'similarities' where the first document has id doc_id
-        # sort them by the similarity column, descending
 
-        # SQL constraints:
-        constraints = """
-            WHERE document1_id = %s
-            ORDER BY similarity_score DESC
-        """
-
-        # Retrieving from postgres using constraints
-        similarity_list = pg.retrieve(name_of_table='similarities',
-                                      names_of_columns='document2_id, similarity_score',
-                                      constraints=constraints,
-                                      user_input=[doc_id])
-
-        # Taking only indices of k most similar documents
-        result_indices = [entry['document2_id'] for entry in similarity_list[:k]]
-        result = [(entry['document2_id'], entry['similarity_score']) for entry in similarity_list[:k]]
-        finish = True
-        # pg.disconnect()
+        # Retrieve k most similar documents of the source document from the database
+        result_indices, result = pg.retrieve_similarities(doc_id, k)
     except Exception as e:
         # TODO: log exception
         # something went wrong with the request
-        return abort(400, str(e))
+        return abort(400, str(e)+' This error occured in service.py')
     else:
         return jsonify({
             "similar_documents": result_indices,
-            "similarities": result,
-            "finish": finish
+            "similarities": result
         })
