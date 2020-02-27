@@ -157,7 +157,6 @@ class PostgresQL:
             """)
         values = SQL('').join([values, SQL(';')])
         statement = SQL(' ').join([statement, values])
-        print(statement.as_string(self.connection))
         self.execute(statement.format(table_name=Identifier(name_of_table)), (*user_input,))
         self.commit()
 
