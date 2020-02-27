@@ -35,8 +35,9 @@ class PostgresQL:
                 port = self.port,
                 database = database
             )
-        except Exception as e:
-            print(str(e) + ' Issues connecting to the database.')
+        except (Exception, psycopg2.Error) as error:
+            # notify the user about the error
+            self.connection = None
 
         try:
             # store the connection cursor
