@@ -180,14 +180,14 @@ def get_similarities():
         try:
             pg = config_db.get_db()
         except Exception as e:
-            return abort(400, str(e) + ' Accessing the database')
+            return abort(400, 'Error accessing the database. ' + str(e))
 
         # Retrieve k most similar documents of the source document from the database
         result_indices, result = pg.retrieve_similarities(doc_id, k)
     except Exception as e:
         # TODO: log exception
         # something went wrong with the request
-        return abort(400, str(e)+' This error occured in service.py')
+        return abort(400, 'Could not retrieve from table similarities. ' + str(e))
     else:
         return jsonify({
             "similar_documents": result_indices,
