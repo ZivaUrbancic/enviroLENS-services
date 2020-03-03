@@ -23,7 +23,7 @@ def get_db():
         # initialize db object
         g.db = PostgresQL(host=host, port=port)
 
-        # get database and password for establishing the conncetion
+        # get database and password for establishing the connection
         database = current_app.config['DB_NAME']
         user = current_app.config['DB_USER']
         password = current_app.config['DB_PASSWORD']

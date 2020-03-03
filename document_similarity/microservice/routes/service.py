@@ -6,6 +6,7 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 import requests
+# from psycopg2.sql import SQL, Identifier
 
 #################################################
 # Initialize the models
@@ -53,15 +54,17 @@ def update_similarities():
     pg = config_db.get_db()
 
 
-    # get document id as the parameter
+    # get document id (and optionally language) as the parameter
     if request.method == 'GET':
         try:
             document_id = request.args.get('document_id', default=None, type=int)
+            language = request.args.get('language', default='en', type=str)
         except Exception as e:
             return abort(401, "Could not retrieve parameter 'document_id', method = 'GET'. " + str(e))
     elif request.method == 'POST':
         try:
             document_id = request.json['document_id']
+            language = request.json['language']
         except Exception as e:
             return abort(401, "Could not retrieve parameter 'document_id', method = 'POST'. " + str(e))
     else:
@@ -71,13 +74,8 @@ def update_similarities():
     # Retrieve the embeddings from the database
 
     try:
-        # get embeddings from postgres
-        loaded_embedding = pg.execute("""
-            SELECT * FROM document_embeddings;
-            """)
-        # Separate the result into a list of indices and a matrix of embeddings
-        indices = [embedding['document_id'] for embedding in loaded_embedding]
-        embeddings = [embedding['vector'] for embedding in loaded_embedding]
+        # Retrieve IDs and embeddings of documents in the database
+        indices, embeddings = pg.retrieve_embeddings()
     except Exception as e:
         return abort(404, "Could not retrieve document embeddings from the database. " + str(e))
 
@@ -85,37 +83,35 @@ def update_similarities():
     # Retrieve the document's text from the database
 
     try:
-        statement = """
-            SELECT fulltext_cleaned FROM documents
-            WHERE document_id={};
-            """.format(document_id)
-        document_text = (pg.execute(statement))[0]['fulltext_cleaned']
+        # Retrieve a vocabulary containing the full text, the abstract and the title of the document from the database.
+        retrieved = pg.retrieve_textual_data(document_id)
+
+        # Take the first that is not empty or None (priorities: full text > abstract > title).
+        document_text = retrieved['fulltext_cleaned']
         if document_text == "" or document_text is None:
-            statement = """
-            SELECT abstract FROM documents
-            WHERE document_id={};
-            """.format(document_id)
-            document_text = (pg.execute(statement))[0]['abstract']
+            document_text = retrieved['abstract']
         if document_text == "" or document_text is None:
-            statement = """
-            SELECT title FROM documents
-            WHERE document_id={};
-            """.format(document_id)
-            document_text = (pg.execute(statement))[0]['title']
+            document_text = retrieved['title']
+
+        # If none of those are useful, raise an exception
         if document_text == "" or document_text is None:
-            raise Exception("Could not retrieve any text for this document.")
+            raise Exception("Could not retrieve any text for the document with ID {}.".format(document_id))
     except Exception as e:
         return abort(400, "Could not retrieve text of the document from the database. "+str(e))
 
 
     # Construct the new document's embedding
 
-    # TODO: add language_model parameter
     try:
         # Call the text-embedding-service and produce the embedding
-        params = {'text': document_text, 'language': 'en'}
+        params = {'text': document_text, 'language': language}
         service_response = (requests.post(url=text_embedding_url, json=params)).json()
-        new_embedding = service_response['embedding']
+        if 'embedding' in service_response:
+            new_embedding = service_response['embedding']
+        elif 'error' in service_response:
+            raise Exception(str(service_response['error']))
+        else:
+            raise Exception("Something went terribly wrong.")
     except Exception as e:
         return abort(400, "Could not retrieve the embedding from the text embedding service. " + str(e))
 
@@ -134,11 +130,8 @@ def update_similarities():
     # Insert the new embedding into the database
 
     try:
-        pg.execute("""
-            INSERT INTO document_embeddings
-            VALUES ({}, ARRAY{});
-            """.format(document_id, new_embedding))
-        pg.commit()
+        # Insert the new embedding (indexed by document_id) into 'document_embeddings' table
+        pg.insert_new_embedding(document_id, new_embedding)
     except Exception as e:
         return abort(400, "Could not add the new embedding into the table 'document_embeddings'. " + str(e))
 
@@ -147,21 +140,19 @@ def update_similarities():
 
     try:
         for i, j, sim in additional_similarities:
-            pg.execute("""
-                INSERT INTO similarities
-                VALUES ({}, {}, {});
-                """.format(i, j, sim))
-            pg.commit()
+            # Insert the similarity score 'sim' between document with id 'i' and document with id 'j' into
+            # 'similarities' table
+            pg.insert_new_similarity(i, j, sim)
     except Exception as e:
         return abort(400, "Could not add the additional similarities into the table 'similarities'. " + str(e))
 
 
     # Return the result
     return jsonify({
-            "embedding": new_embedding,
-            "additional similarities": additional_similarities,
-            "indices": indices,
-        })
+        "embedding": new_embedding,
+        "additional similarities": additional_similarities,
+        "indices": indices
+    })
 
 
 #################################################
@@ -186,24 +177,19 @@ def get_similarities():
     try:
         # retrieve the similarity matrix
         # connect to the database:
-        pg = config_db.get_db()
-        # TODO: change the expression if needed
-        # get only the lines in table 'similarities' where the first document has id doc_id
-        # sort them by the similarity column, descending
-        similarity_list = pg.execute("""
-            SELECT document2_id, similarity_score FROM similarities
-            WHERE document1_id = {}
-            ORDER BY similarity_score DESC;
-            """.format(doc_id))
-        result_indices = [entry['document2_id'] for entry in similarity_list[:k]]
-        result = [(entry['document2_id'], entry['similarity_score']) for entry in similarity_list[:k]]
-        pg.disconnect()
+        try:
+            pg = config_db.get_db()
+        except Exception as e:
+            return abort(400, 'Error accessing the database. ' + str(e))
+
+        # Retrieve k most similar documents of the source document from the database
+        result_indices, result = pg.retrieve_similarities(doc_id, k)
     except Exception as e:
         # TODO: log exception
         # something went wrong with the request
-        return abort(400, str(e))
+        return abort(400, 'Could not retrieve from table similarities. ' + str(e))
     else:
         return jsonify({
             "similar_documents": result_indices,
-            "similarities": result,
+            "similarities": result
         })

@@ -1,5 +1,6 @@
 import psycopg2
-
+from psycopg2.sql import Identifier, SQL
+from werkzeug.exceptions import abort
 
 class PostgresQL:
     """Connection to the PostgresQL database
@@ -13,6 +14,7 @@ class PostgresQL:
     def __init__(self, host="127.0.0.1", port="5432"):
         self.host = host
         self.port = port
+        #self.connection=False
 
 
     def connect(self, database, password, user="postgres"):
@@ -33,7 +35,11 @@ class PostgresQL:
                 port = self.port,
                 database = database
             )
+        except (Exception, psycopg2.Error) as error:
+            # notify the user about the error
+            self.connection = None
 
+        try:
             # store the connection cursor
             self.cursor = self.connection.cursor()
 
@@ -49,11 +55,12 @@ class PostgresQL:
             self.connection.close()
 
 
-    def execute(self, statement):
+    def execute(self, statement, params=None):
         """Execute the provided statement
 
         Args:
             statement (str): The postgresql statement to be executed.
+            params (tuple): values to be formatted into the statement. (Default = None)
 
         Returns:
             list: a list of tuples containing the postgresql records.
@@ -62,7 +69,10 @@ class PostgresQL:
         if self.cursor is None:
             raise Exception("The connection is not established")
         else:
-            self.cursor.execute(statement)
+            if params is None:
+                self.cursor.execute(statement)
+            else:
+                self.cursor.execute(statement, params)
             if self.cursor.description is not None:
                 num_fields = len(self.cursor.description)
                 field_names = [i[0] for i in self.cursor.description]
@@ -70,10 +80,123 @@ class PostgresQL:
             else:
                 return None
 
+    def retrieve_textual_data(self, doc_id):
+        """Given an ID of a document, the method returns its full text, abstract and title from the database.
+
+        Args:
+            doc_id (int): the ID of the document in the database.
+
+        Returns:
+            vocabulary: a vocabulary with keys 'fulltext_cleaned', 'abstract' and 'title'.
+        """
+
+        statement = """
+        SELECT fulltext_cleaned, abstract, title FROM documents
+        WHERE document_id = %s;
+        """
+        return self.execute(statement,(doc_id,))[0]
+
+    def retrieve_embeddings(self):
+        """Retrieves all document embeddings currently in the database.
+
+        Args:
+            The method takes no arguments.
+
+        Returns:
+            tuple(list): Two lists: first with IDs of the documents with embeddings in the database and second with
+                their embeddings.
+        """
+
+        statement = """
+        SELECT * FROM document_embeddings;
+        """
+        loaded_embeddings = self.execute(statement)
+
+        # Separate the result into a list of indices and a matrix of embeddings
+        indices = [embedding['document_id'] for embedding in loaded_embeddings]
+        embeddings = [embedding['vector'] for embedding in loaded_embeddings]
+        return indices, embeddings
+
+    def retrieve_similarities(self, doc_id, k=5):
+        """Given an ID of a document (and optionally a parameter k) the method returns the IDs of k documents that
+        are most similar to the sample document.
+
+        Args:
+            doc_id (int): The ID of the sample document.
+            k (int): The number of similar documents we want to find.
+                (Default=5)
+
+        Returns:
+            tuple(list): Two lists. The first contains the IDs of the retrieved documents. The second contains tuples
+                of the IDs of the similar document and the similarity score between the retrieved document and the
+                sample document.
+        """
+
+        statement="""
+        SELECT document2_id, similarity_score FROM similarities
+        WHERE document1_id = %s
+        ORDER BY similarity_score DESC;
+        """
+        similarity_list = self.execute(statement, (doc_id,))
+        result_indices = [entry['document2_id'] for entry in similarity_list[:k]]
+        result = [(entry['document2_id'], entry['similarity_score']) for entry in similarity_list[:k]]
+        return result_indices, result
+
+    def insert(self, name_of_table, values, user_input):
+        """Inserts values to a table.
+
+        Args:
+            name_of_table (string): Name of the table we want to insert into.
+            values (string): SQL code describing values to insert. Example:
+                '''VALUES ({}, {}, ARRAY {})'''
+            user_input (list(miscellaneous)): values to be formatted into the statement.
+        """
+
+        statement =SQL("""
+            INSERT INTO {table_name}
+            """)
+        values = SQL('').join([values, SQL(';')])
+        statement = SQL(' ').join([statement, values])
+        self.execute(statement.format(table_name=Identifier(name_of_table)), (*user_input,))
+        self.commit()
+
+    def insert_new_embedding(self, doc_id, embedding):
+        """Inserts a new embedding into the database.
+
+        Args:
+            doc_id (int): The ID of the document whose embedding we're inserting.
+            embedding (np.ndarray): The embedding we're inserting.
+
+        Returns:
+            The method doesn't return anything.
+        """
+
+        statement = """
+            INSERT INTO document_embeddings
+            VALUES (%s, %s);
+            """
+        self.execute(statement, (doc_id, embedding, ))
+        self.commit()
+
+    def insert_new_similarity(self, document1_id, document2_id, sim):
+        """Inserts a new similarity into the database.
+
+        Args:
+            document1_id (int): The ID of the first of two documents.
+            document2_id (int): The ID of the second of two documents.
+            sim (np.single): Similarity score between given documents.
+
+        Returns:
+            The method doesn't return anything.
+        """
+
+        statement = """
+            INSERT INTO similarities
+            VALUES (%s, %s, %s);
+            """
+        self.execute(statement, (document1_id, document2_id, sim, ))
+        self.commit()
 
     def commit(self):
         if self.connection:
             self.connection.commit()
-
-
-    # TODO: add project specific routes
