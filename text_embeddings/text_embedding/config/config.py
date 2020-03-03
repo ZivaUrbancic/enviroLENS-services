@@ -26,11 +26,6 @@ class DevelopmentConfig(Config):
     ENV='development'
     DEBUG = True
     SECRET_KEY=os.getenv('DEV_SECRET_KEY')
-    # the model parameters
-    MODEL_PATH=os.getenv('DEV_MODEL_PATH')
-    MODEL_FORMAT=os.getenv('DEV_MODEL_FORMAT')
-    MODEL_LANGUAGE=os.getenv('DEV_MODEL_LANGUAGE')
-
 
 class TestingConfig(Config):
     """Testing configuration"""

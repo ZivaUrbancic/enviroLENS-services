@@ -157,13 +157,10 @@ def update_similarities():
 
 
     # Return the result
-
-    finish = True
     return jsonify({
             "embedding": new_embedding,
             "additional similarities": additional_similarities,
             "indices": indices,
-            "finish": finish
         })
 
 
@@ -200,7 +197,6 @@ def get_similarities():
             """.format(doc_id))
         result_indices = [entry['document2_id'] for entry in similarity_list[:k]]
         result = [(entry['document2_id'], entry['similarity_score']) for entry in similarity_list[:k]]
-        finish = True
         pg.disconnect()
     except Exception as e:
         # TODO: log exception
@@ -210,5 +206,4 @@ def get_similarities():
         return jsonify({
             "similar_documents": result_indices,
             "similarities": result,
-            "finish": finish
         })
