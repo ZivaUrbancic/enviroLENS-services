@@ -11,22 +11,15 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-
 #################################################
 # Initialize the models
 #################################################
 # get the database configuration object
 from ..config import config_db
 
-
-
 from ..library.document_retrieval import tfidf_score_str
 from ..library.document_retrieval import change_dict_structure
 from ..library.postgresql import PostgresQL
-
-
-
-
 
 ## initialize text embedding model
 model = PostgresQL()
@@ -70,11 +63,10 @@ def retrieval():
     PORT = app.config.get('TEXT_EMBEDDING_PORT', '4222')
 
     query_params = {'query': query}
-
     try:
         r = requests.get(f"http://{HOST}:{PORT}/api/v1/embeddings/expand", params=query_params)
         r = json.loads(r.text)
-        tokens = r.get("expanded_query")
+        tokens = r.get("expanded_query", [])
         db = config_db.get_db()
         docs = db.db_query(tokens)
         number_all_documents = db.db_nb_docs()
@@ -83,11 +75,12 @@ def retrieval():
         metadata = db.db_return_docs_metadata(tfidf_score)
 
     except Exception as e:
+        # import traceback
+        # traceback.print_exc()
         # TODO: log exception
         # something went wrong with the request
         return abort(400, str(e))
     else:
-        # TODO: return the response
         return jsonify({
             "documents_metadata": metadata
         })

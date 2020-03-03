@@ -17,8 +17,9 @@ crawlers/ecolex/literature/*
 !crawlers/ecolex/literature/.*
 
 crawlers/eurlex/files/*
-!crawlers/eurlex/files/.*
+crawlers/eurlex/!files/.*
 crawlers/eurlex/celex_nums/*
+crawlers/eurlex/!celex_nums/.*
 
 **__pycache__/
 **.__pycache__/

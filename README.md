@@ -188,23 +188,23 @@ You can also use custom host and port.
 ### Usage:
 
 Available endpoints:
-* **GET** `{HOST}/{PORT}/api/v1/retrieval/retrieve` __query_params__ query, m
+* **GET** `{HOST}/{PORT}/api/v1/documents/search` __query_params__ query, m
   * query -> your text query
   * m -> number of results
 
   #### Example request:
-  ```{BASE_URL}/api/v1/retrieval/retrieve?query=deforestation&m=10```
-  You will receive top 10 documents similar to query "deforestation"
-* **GET** `{HOST}/{PORT}/api/v1/similarity/get_similar` __query_params__ document_id, get_k
+  ```{BASE_URL}/api/v1/documents/search?query=deforestation&m=10```
+  You will receive top 10 documents similar to query "deforestation".
+* **GET** `{HOST}/{PORT}/api/v1/documents/<document_id>/similar` __query_params__ get_k
   * document_id -> id of the document
   * get_k -> number of results
   #### Example request:
-  ```{BASE_URL}/api/v1/similarity/get_similar?document_id=1000017605&get_k=5 ```
-  You will receive 5 of the most similar documents to document with the given id.
-* **GET** `{HOST}/{PORT}/api/v1/similarity/update_similarities` __query_params__ document_id
+  ```{BASE_URL}/api/v1/documents/123/similar?get_k=5 ```
+  You will receive 5 of the most similar documents to document with id 123.
+* **POST** `{HOST}/{PORT}/api/v1/documents/<document_id>/similarity_update`
   * document_id -> id of the document
   #### Example request:
-  ```{BASE_URL}/api/v1/similarity/update_similarities?document_id=1000017605```
+  ```{BASE_URL}/api/v1/documents/similarity_update```
   Recalculates similarities of the document with the given id to the other documents.
 * **GET** `{HOST}/{PORT}/api/v1/embeddings/create` __query_params__ text, language
   * text -> your text
@@ -212,16 +212,16 @@ Available endpoints:
   #### Example request:
   ```{BASE_URL}/api/v1/embedding/create?text=ice cream&language=en```
   You will receive the embedding of the text "ice cream" from the english word embedding model.
-* **POST** `{HOST}/{PORT}/api/v1/db/document` __json__ "document_ids" : (list of documents ids)
-  * json :
-  ```
-  {
-    document_ids : [1, 2, 3]
-  }
-  ```
+* **GET** `{HOST}/{PORT}/api/v1/documents` __query_params__  document_ids
+  * document_ids : (comma separated document ids)
   #### Example request:
-  ```{BASE_URL}/api/v1/db/document```
-  With the **POST** request at this endpoint along with the json given above, you will receive documents data for documents ids given in the json.
+  ```{BASE_URL}/api/v1/documents?document_ids=1,3,17```
+  With the **GET** request at this endpoint you will receive documents data for documents ids 1, 3 and 17.
+* **GET** `{HOST}/{PORT}/api/v1/documents/<document_id>`
+  * document_id : (id of the document)
+  #### Example request:
+  ```{BASE_URL}/api/v1/documents/3```
+  With the **GET** request at this endpoint you will receive documents data for document with id 3.
 
 
 # Acknowledgments

@@ -181,7 +181,6 @@ def get_similarities():
             pg = config_db.get_db()
         except Exception as e:
             return abort(400, str(e) + ' Accessing the database')
-        # TODO: change the expression if needed
 
         # Retrieve k most similar documents of the source document from the database
         result_indices, result = pg.retrieve_similarities(doc_id, k)
