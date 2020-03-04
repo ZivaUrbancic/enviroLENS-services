@@ -167,9 +167,10 @@ def get_similarities():
         elif offset is None:
             offset = page * k
         elif offset != page * k and page is not None:
-            raise Exception("The parameter 'offset' must be the product of parameters 'limit' and 'page'.")
+            raise Exception("If parameters 'offset' and 'page' are both given, then the parameter 'offset' must be " +
+                            "the product of parameters 'limit' and 'page'.")
     except Exception as e:
-        return abort(401, "Could not retrieve the parameters. " + str(e))
+        return abort(400, "Could not retrieve the parameters. " + str(e))
 
     # Retrieve the information about most similar documents
     try:
