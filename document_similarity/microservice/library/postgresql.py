@@ -1,5 +1,4 @@
 import psycopg2
-from psycopg2.sql import Identifier, SQL
 
 class PostgresQL:
     """Connection to the PostgresQL database
@@ -140,27 +139,12 @@ class PostgresQL:
         ORDER BY similarity_score DESC;
         """
         similarity_list = self.execute(statement, (doc_id,))
-        result_indices = [entry['document2_id'] for entry in similarity_list[offset:(offset + k)]]
-        result = [(entry['document2_id'], entry['similarity_score']) for entry in similarity_list[offset:(offset + k)]]
+        if offset > len(similarity_list):
+            raise Exception("The number of documents in the database is lower than the 'offset' parameter.")
+        limit = min(offset + k, len(similarity_list))
+        result_indices = [entry['document2_id'] for entry in similarity_list[offset:limit]]
+        result = [(entry['document2_id'], entry['similarity_score']) for entry in similarity_list[offset:limit]]
         return result_indices, result
-
-    def insert(self, name_of_table, values, user_input):
-        """Inserts values to a table.
-
-        Args:
-            name_of_table (string): Name of the table we want to insert into.
-            values (string): SQL code describing values to insert. Example:
-                '''VALUES ({}, {}, ARRAY {})'''
-            user_input (list(miscellaneous)): values to be formatted into the statement.
-        """
-
-        statement =SQL("""
-            INSERT INTO {table_name}
-            """)
-        values = SQL('').join([values, SQL(';')])
-        statement = SQL(' ').join([statement, values])
-        self.execute(statement.format(table_name=Identifier(name_of_table)), (*user_input,))
-        self.commit()
 
     def insert_new_embedding(self, doc_id, embedding):
         """Inserts a new embedding into the database.

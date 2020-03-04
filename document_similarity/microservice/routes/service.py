@@ -166,7 +166,7 @@ def get_similarities():
             offset = 0
         elif offset is None:
             offset = page * k
-        elif offset != page * k and page is not None:
+        elif page is not None and offset != page * k:
             raise Exception("If parameters 'offset' and 'page' are both given, then the parameter 'offset' must be " +
                             "the product of parameters 'limit' and 'page'.")
     except Exception as e:
