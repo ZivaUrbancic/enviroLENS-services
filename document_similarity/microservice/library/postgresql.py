@@ -116,14 +116,17 @@ class PostgresQL:
         embeddings = [embedding['vector'] for embedding in loaded_embeddings]
         return indices, embeddings
 
-    def retrieve_similarities(self, doc_id, k=5):
-        """Given an ID of a document (and optionally a parameter k) the method returns the IDs of k documents that
-        are most similar to the sample document.
+    def retrieve_similarities(self, doc_id, k=5, offset=0):
+        """Given an ID of a document (and optionally parameters 'k' and 'offset') the method returns the IDs of 'k'
+        documents that are most similar to the sample document, where we skip the first 'offset' most similar documents.
+        For example, if k = 3 and offset = 10, the method will return the 11th, 12th and 13th most similar document.
 
         Args:
             doc_id (int): The ID of the sample document.
             k (int): The number of similar documents we want to find.
                 (Default=5)
+            offset (int): Number of top most similar documents that we want to skip.
+                (Default=0)
 
         Returns:
             tuple(list): Two lists. The first contains the IDs of the retrieved documents. The second contains tuples
@@ -137,8 +140,8 @@ class PostgresQL:
         ORDER BY similarity_score DESC;
         """
         similarity_list = self.execute(statement, (doc_id,))
-        result_indices = [entry['document2_id'] for entry in similarity_list[:k]]
-        result = [(entry['document2_id'], entry['similarity_score']) for entry in similarity_list[:k]]
+        result_indices = [entry['document2_id'] for entry in similarity_list[offset:(offset + k)]]
+        result = [(entry['document2_id'], entry['similarity_score']) for entry in similarity_list[offset:(offset + k)]]
         return result_indices, result
 
     def insert(self, name_of_table, values, user_input):

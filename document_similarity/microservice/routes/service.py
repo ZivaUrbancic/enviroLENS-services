@@ -143,20 +143,24 @@ def update_similarities():
 @bp.route('/get_similarities', methods=['GET', 'POST'])
 def get_similarities():
     # Retrieve query parameters 'document_id' and 'get_k'
-    if request.method == 'GET':
-        try:
+    try:
+        if request.method == 'GET':
             doc_id = request.args.get('document_id', default=None, type=int)
-            k = request.args.get('get_k', default=5, type=int)
-        except Exception as e:
-            return abort(401, "Could not retrieve parameters 'document_id' and 'get_k'. " + str(e))
-    elif request.method == 'POST':
-        try:
+            k = request.args.get('limit', default=5, type=int)
+            page = request.args.get('page', default=0, type=int)
+            offset = request.args.get('offset', default=page * k, type=int)
+        elif request.method == 'POST':
             doc_id = request.json['document_id']
-            k = request.json['get_k']
-        except Exception as e:
-            return abort(401, "Could not retrieve parameters 'document_id' and 'get_k'. " + str(e))
-    else:
-        return abort(405)
+            k = request.json['limit']
+            page = request.json['page']
+            offset = request.json['offset']
+        else:
+            return abort(405)
+        # Check if the given parameters fit together
+        if offset != page * k:
+            raise Exception("The parameter 'offset' must be the product of parameters 'limit' and 'page'.")
+    except Exception as e:
+        return abort(401, "Could not retrieve the parameters. " + str(e))
 
     # Retrieve the information about most similar documents
     try:
@@ -167,13 +171,20 @@ def get_similarities():
             return abort(400, 'Error accessing the database. ' + str(e))
 
         # Retrieve k most similar documents of the source document from the database
-        result_indices, result = pg.retrieve_similarities(doc_id, k)
+        result_indices, result = pg.retrieve_similarities(doc_id, k, offset)
     except Exception as e:
         # something went wrong with the request
         return abort(400, 'Could not retrieve from table similarities. ' + str(e))
     else:
         # Return the result
+        params = {
+            "document_id": doc_id,
+            "page": page,
+            "limit": k,
+            "offset": offset
+        }
         return jsonify({
+            "query_parameters": params,
             "similar_documents": result_indices,
             "similarities": result
         })

@@ -74,7 +74,9 @@ def get_similar_documents(doc_id):
     """
     At this endpoint you will be able to get documents similar to document `doc_id`.
     You can provide additional query_parameter:
-        * get_k int (number of results), default = 5
+        * limit int (number of results per page), default = 5
+        * page int (number of page), default = 0
+        * offset int (number of results), default = 5
 
     In response you will receive json of the following format:
 
@@ -97,9 +99,13 @@ def get_similar_documents(doc_id):
     HOST = app.config.get('SIMILARITY_HOST')
     PORT = app.config.get('SIMILARITY_PORT')
 
+    k = request.args.get('limit', 5)
+    page = request.args.get('page', 0)
     query_params = {
         'document_id' : doc_id,
-        'get_k' : request.args.get('get_k', 5)
+        'limit' : k,
+        'page' : page,
+        'offset' : request.args.get('offset', k * page)
     }
 
     r = requests.get(f"http://{HOST}:{PORT}/api/v1/similarity/get_similarities", params=query_params)
