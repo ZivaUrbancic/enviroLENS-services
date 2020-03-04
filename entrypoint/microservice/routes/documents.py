@@ -99,13 +99,11 @@ def get_similar_documents(doc_id):
     HOST = app.config.get('SIMILARITY_HOST')
     PORT = app.config.get('SIMILARITY_PORT')
 
-    k = request.args.get('limit', 5)
-    page = request.args.get('page', 0)
     query_params = {
         'document_id' : doc_id,
-        'limit' : k,
-        'page' : page,
-        'offset' : request.args.get('offset', k * page)
+        'limit' : request.args.get('limit', 5),
+        'page' : request.args.get('page', None),
+        'offset' : request.args.get('offset', None)
     }
 
     r = requests.get(f"http://{HOST}:{PORT}/api/v1/similarity/get_similarities", params=query_params)

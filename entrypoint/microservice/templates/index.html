@@ -223,7 +223,7 @@
                 <tr>
                   <td><b class="doc">document_id</b></td>
                   <td>
-                    <span class="doc doc--small">Type:</span> String
+                    <span class="doc doc--small">Type:</span> Integer
                   </td>
                   <td>
                     <span class="doc doc--small">Title:</span> Document ID
@@ -233,6 +233,51 @@
                   </td>
                   <td>
                     Id of the document to which we want to find similar documents.
+                  </td>
+                </tr>
+                <tr>
+                  <td><b class="doc">limit</b></td>
+                  <td>
+                    <span class="doc doc--small">Type:</span> Integer
+                  </td>
+                  <td>
+                    <span class="doc doc--small">Title:</span> Limit
+                  </td>
+                  <td>
+                    <span class="doc doc--small">Optional:</span> True
+                  </td>
+                  <td>
+                    Number of documents per page.
+                  </td>
+                </tr>
+                <tr>
+                  <td><b class="doc">page</b></td>
+                  <td>
+                    <span class="doc doc--small">Type:</span> Integer
+                  </td>
+                  <td>
+                    <span class="doc doc--small">Title:</span> Page
+                  </td>
+                  <td>
+                    <span class="doc doc--small">Optional:</span> True
+                  </td>
+                  <td>
+                    Which page to retrieve (with 0 meaning the first page, 1 the second and so on).
+                  </td>
+                </tr>
+                <tr>
+                  <td><b class="doc">offset</b></td>
+                  <td>
+                    <span class="doc doc--small">Type:</span> Integer
+                  </td>
+                  <td>
+                    <span class="doc doc--small">Title:</span> Offset
+                  </td>
+                  <td>
+                    <span class="doc doc--small">Optional:</span> True
+                  </td>
+                  <td>
+                    How many most similar documents to skip. If page is given, offset should be equal to page*limit.
                   </td>
                 </tr>
               </tbody>
@@ -318,7 +363,7 @@
                     <span class="doc doc--small">Type:</span> String
                   </td>
                   <td>
-                    <span class="doc doc--small">Title:</span> Language of the text
+                    <span class="doc doc--small">Title:</span> Language
                   </td>
                   <td>
                     <span class="doc doc--small">Optional:</span> true

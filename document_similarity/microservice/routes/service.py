@@ -142,13 +142,17 @@ def update_similarities():
 
 @bp.route('/get_similarities', methods=['GET', 'POST'])
 def get_similarities():
-    # Retrieve query parameters 'document_id' and 'get_k'
+    # Retrieve query parameters
     try:
+
+        # Retrieving parameters for method GET:
         if request.method == 'GET':
             doc_id = request.args.get('document_id', default=None, type=int)
             k = request.args.get('limit', default=5, type=int)
-            page = request.args.get('page', default=0, type=int)
-            offset = request.args.get('offset', default=page * k, type=int)
+            page = request.args.get('page', default=None, type=int)
+            offset = request.args.get('offset', default=None, type=int)
+
+        # Retrieving parameters for method POST:
         elif request.method == 'POST':
             doc_id = request.json['document_id']
             k = request.json['limit']
@@ -156,8 +160,13 @@ def get_similarities():
             offset = request.json['offset']
         else:
             return abort(405)
-        # Check if the given parameters fit together
-        if offset != page * k:
+
+        # Initialize missing parameters and check if they all fit together
+        if offset is None and page is None:
+            offset = 0
+        elif offset is None:
+            offset = page * k
+        elif offset != page * k and page is not None:
             raise Exception("The parameter 'offset' must be the product of parameters 'limit' and 'page'.")
     except Exception as e:
         return abort(401, "Could not retrieve the parameters. " + str(e))
