@@ -1,6 +1,5 @@
 import psycopg2
 from psycopg2.sql import Identifier, SQL
-from werkzeug.exceptions import abort
 
 class PostgresQL:
     """Connection to the PostgresQL database

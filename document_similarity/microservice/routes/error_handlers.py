@@ -66,3 +66,15 @@ def register(app):
                 "error": e.description,
             }
         })
+
+    @app.errorhandler(502)
+    def database_error(e):
+        # TODO: possible webpage for error
+        return jsonify({
+            "error": {
+                "message": "502: Database error.",
+                "route": request.path,
+                "method": request.method,
+                "error": e.description,
+            }
+        })
