@@ -151,13 +151,6 @@ def get_similarities():
             k = request.args.get('limit', default=5, type=int)
             page = request.args.get('page', default=None, type=int)
             offset = request.args.get('offset', default=None, type=int)
-
-        # Retrieving parameters for method POST:
-        elif request.method == 'POST':
-            doc_id = request.json['document_id']
-            k = request.json['limit']
-            page = request.json['page']
-            offset = request.json['offset']
         else:
             return abort(405)
 

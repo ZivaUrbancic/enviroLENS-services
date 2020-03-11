@@ -136,14 +136,13 @@ class PostgresQL:
         statement="""
         SELECT document2_id, similarity_score FROM similarities
         WHERE document1_id = %s
-        ORDER BY similarity_score DESC;
+        ORDER BY similarity_score DESC
+        LIMIT %s
+        OFFSET %s;
         """
-        similarity_list = self.execute(statement, (doc_id,))
-        if offset > len(similarity_list):
-            raise Exception("The number of documents in the database is lower than the 'offset' parameter.")
-        limit = min(offset + k, len(similarity_list))
-        result_indices = [entry['document2_id'] for entry in similarity_list[offset:limit]]
-        result = [(entry['document2_id'], entry['similarity_score']) for entry in similarity_list[offset:limit]]
+        similarity_list = self.execute(statement, (doc_id, k, offset,))
+        result_indices = [entry['document2_id'] for entry in similarity_list]
+        result = [(entry['document2_id'], entry['similarity_score']) for entry in similarity_list]
         return result_indices, result
 
     def insert_new_embedding(self, doc_id, embedding):
