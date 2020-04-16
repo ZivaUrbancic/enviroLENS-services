@@ -47,8 +47,8 @@ To start the microservice one must first initialize some global variables.
 ### Linux and Mac
 
 ```bash
-export FLASK_APP=document_retrieval
-export FLASK_ENV=document_retrieval
+export FLASK_APP=search
+export FLASK_ENV=development
 ```
 
 ### Windows
@@ -56,14 +56,14 @@ export FLASK_ENV=document_retrieval
 For Windows cmd, use `set` instead of `export`:
 
 ```cmd
-set FLASK_APP=document_retrieval
+set FLASK_APP=search
 set FLASK_ENV=development
 ```
 
 For Windows PowerShell, use `$env:` instead of `export`:
 
 ```PowerShell
-$env:FLASK_APP="document_retrieval"
+$env:FLASK_APP="search"
 $env:FLASK_ENV="development"
 ```
 
@@ -87,7 +87,7 @@ python -m flask run
 One will see output similar to this:
 
 ```bash
- * Serving Flask app "document_retrieval" (lazy loading)
+ * Serving Flask app "search" (lazy loading)
  * Environment: development
  * Debug mode: on
  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
@@ -114,7 +114,7 @@ instructions on how to run the service in development mode with additional param
 ##### Linux and Mac
 
 ```bash
-python -m microservice.main start \
+python -m service.main start \
     -H localhost \
     -p 4000
 ```
@@ -122,7 +122,7 @@ python -m microservice.main start \
 ##### Windows
 
 ```cmd
-python -m microservice.main start -H localhost -p 4000
+python -m service.main start -H localhost -p 4000
 ```
 
 #### Running different services
@@ -187,7 +187,7 @@ and control a number of processes on a UNIX-like operating systems.
     [program:microservice]
     user = {name-of-the-user}
     directory = /path/to/project/directory
-    command = sh ./scripts/environment.sh gunicorn -w 1 -b 127.0.0.1:4000 -c ./scripts/gunicorn.conf.py 'microservice:create_app(args={ "host":"127.0.0.1", "port":4000, "env":"production" })'
+    command = sh ./scripts/environment.sh gunicorn -w 1 -b 127.0.0.1:4000 -c ./scripts/gunicorn.conf.py 'service:create_app(args={ "host":"127.0.0.1", "port":4000, "env":"production" })'
 
     priority = 900
     autostart = true

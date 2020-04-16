@@ -23,3 +23,6 @@ crawlers/eurlex/!celex_nums/.*
 
 **__pycache__/
 **.__pycache__/
+
+
+log

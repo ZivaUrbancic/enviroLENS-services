@@ -41,9 +41,9 @@ def create_app(args=None):
         config_logging.init_app(app)
 
         # add index routes
-        from .routes import index, service
+        from .routes import index, search
         app.register_blueprint(index.bp)
-        app.register_blueprint(service.bp)
+        app.register_blueprint(search.bp)
 
     # TODO: log start of the service
     # return the app
