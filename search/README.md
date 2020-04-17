@@ -40,6 +40,26 @@ To install the project run
 pip install -r requirements.txt
 ```
 
+
+## Populating the elasticsearch index
+
+For this microservice to work, it requires a working elasticsearch service and a populated index.
+
+To set up the elasticsearch service please refer to this page: https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html
+
+Afterwards, once the service is up and running one must first create and populate the elasticsearch index.
+
+To do that, simply run the following command **from the root of the project, i.e. /eLENS-miner-system**:
+
+```bash
+ls # if running the ls command, one should see the folder /search
+# run the index population script
+python -m search.load.create-elasticsearch-index
+```
+
+It will take some time to populate the index.
+
+
 ## Starting Microservice
 
 To start the microservice one must first initialize some global variables.
@@ -76,7 +96,6 @@ One can leave it running and just reload the browser page as one does changes to
 #### Prerequisites
 Check the [configuration](./microservice/config/) folder to see what needs to be set before running
 the microservice in development mode.
-
 
 To run the service:
 ```bash

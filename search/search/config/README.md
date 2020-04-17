@@ -29,6 +29,9 @@ The parameters that can be set in this file can be found [here](../../README.md#
 # session secret
 PROD_SESSION_KEY=session-key
 
+PROD_PG_DATABASE={production-database-name}
+PROD_PG_PASSWORD={production-database-password}
+
 #######################################
 ### Development variables
 #######################################
@@ -36,12 +39,18 @@ PROD_SESSION_KEY=session-key
 # session secret
 DEV_SESSION_KEY=session-key
 
+DEV_PG_DATABASE={development-database-name}
+DEV_PG_PASSWORD={development-database-password}
+
 #######################################
 ### Test variables
 #######################################
 
 # session secret
 TEST_SESSION_KEY=session-key
+
+TEST_PG_DATABASE={test-database-name}
+TEST_PG_PASSWORD={test-database-name}
 
 ######################################
 # Common variables
