@@ -15,6 +15,63 @@ class PostgresQL:
         self.port = port
 
 
+    def connect(self, database, password, user="postgres"):
+        """Connects to the database with the provided user and password
+
+        Args:
+            database (str): The database name.
+            password (str): The password of the user.
+            user (str): The postgresql user. (Default "postgres")
+        """
+
+        try:
+            # create a connection
+            self.connection = psycopg2.connect(
+                user = user,
+                password = password,
+                host = self.host,
+                port = self.port,
+                database = database
+            )
+
+            # store the connection cursor
+            self.cursor = self.connection.cursor()
+
+        except (Exception, psycopg2.Error) as error:
+            # notify the user about the error
+            self.cursor = None
+
+
+    def disconnect(self):
+        """Disconnect the postgresql connection to the database"""
+        if self.connection:
+            self.cursor.close()
+            self.connection.close()
+
+
+    def execute(self, statement, params=None):
+        """Execute the provided statement
+
+        Args:
+            statement (str): The postgresql statement to be executed.
+
+        Returns:
+            list: a list of tuples containing the postgresql records.
+
+        """
+        if self.cursor is None:
+            raise Exception("The connection is not established")
+
+        if params:
+            self.cursor.execute(statement, params)
+        else:
+            self.cursor.execute(statement)
+
+        num_fields = len(self.cursor.description)
+        field_names = [i[0] for i in self.cursor.description]
+        return [{ field_names[i]: row[i] for i in range(num_fields) } for row in self.cursor.fetchall()]
+
+
     def db_query(self, query_words):
         """ From database returns list of dictionaries containing document IDs and text. Documents contain at least one query word.
         Args:
@@ -28,7 +85,8 @@ class PostgresQL:
             "WHERE to_tsvector('english', fulltext_cleaned) @@ to_tsquery(%s);"
         )
         documents = self.execute(statement, (output, ))
-        return(documents)
+        return documents
+
 
     def db_return_docs_metadata(self, metric_fn_output):
         """From database returns document metadata.
@@ -64,73 +122,11 @@ class PostgresQL:
             metadata_sorted[position] = { k: elt[k] for k in ('document_source', 'date', 'title', 'celex_num', 'fulltextlink') }
         return metadata_sorted
 
+
     def db_nb_docs(self):
         """Count number of the documents in database.
         Returns:
             leng(int): Number of documents in database."""
-        SQL = "SELECT COUNT(*) FROM documents;"
-        leng = self.execute(SQL)
-        leng = leng[0].get('count')
-        return(leng)
-
-    def connect(self, database, password, user="postgres"):
-        """Connects to the database with the provided user and password
-
-        Args:
-            database (str): The database name.
-            password (str): The password of the user.
-            user (str): The postgresql user. (Default "postgres")
-        """
-
-        try:
-            # create a connection
-            self.connection = psycopg2.connect(
-                user = user,
-                password = password,
-                host = self.host,
-                port = self.port,
-                database = database
-            )
-
-            # store the connection cursor
-            self.cursor = self.connection.cursor()
-
-        except (Exception, psycopg2.Error) as error:
-            # notify the user about the error
-            self.cursor = None
-
-
-    def disconnect(self):
-        """Disconnect the postgresql connection to the database"""
-        if self.connection:
-            self.cursor.close()
-            self.connection.close()
-
-
-    def execute(self, statement, *placeholder_values):
-        """Execute the provided statement
-
-        Args:
-            statement (str): The postgresql statement to be executed.
-
-        Returns:
-            list: a list of tuples containing the postgresql records.
-
-        """
-        if self.cursor is None:
-            raise Exception("The connection is not established")
-        elif placeholder_values:
-            if len(placeholder_values) == 1:
-                self.cursor.execute(statement, placeholder_values)
-                num_fields = len(self.cursor.description)
-                field_names = [i[0] for i in self.cursor.description]
-                return [{ field_names[i]: row[i] for i in range(num_fields) } for row in self.cursor.fetchall()]
-            else:
-                raise Exception("Too much arguments")
-        else:
-            self.cursor.execute(statement)
-            num_fields = len(self.cursor.description)
-            field_names = [i[0] for i in self.cursor.description]
-            return [{ field_names[i]: row[i] for i in range(num_fields) } for row in self.cursor.fetchall()]
-
-    # TODO: add project specific routes
+        statement = "SELECT COUNT(*) FROM documents;"
+        result = self.execute(statement)
+        return result[0].get('count')
