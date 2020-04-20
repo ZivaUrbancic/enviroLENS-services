@@ -1,6 +1,7 @@
 import string
 
 from elasticsearch import Elasticsearch
+import pycountry
 from ..search.library.postgresql import PostgresQL
 from ..search.config import config
 
@@ -97,7 +98,7 @@ if __name__=='__main__':
                 # "subjects" is an array of strings
             }
         }
-    });
+    })
 
     print("Get documents from postgres")
     # get the documents from the database
@@ -217,9 +218,6 @@ if __name__=='__main__':
         elif "date" in document and document["date"] == '':
             document["date"] = None
 
-
-        print(document["date"])
-
         # limit the number of entities
         document["named_entities"] = document["named_entities"][:5000] if document["named_entities"] else None
         document["wikipedia"] = document["wikipedia"][:5000] if document["wikipedia"] else None
@@ -253,15 +251,12 @@ if __name__=='__main__':
             for lang in document["languages"][:5000]:
                 if len(lang) == 2:
                     language = pycountry.languages.get(alpha_2=lang)
-                    langs.append(language.capitalize())
+                    if language is not None:
+                        langs.append(language.capitalize())
                 else:
                     langs.append(lang.capitalize())
 
             document["languages"] = langs
-
-        print(document["languages"])
-        print(document["document_id"])
-
         es.index(index="envirolens", id=document["document_id"], body=document)
         if count % 1000 == 0:
             print("Number of indexed documents:", count)
