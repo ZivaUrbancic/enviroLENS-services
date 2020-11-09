@@ -1,294 +1,794 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+  <head>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/bs/bootstrap.min.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/index.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i&amp;subset=latin-ext"
+      rel="stylesheet"
+    />
 
-<head>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+  </head>
 
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bs/bootstrap.min.css') }}">
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i&amp;subset=latin-ext" rel="stylesheet">
-
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-  <script src="{{ url_for('static', filename='js/common.js') }}"></script>
-</head>
-
-<body class="pt-6">
-  <main role="main">
-    <div class="container">
-      <div class="row">
-        <div class="col title__block">
-          <h1 class="title text-center">Main service for processing, analysing and searching</h1>
-          <h5 class="title text-center">through the environmental legal documents</h5>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col">
-          <h2 class="doc doc__section mt-4">REST API</h2>
-
-          <p class="information">
-            All URLs referenced in the REST API section have the following base:
-          </p>
-
-          <div class="doc url_baseline p-4 mb-3">
-            <p class="information">
-              <b class="doc">http://{{ result.host }}:{{ result.port }}/api/v1</b>
-            </p>
+  <body class="pt-6">
+    <main role="main">
+      <div class="container">
+        <div class="row">
+          <div class="col title__block">
+            <h1 class="title text-center">
+              Main service for processing, analysing and searching
+            </h1>
+            <h5 class="title text-center">
+              through the environmental legal documents
+            </h5>
           </div>
+        </div>
 
-          <h3 class="doc doc__section mt-5">
-            Main service REST API
-          </h3>
-          <p class="information">
-            Main service REST API allows users to access any of the document similarity, document retrieval or text embeddings
-            microservices.
-          </p>
+        <div class="row">
+          <div class="col">
+            <h2 class="doc doc__section mt-4">REST API</h2>
 
-          <h6 class="mt-2">
-            Available methods
-          </h6>
+            <p class="information">
+              All URLs referenced in the REST API section have the following
+              base:
+            </p>
 
-          <div class="table-responsive">
-            <table class="table table-borderless table-hover">
-              <thead>
-                <tr>
-                  <th class="doc doc__method request">
-                  </th><th class="doc doc__method route">
-                  </th><th class="doc doc__method description">
-                </th></tr>
-              </thead>
-              <tbody>
-                <tr class="clickable-row" data-href="#documents-search">
-                  <td><b class="doc">GET</b></td>
-                  <td>/documents/search</td>
-                  <td>Get documents related to the given query</td>
-                </tr>
-                <tr class="clickable-row" data-href="#documents-similar">
-                  <td><b class="doc">GET</b></td>
-                  <td>/documents/{document_id}/similar</td>
-                  <td>Get the most similar documents to the given one</td>
-                </tr>
-                <tr class="clickable-row" data-href="#similarity-update">
-                  <td><b class="doc">POST</b></td>
-                  <td>/documents/{document_id}/similarity_update</td>
-                  <td>Updates the similarities table with the provided document</td>
-                </tr>
-                <tr class="clickable-row" data-href="#create-text-embedding">
-                  <td><b class="doc">GET</b></td>
-                  <td>/embeddings/create</td>
-                  <td>Create the text embedding</td>
-                </tr>
-                <tr class="clickable-row" data-href="#db-document">
+            <div class="doc url_baseline p-4 mb-3">
+              <p class="information">
+                <b class="doc"
+                  >http://envirolens.ijs.si/api/v1</b
+                >
+              </p>
+            </div>
+
+            <h3 class="doc doc__section mt-5">
+              Main service REST API
+            </h3>
+            <p class="information">
+              Main service REST API allows users to access any of the document
+              similarity, document retrieval or text embeddings microservices.
+            </p>
+
+            <h6 class="mt-2">
+              Available methods
+            </h6>
+
+            <div class="table-responsive">
+              <table class="table table-borderless table-hover">
+                <thead>
+                  <tr>
+                    <th class="doc doc__method request"></th>
+                    <th class="doc doc__method route"></th>
+                    <th class="doc doc__method description"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="clickable-row" data-href="#documents-search">
+                    <td><b class="doc">GET</b></td>
+                    <td>/documents/search</td>
+                    <td>Search for relevant documents</td>
+                  </tr>
+                  <tr class="clickable-row" data-href="#documents-similar">
+                    <td><b class="doc">GET</b></td>
+                    <td>/documents/{document_id}/similar</td>
+                    <td>Get the most similar documents to the given one</td>
+                  </tr>
+                  <tr class="clickable-row" data-href="#similarity-update">
+                    <td><b class="doc">POST</b></td>
+                    <td>/documents/{document_id}/similarity_update</td>
+                    <td>
+                      Updates the similarities table with the provided document
+                    </td>
+                  </tr>
+                  <tr class="clickable-row" data-href="#create-text-embedding">
+                    <td><b class="doc">GET</b></td>
+                    <td>/embeddings/create</td>
+                    <td>Create the text embedding</td>
+                  </tr>
+                  <tr class="clickable-row" data-href="#db-document">
                     <td><b class="doc">GET</b></td>
                     <td>/documents</td>
                     <td>Returns requested document ids from the database</td>
                   </tr>
-                <tr class="clickable-row" data-href="#db-document-single">
+                  <tr class="clickable-row" data-href="#db-document-single">
                     <td><b class="doc">GET</b></td>
                     <td>/documents/{document_id}</td>
                     <td>Returns requested document from the database</td>
                   </tr>
-              </tbody>
-            </table>
-          </div>
+                </tbody>
+              </table>
+            </div>
 
-          <a class="anchor" id="documents-search"></a>
-          <h5 class="doc doc__subsection mt-5 mb-3">
-              Retrieve most similar documents to the given query
-          </h5>
+            <a class="anchor" id="documents-search"></a>
+            <h5 class="doc doc__subsection mt-5 mb-3">
+              Search for relevant documents
+            </h5>
 
-          <div class="table-responsive">
-            <table class="table table-borderless">
-              <thead>
-                <tr>
-                  <th class="doc doc__method request">
-                  </th><th class="doc doc__method route">
-                </th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><b class="doc">GET</b></td>
-                  <td><b>/documents/search</b></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <p>Route information</p>
-          <h6 class="mt-2">Query string parameters</h6>
-          <div class="table-responsive">
-            <table class="table table-dashed-borders">
-              <thead>
-                <tr>
-                  <th class="doc doc__query name"></th>
-                  <th class="doc doc__query type"></th>
-                  <th class="doc doc__query title"></th>
-                  <th class="doc doc__query optional"></th>
-                  <th class="doc doc__query description"></th>
-                </tr>
-              </thead>
-              <tbody>
+            <div class="table-responsive">
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th class="doc doc__method request"></th>
+                    <th class="doc doc__method route"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b class="doc">GET</b></td>
+                    <td><b>/documents/search</b></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p>Route information</p>
+            <h6 class="mt-2">Query string parameters</h6>
+            <div class="table-responsive">
+              <table class="table table-dashed-borders">
+                <thead>
+                  <tr>
+                    <th class="doc doc__query name"></th>
+                    <th class="doc doc__query type"></th>
+                    <th class="doc doc__query title"></th>
+                    <th class="doc doc__query optional"></th>
+                    <th class="doc doc__query description"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b class="doc">text</b></td>
+                    <td><span class="doc doc--small">Type:</span> String</td>
+                    <td>
+                      <span class="doc doc--small">Title:</span> Query Text
+                    </td>
+                    <td><span class="doc doc--small">Optional:</span> false</td>
+                    <td>
+                      The text for which we wish to retrieve documents.
+                    </td>
+                  </tr>
 
-                <tr>
-                  <td><b class="doc">query</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> String
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> Query Text
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Optional:</span> false
-                  </td>
-                  <td>
-                    Query for which we want to find related documents for.
-                  </td>
-                </tr>
+                  <tr>
+                    <td><b class="doc">sources</b></td>
+                    <td><span class="doc doc--small">Type:</span> String</td>
+                    <td>
+                      <span class="doc doc--small">Title:</span> Document
+                      Sources
+                    </td>
+                    <td><span class="doc doc--small">Optional:</span> true</td>
+                    <td>
+                      The comma separated source names of the documents. When
+                      provided, returns only documents that are associated with
+                      any of the provided sources. Possible options:
+                      <code>eurlex</code>, <code>ecolex</code>. <br /><b
+                        >Default value</b
+                      >
+                      is <code>eurlex</code>.
+                    </td>
+                  </tr>
 
-                <tr>
-                  <td><b class="doc">m</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> Positive Integer
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> number of results
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Optional:</span> true
-                  </td>
-                  <td>
-                    Number of results that we want to get.
-                  </td>
-                </tr>
+                  <tr>
+                    <td><b class="doc">locations</b></td>
+                    <td><span class="doc doc--small">Type:</span> String</td>
+                    <td>
+                      <span class="doc doc--small">Title:</span> Associated
+                      Locations
+                    </td>
+                    <td><span class="doc doc--small">Optional:</span> true</td>
+                    <td>
+                      The comma separated location names. When present, returns
+                      only the documents that are associated with any of the
+                      locations.
+                      <br /><b>Default value</b> is <code>Null</code>.
+                    </td>
+                  </tr>
 
-              </tbody>
-            </table>
-          </div>
+                  <tr>
+                    <td><b class="doc">languages</b></td>
+                    <td><span class="doc doc--small">Type:</span> String</td>
+                    <td>
+                      <span class="doc doc--small">Title:</span> Languages
+                    </td>
+                    <td><span class="doc doc--small">Optional:</span> true</td>
+                    <td>
+                      The comma separated languages in English. When present,
+                      returns only the documents that are available in any of
+                      the provided languages.
+                      <br /><b>Example:</b>
+                      <code>languages=english,german</code>
+                    </td>
+                  </tr>
 
-          <h6 class="mt-2">Response JSON (example)</h6>
-          <div class="doc url_baseline p-4 mb-3">
-            <p class="information">
-              <b class="doc"> 
-<pre>
-  {
-    "document_metadata" : [
-      {
-        "celex_num": "91998E001914",
-        "date": "16/06/1998",
-        "document_source": "eurlex",
-        "fulltextlink": null,
-        "title": "WRITTEN QUESTION No. 1914/98 by José APOLINÁRIO to the Commission. Implementation of Regulation (EEC) No 2080/92"
-    },
-    ]
-  }
-</pre>
-              </b>
-            </p>
-          </div>
+                  <tr>
+                    <td><b class="doc">informea</b></td>
+                    <td><span class="doc doc--small">Type:</span> String</td>
+                    <td><span class="doc doc--small">Title:</span> InforMEA</td>
+                    <td><span class="doc doc--small">Optional:</span> true</td>
+                    <td>
+                      The comma separated InforMEA terms. When present, returns
+                      only the documents that are associated in any of the
+                      provided InforMEA terms.
+                      <br /><b>Example:</b>
+                      <code>languages=english,german</code>
+                    </td>
+                  </tr>
 
+                  <tr>
+                    <td><b class="doc">limit</b></td>
+                    <td><span class="doc doc--small">Type:</span> Integer</td>
+                    <td><span class="doc doc--small">Title:</span> Limit</td>
+                    <td><span class="doc doc--small">Optional:</span> true</td>
+                    <td>
+                      The number of retrieved documents.
+                    </td>
+                  </tr>
 
-          <a class="anchor" id="documents-similar"></a>
-          <h5 class="doc doc__subsection mt-5 mb-3">
+                  <tr>
+                    <td><b class="doc">page</b></td>
+                    <td><span class="doc doc--small">Type:</span> Integer</td>
+                    <td><span class="doc doc--small">Title:</span> Page</td>
+                    <td><span class="doc doc--small">Optional:</span> true</td>
+                    <td>
+                      The page of the retrieved documents.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h6 class="mt-2">Response body attributes</h6>
+            <div class="table-responsive">
+              <table class="table table-dashed-borders">
+                <thead>
+                  <tr>
+                    <th class="doc doc__query name"></th>
+                    <th class="doc doc__query type"></th>
+                    <th class="doc doc__query title"></th>
+                    <th class="doc doc__query optional"></th>
+                    <th class="doc doc__query description"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b class="doc">documents</b></td>
+                    <td><span class="doc doc--small">Type:</span>Object[]</td>
+                    <td>
+                      <span class="doc doc--small">Title:</span>Document
+                      Metadata
+                    </td>
+                    <td><span class="doc doc--small">Read only:</span> true</td>
+                    <td>
+                      Metadata of the retrieved documents.
+                    </td>
+                  </tr>
+
+                  <tr class="no-top-border">
+                    <td colspan="5">
+                      <b class="doc">documents item properties</b>
+                      <table
+                        class="table table-dashed-borders table--second-level"
+                      >
+                        <thead>
+                          <tr>
+                            <th class="doc doc__query name"></th>
+                            <th class="doc doc__query type"></th>
+                            <th class="doc doc__query title"></th>
+                            <th class="doc doc__query optional"></th>
+                            <th class="doc doc__query description"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><b class="doc">score</b></td>
+                            <td>
+                              <span class="doc doc--small">Type:</span> Number
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Title:</span> Score
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Read only:</span>
+                              true
+                            </td>
+                            <td>
+                              The relevance score of the document to the query.
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><b class="doc">document_id</b></td>
+                            <td>
+                              <span class="doc doc--small">Type:</span> Number
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Title:</span>
+                              Document ID
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Read only:</span>
+                              true
+                            </td>
+                            <td>
+                              The document ID.
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><b class="doc">title</b></td>
+                            <td>
+                              <span class="doc doc--small">Type:</span> String
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Title:</span>
+                              Document Title
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Read only:</span>
+                              true
+                            </td>
+                            <td>
+                              The document title (if present, otherwise None).
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><b class="doc">abstract</b></td>
+                            <td>
+                              <span class="doc doc--small">Type:</span> String
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Title:</span>
+                              Document Abstract
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Read only:</span>
+                              true
+                            </td>
+                            <td>
+                              The document abstract (if present, otherwise
+                              None).
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><b class="doc">link</b></td>
+                            <td>
+                              <span class="doc doc--small">Type:</span> String
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Title:</span>
+                              Document Link
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Read only:</span>
+                              true
+                            </td>
+                            <td>
+                              The link to the associated document or webpage
+                              containing more information.
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><b class="doc">date</b></td>
+                            <td>
+                              <span class="doc doc--small">Type:</span> Date
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Title:</span>
+                              Document Date
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Read only:</span>
+                              true
+                            </td>
+                            <td>
+                              The date of the document (if present, otherwise
+                              None).
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><b class="doc">celex</b></td>
+                            <td>
+                              <span class="doc doc--small">Type:</span> String
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Title:</span>
+                              Document CELEX ID
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Read only:</span>
+                              true
+                            </td>
+                            <td>
+                              The document CELEX ID (if present, otherwise
+                              None).
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><b class="doc">keywords</b></td>
+                            <td>
+                              <span class="doc doc--small">Type:</span> String[]
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Title:</span>
+                              Document Keywords
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Read only:</span>
+                              true
+                            </td>
+                            <td>
+                              The document keywords array (if present, otherwise
+                              None).
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><b class="doc">source</b></td>
+                            <td>
+                              <span class="doc doc--small">Type:</span> String
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Title:</span>
+                              Document Source
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Read only:</span>
+                              true
+                            </td>
+                            <td>
+                              The document source.
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><b class="doc">informea</b></td>
+                            <td>
+                              <span class="doc doc--small">Type:</span> String[]
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Title:</span>
+                              Document InforMEA Terms
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Read only:</span>
+                              true
+                            </td>
+                            <td>
+                              The document InforMEA terms array (if present,
+                              otherwise None).
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><b class="doc">languages</b></td>
+                            <td>
+                              <span class="doc doc--small">Type:</span> String[]
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Title:</span>
+                              Document Languages
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Read only:</span>
+                              true
+                            </td>
+                            <td>
+                              The array of languages the document is available
+                              in (if present, otherwise None).
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><b class="doc">subjects</b></td>
+                            <td>
+                              <span class="doc doc--small">Type:</span> String[]
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Title:</span>
+                              Document Subjects
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Read only:</span>
+                              true
+                            </td>
+                            <td>
+                              The array of subjects associated with the document
+                              (if present, otherwise None).
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><b class="doc">areas</b></td>
+                            <td>
+                              <span class="doc doc--small">Type:</span> String[]
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Title:</span>
+                              Document Areas
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Read only:</span>
+                              true
+                            </td>
+                            <td>
+                              The areas the document is associated with (if
+                              present, otherwise None).
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td><b class="doc">query</b></td>
+                    <td><span class="doc doc--small">Type:</span>Object</td>
+                    <td>
+                      <span class="doc doc--small">Title:</span>Query Parameters
+                    </td>
+                    <td><span class="doc doc--small">Read only:</span> true</td>
+                    <td>
+                      The query parameters used to perform the search.
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td><b class="doc">metadata</b></td>
+                    <td><span class="doc doc--small">Type:</span>Object</td>
+                    <td>
+                      <span class="doc doc--small">Title:</span>Search Metadata
+                    </td>
+                    <td><span class="doc doc--small">Read only:</span> true</td>
+                    <td>
+                      The search metadata used to support navigating through the
+                      results.
+                    </td>
+                  </tr>
+
+                  <tr class="no-top-border">
+                    <td colspan="5">
+                      <b class="doc">metadata item properties</b>
+                      <table
+                        class="table table-dashed-borders table--second-level"
+                      >
+                        <thead>
+                          <tr>
+                            <th class="doc doc__query name"></th>
+                            <th class="doc doc__query type"></th>
+                            <th class="doc doc__query title"></th>
+                            <th class="doc doc__query optional"></th>
+                            <th class="doc doc__query description"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><b class="doc">total_hits</b></td>
+                            <td>
+                              <span class="doc doc--small">Type:</span> Number
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Title:</span> Total
+                              Hits
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Read only:</span>
+                              true
+                            </td>
+                            <td>
+                              The number of all relevant documents.
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><b class="doc">total_pages</b></td>
+                            <td>
+                              <span class="doc doc--small">Type:</span> Number
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Title:</span> Total
+                              Pages
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Read only:</span>
+                              true
+                            </td>
+                            <td>
+                              The maximum number of result pages.
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><b class="doc">prev_page</b></td>
+                            <td>
+                              <span class="doc doc--small">Type:</span> String
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Title:</span>
+                              Previous Page
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Read only:</span>
+                              true
+                            </td>
+                            <td>
+                              The URL to the previous search result page (if
+                              present, otherwise None).
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><b class="doc">next_page</b></td>
+                            <td>
+                              <span class="doc doc--small">Type:</span> String
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Title:</span> Next
+                              Page
+                            </td>
+                            <td>
+                              <span class="doc doc--small">Read only:</span>
+                              true
+                            </td>
+                            <td>
+                              The URL to the next search result page (if
+                              present, otherwise None).
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <a class="anchor" id="documents-similar"></a>
+            <h5 class="doc doc__subsection mt-5 mb-3">
               Retrieve most similar documents to the given document
-          </h5>
+            </h5>
 
-          <div class="table-responsive">
-            <table class="table table-borderless">
-              <thead>
-                <tr>
-                  <th class="doc doc__method request">
-                  </th><th class="doc doc__method route">
-                </th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><b class="doc">GET</b></td>
-                  <td><b>/documents/{document_id}/similar</b></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <p>Route information</p>
-          <h6 class="mt-2">Query string parameters</h6>
-          <div class="table-responsive">
-            <table class="table table-dashed-borders">
-              <thead>
-                <tr>
-                  <th class="doc doc__query name"></th>
-                  <th class="doc doc__query type"></th>
-                  <th class="doc doc__query title"></th>
-                  <th class="doc doc__query optional"></th>
-                  <th class="doc doc__query description"></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><b class="doc">document_id</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> Integer
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> Document ID
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Optional:</span> false
-                  </td>
-                  <td>
-                    Id of the document to which we want to find similar documents.
-                  </td>
-                </tr>
-                <tr>
-                  <td><b class="doc">limit</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> Integer
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> Limit
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Optional:</span> True
-                  </td>
-                  <td>
-                    Number of documents per page.
-                  </td>
-                </tr>
-                <tr>
-                  <td><b class="doc">page</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> Integer
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> Page
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Optional:</span> True
-                  </td>
-                  <td>
-                    Which page to retrieve (with 0 meaning the first page, 1 the second and so on).
-                  </td>
-                </tr>
-                <tr>
-                  <td><b class="doc">offset</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> Integer
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> Offset
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Optional:</span> True
-                  </td>
-                  <td>
-                    How many most similar documents to skip. If page is given, offset should be equal to page*limit.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+            <div class="table-responsive">
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th class="doc doc__method request">
+                    </th><th class="doc doc__method route">
+                  </th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b class="doc">GET</b></td>
+                    <td><b>/documents/{document_id}/similar</b></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p>Route information</p>
+            <h6 class="mt-2">Query string parameters</h6>
+            <div class="table-responsive">
+              <table class="table table-dashed-borders">
+                <thead>
+                  <tr>
+                    <th class="doc doc__query name"></th>
+                    <th class="doc doc__query type"></th>
+                    <th class="doc doc__query title"></th>
+                    <th class="doc doc__query optional"></th>
+                    <th class="doc doc__query description"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b class="doc">document_id</b></td>
+                    <td>
+                      <span class="doc doc--small">Type:</span> Integer
+                    </td>
+                    <td>
+                      <span class="doc doc--small">Title:</span> Document ID
+                    </td>
+                    <td>
+                      <span class="doc doc--small">Optional:</span> false
+                    </td>
+                    <td>
+                      Id of the document to which we want to find similar documents.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b class="doc">limit</b></td>
+                    <td>
+                      <span class="doc doc--small">Type:</span> Integer
+                    </td>
+                    <td>
+                      <span class="doc doc--small">Title:</span> Limit
+                    </td>
+                    <td>
+                      <span class="doc doc--small">Optional:</span> True
+                    </td>
+                    <td>
+                      Number of documents per page.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b class="doc">page</b></td>
+                    <td>
+                      <span class="doc doc--small">Type:</span> Integer
+                    </td>
+                    <td>
+                      <span class="doc doc--small">Title:</span> Page
+                    </td>
+                    <td>
+                      <span class="doc doc--small">Optional:</span> True
+                    </td>
+                    <td>
+                      Which page to retrieve (with 0 meaning the first page, 1 the second and so on).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b class="doc">offset</b></td>
+                    <td>
+                      <span class="doc doc--small">Type:</span> Integer
+                    </td>
+                    <td>
+                      <span class="doc doc--small">Title:</span> Offset
+                    </td>
+                    <td>
+                      <span class="doc doc--small">Optional:</span> True
+                    </td>
+                    <td>
+                      How many most similar documents to skip. If page is given, offset should be equal to page*limit.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
-          <h6 class="mt-2">Response JSON (example)</h6>
-          <div class="doc url_baseline p-4 mb-3">
-            <p class="information">
-              <b class="doc"> 
-<pre>
+            <div class="table-responsive">
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th class="doc doc__method request"></th>
+                    <th class="doc doc__method route"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b class="doc">GET</b></td>
+                    <td><b>/documents/{document_id}/similar</b></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p>Route information</p>
+            <h6 class="mt-2">Query string parameters</h6>
+            <div class="table-responsive">
+              <table class="table table-dashed-borders">
+                <thead>
+                  <tr>
+                    <th class="doc doc__query name"></th>
+                    <th class="doc doc__query type"></th>
+                    <th class="doc doc__query title"></th>
+                    <th class="doc doc__query optional"></th>
+                    <th class="doc doc__query description"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b class="doc">document_id</b></td>
+                    <td><span class="doc doc--small">Type:</span> String</td>
+                    <td>
+                      <span class="doc doc--small">Title:</span> Document ID
+                    </td>
+                    <td><span class="doc doc--small">Optional:</span> false</td>
+                    <td>
+                      Id of the document to which we want to find similar
+                      documents.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h6 class="mt-2">Response JSON (example)</h6>
+            <div class="doc url_baseline p-4 mb-3">
+              <p class="information">
+                <b class="doc">
+                  <pre>
   [
   {
       ... document metadata ...
@@ -299,88 +799,144 @@
       similarity : x.abcdefgh
   },
 ]
-      
-</pre>
-              </b>
-            </p>
-          </div>
 
+</pre
+                  >
+                </b>
+              </p>
+            </div>
 
-          <a class="anchor" id="similarity-update"></a>
-          <h5 class="doc doc__subsection mt-5 mb-3">
+            <a class="anchor" id="similarity-update"></a>
+            <h5 class="doc doc__subsection mt-5 mb-3">
               Update document similarities with the given document.
-          </h5>
+            </h5>
 
-          <div class="table-responsive">
-            <table class="table table-borderless">
-              <thead>
-                <tr>
-                  <th class="doc doc__method request">
-                  </th><th class="doc doc__method route">
-                </th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><b class="doc">POST</b></td>
-                  <td><b>/documents/similarity_update</b></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <p>Route information</p>
-          <h6 class="mt-2">Query string parameters</h6>
-          <div class="table-responsive">
-            <table class="table table-dashed-borders">
-              <thead>
-                <tr>
-                  <th class="doc doc__query name"></th>
-                  <th class="doc doc__query type"></th>
-                  <th class="doc doc__query title"></th>
-                  <th class="doc doc__query optional"></th>
-                  <th class="doc doc__query description"></th>
-                </tr>
-              </thead>
-              <tbody>
+            <div class="table-responsive">
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th class="doc doc__method request">
+                    </th><th class="doc doc__method route">
+                  </th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b class="doc">POST</b></td>
+                    <td><b>/documents/similarity_update</b></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p>Route information</p>
+            <h6 class="mt-2">Query string parameters</h6>
+            <div class="table-responsive">
+              <table class="table table-dashed-borders">
+                <thead>
+                  <tr>
+                    <th class="doc doc__query name"></th>
+                    <th class="doc doc__query type"></th>
+                    <th class="doc doc__query title"></th>
+                    <th class="doc doc__query optional"></th>
+                    <th class="doc doc__query description"></th>
+                  </tr>
+                </thead>
+                <tbody>
 
-                <tr>
-                  <td><b class="doc">document_id</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> String
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> Document ID
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Optional:</span> false
-                  </td>
-                  <td>
-                    Id of the document for which we want to do the update.
-                  </td>
-                </tr>
-                <tr>
-                  <td><b class="doc">language</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> String
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> Language
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Optional:</span> true
-                  </td>
-                  <td>
-                    The ISO 639-1 code of the language of the document.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                  <tr>
+                    <td><b class="doc">document_id</b></td>
+                    <td>
+                      <span class="doc doc--small">Type:</span> String
+                    </td>
+                    <td>
+                      <span class="doc doc--small">Title:</span> Document ID
+                    </td>
+                    <td>
+                      <span class="doc doc--small">Optional:</span> false
+                    </td>
+                    <td>
+                      Id of the document for which we want to do the update.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b class="doc">language</b></td>
+                    <td>
+                      <span class="doc doc--small">Type:</span> String
+                    </td>
+                    <td>
+                      <span class="doc doc--small">Title:</span> Language
+                    </td>
+                    <td>
+                      <span class="doc doc--small">Optional:</span> true
+                    </td>
+                    <td>
+                      The ISO 639-1 code of the language of the document.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th class="doc doc__method request"></th>
+                    <th class="doc doc__method route"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b class="doc">POST</b></td>
+                    <td><b>/documents/similarity_update</b></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p>Route information</p>
+            <h6 class="mt-2">Query string parameters</h6>
+            <div class="table-responsive">
+              <table class="table table-dashed-borders">
+                <thead>
+                  <tr>
+                    <th class="doc doc__query name"></th>
+                    <th class="doc doc__query type"></th>
+                    <th class="doc doc__query title"></th>
+                    <th class="doc doc__query optional"></th>
+                    <th class="doc doc__query description"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b class="doc">document_id</b></td>
+                    <td><span class="doc doc--small">Type:</span> String</td>
+                    <td>
+                      <span class="doc doc--small">Title:</span> Document ID
+                    </td>
+                    <td><span class="doc doc--small">Optional:</span> false</td>
+                    <td>
+                      Id of the document for which we want to do the update.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b class="doc">language</b></td>
+                    <td><span class="doc doc--small">Type:</span> String</td>
+                    <td>
+                      <span class="doc doc--small">Title:</span> Language of the
+                      text
+                    </td>
+                    <td><span class="doc doc--small">Optional:</span> true</td>
+                    <td>
+                      The ISO 639-1 code of the language of the document.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
-          <h6 class="mt-2">Response JSON (example)</h6>
-          <div class="doc url_baseline p-4 mb-3">
-            <p class="information">
-              <b class="doc"> 
-<pre>
+            <h6 class="mt-2">Response JSON (example)</h6>
+            <div class="doc url_baseline p-4 mb-3">
+              <p class="information">
+                <b class="doc">
+                  <pre>
     {
       "additional similarities": [
         [
@@ -409,88 +965,78 @@
         ...
       ]
     }
-</pre>
-              </b>
-            </p>
-          </div>
+</pre
+                  >
+                </b>
+              </p>
+            </div>
 
-
-          <a class="anchor" id="create-text-embedding"></a>
-          <h5 class="doc doc__subsection mt-5 mb-3">
+            <a class="anchor" id="create-text-embedding"></a>
+            <h5 class="doc doc__subsection mt-5 mb-3">
               Creates text embedding from the given query.
-          </h5>
+            </h5>
 
-          <div class="table-responsive">
-            <table class="table table-borderless">
-              <thead>
-                <tr>
-                  <th class="doc doc__method request">
-                  </th><th class="doc doc__method route">
-                </th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><b class="doc">GET</b></td>
-                  <td><b>/embedding/create</b></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <p>Route information</p>
-          <h6 class="mt-2">Query string parameters</h6>
-          <div class="table-responsive">
-            <table class="table table-dashed-borders">
-              <thead>
-                <tr>
-                  <th class="doc doc__query name"></th>
-                  <th class="doc doc__query type"></th>
-                  <th class="doc doc__query title"></th>
-                  <th class="doc doc__query optional"></th>
-                  <th class="doc doc__query description"></th>
-                </tr>
-              </thead>
-              <tbody>
+            <div class="table-responsive">
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th class="doc doc__method request"></th>
+                    <th class="doc doc__method route"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b class="doc">GET</b></td>
+                    <td><b>/embedding/create</b></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p>Route information</p>
+            <h6 class="mt-2">Query string parameters</h6>
+            <div class="table-responsive">
+              <table class="table table-dashed-borders">
+                <thead>
+                  <tr>
+                    <th class="doc doc__query name"></th>
+                    <th class="doc doc__query type"></th>
+                    <th class="doc doc__query title"></th>
+                    <th class="doc doc__query optional"></th>
+                    <th class="doc doc__query description"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b class="doc">text</b></td>
+                    <td><span class="doc doc--small">Type:</span> String</td>
+                    <td><span class="doc doc--small">Title:</span> Text</td>
+                    <td><span class="doc doc--small">Optional:</span> false</td>
+                    <td>
+                      Text for which we want the embedding.
+                    </td>
+                  </tr>
 
-                <tr>
-                  <td><b class="doc">text</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> String
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> Text
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Optional:</span> false
-                  </td>
-                  <td>
-                    Text for which we want the embedding.
-                  </td>
-                </tr>
+                  <tr>
+                    <td><b class="doc">language</b></td>
+                    <td><span class="doc doc--small">Type:</span> String</td>
+                    <td>
+                      <span class="doc doc--small">Title:</span> Language of the
+                      text
+                    </td>
+                    <td><span class="doc doc--small">Optional:</span> True</td>
+                    <td>
+                      Language of given text.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
-                <tr>
-                  <td><b class="doc">language</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> String
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> Language of the text
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Optional:</span> True
-                  </td>
-                  <td>
-                    Language of given text.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <h6 class="mt-2">Response JSON (example)</h6>
-          <div class="doc url_baseline p-4 mb-3">
-            <p class="information">
-              <b class="doc"> 
-<pre>
+            <h6 class="mt-2">Response JSON (example)</h6>
+            <div class="doc url_baseline p-4 mb-3">
+              <p class="information">
+                <b class="doc">
+                  <pre>
     {
       "embedding": [
         -0.026200000196695328,
@@ -510,197 +1056,179 @@
         }
       ]
     }
-</pre>
-              </b>
-            </p>
-          </div>
-          <a class="anchor" id="db-document"></a>
-          <h5 class="doc doc__subsection mt-5 mb-3">
+</pre
+                  >
+                </b>
+              </p>
+            </div>
+            <a class="anchor" id="db-document"></a>
+            <h5 class="doc doc__subsection mt-5 mb-3">
               Fetches documents from the database
-          </h5>
+            </h5>
 
-          <div class="table-responsive">
-            <table class="table table-borderless">
-              <thead>
-                <tr>
-                  <th class="doc doc__method request">
-                  </th><th class="doc doc__method route">
-                </th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><b class="doc">GET</b></td>
-                  <td><b>/documents</b></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <p>Route information</p>
-          <h6 class="mt-2">Query parameters</h6>
-          <div class="table-responsive">
-            <table class="table table-dashed-borders">
-              <thead>
-                <tr>
-                  <th class="doc doc__query name"></th>
-                  <th class="doc doc__query type"></th>
-                  <th class="doc doc__query title"></th>
-                  <th class="doc doc__query optional"></th>
-                  <th class="doc doc__query description"></th>
-                </tr>
-              </thead>
-              <tbody>
+            <div class="table-responsive">
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th class="doc doc__method request"></th>
+                    <th class="doc doc__method route"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b class="doc">GET</b></td>
+                    <td><b>/documents</b></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p>Route information</p>
+            <h6 class="mt-2">Query parameters</h6>
+            <div class="table-responsive">
+              <table class="table table-dashed-borders">
+                <thead>
+                  <tr>
+                    <th class="doc doc__query name"></th>
+                    <th class="doc doc__query type"></th>
+                    <th class="doc doc__query title"></th>
+                    <th class="doc doc__query optional"></th>
+                    <th class="doc doc__query description"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b class="doc">document_ids</b></td>
+                    <td><span class="doc doc--small">Type:</span> List[Int]</td>
+                    <td>
+                      <span class="doc doc--small">Title:</span> List of
+                      documents ids
+                    </td>
+                    <td><span class="doc doc--small">Optional:</span> false</td>
+                    <td>
+                      Ids of the documents we want to fetch.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
-                <tr>
-                  <td><b class="doc">document_ids</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> List[Int]
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> List of documents ids
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Optional:</span> false
-                  </td>
-                  <td>
-                    Ids of the documents we want to fetch.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <a class="anchor" id="db-document-single"></a>
-          <h5 class="doc doc__subsection mt-5 mb-3">
+            <a class="anchor" id="db-document-single"></a>
+            <h5 class="doc doc__subsection mt-5 mb-3">
               Fetches document from the database
-          </h5>
+            </h5>
 
-          <div class="table-responsive">
-            <table class="table table-borderless">
-              <thead>
-                <tr>
-                  <th class="doc doc__method request">
-                  </th><th class="doc doc__method route">
-                </th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><b class="doc">GET</b></td>
-                  <td><b>/documents/{document_id}</b></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <p>Route information</p>
-          <h6 class="mt-2">Query parameters</h6>
-          <div class="table-responsive">
-            <table class="table table-dashed-borders">
-              <thead>
-                <tr>
-                  <th class="doc doc__query name"></th>
-                  <th class="doc doc__query type"></th>
-                  <th class="doc doc__query title"></th>
-                  <th class="doc doc__query optional"></th>
-                  <th class="doc doc__query description"></th>
-                </tr>
-              </thead>
-              <tbody>
+            <div class="table-responsive">
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th class="doc doc__method request"></th>
+                    <th class="doc doc__method route"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b class="doc">GET</b></td>
+                    <td><b>/documents/{document_id}</b></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p>Route information</p>
+            <h6 class="mt-2">Query parameters</h6>
+            <div class="table-responsive">
+              <table class="table table-dashed-borders">
+                <thead>
+                  <tr>
+                    <th class="doc doc__query name"></th>
+                    <th class="doc doc__query type"></th>
+                    <th class="doc doc__query title"></th>
+                    <th class="doc doc__query optional"></th>
+                    <th class="doc doc__query description"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b class="doc">document_id</b></td>
+                    <td><span class="doc doc--small">Type:</span> Int</td>
+                    <td>
+                      <span class="doc doc--small">Title:</span> document id
+                    </td>
+                    <td><span class="doc doc--small">Optional:</span> false</td>
+                    <td>
+                      Id of the document we want to fetch.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
-                <tr>
-                  <td><b class="doc">document_id</b></td>
-                  <td>
-                    <span class="doc doc--small">Type:</span> Int
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Title:</span> document id
-                  </td>
-                  <td>
-                    <span class="doc doc--small">Optional:</span> false
-                  </td>
-                  <td>
-                    Id of the document we want to fetch.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <h6 class="mt-2">Response JSON (example)</h6>
-          <div class="doc url_baseline p-4 mb-3">
-            <p class="information">
-              <b class="doc"> 
-<pre>
+            <h6 class="mt-2">Response JSON (example)</h6>
+            <div class="doc url_baseline p-4 mb-3">
+              <p class="information">
+                <b class="doc">
+                  <pre>
     [
     {
-      "abstract": "<dd>The present writ petition has been filed in public interest. It paints a grim picture about the failure of the civic agencies in regard to the solid waste management in Delhi. In particular, it refers to the problems arising out of use of plastic bags in general which are posing major environmental hazard. The petition, therefore, prays for directions for upgrading the waste management system, effective means to curb the tendency to generate needless waste by strict legislative measures and also by educating the people at large about the hazards to environment arising out of absence of a scientific waste management programme. It prays for a mandamus directing the respondents to amend the provisions of the Delhi Plastic Bag (Manufacture, Sales and Usage) and Non-Biodegradable Garbage (Control) Act, 2000 and the Rules framed thereunder so as to ensure that the same apply and extend not only to prohibition but also to the manufacture and sale of all plastic bags in general.",
-      "basin": null,
-      "category": "jurisprudence",
-      "celex_num": null,
-      "classification": "jurisprudence",
-      "courtname": "High Court of Delhi",
-      "date": "Aug 7, 2008",
-      "depository": null,
-      "document_id": 2313,
-      "document_source": "ecolex",
-      "documenttype": null,
-      "entryintoforce": null,
-      "entryintoforcenotes": null,
-      "fieldofapplication": null,
-      "form": null,
-      "fulltext_cleaned": "",
-      "fulltextlink": "https://www.informea.org/sites/default/files/court-decisions/COU-156254.pdf",
-      "isbn": null,
-      "issn": null,
-      "journalseries": null,
-      "meetinglink": null,
-      "meetingname": null,
-      "name": "Vinod Kumar Jain vs Union Of India And Anr.",
-      "pages": null,
-      "placeofadoption": null,
-      "placepublication": null,
-      "publisher": null,
-      "referencenumber": null,
-      "seatofcourt": null,
-      "sourceid": null,
-      "sourcelink": "https://www.informea.org/en/court-decision/vinod-kumar-jain-vs-union-india-and-anr",
-      "sourcename": "UNEP",
-      "status": null,
-      "title": null,
-      "treatylink": null,
-      "treatyname": null,
-      "typeofcourt": "National - higher court",
-      "website": null,
-      "websitelink": null
-    }
-  ]
-</pre>
-              </b>
-            </p>
-          </div>
-
-
-        </div>
-      </div>
-    </div>
-
-  </main>
-
-
-  <footer class="container">
-    <div class="row">
-      <div class="col">
-
-        <div class="container content">
-          <div class="row">
-            <div class="col text-center">
-              <span class="copyright">© AILab</span>
+      "abstract": "<dd>
+                      The present writ petition has been filed in public
+                      interest. It paints a grim picture about the failure of
+                      the civic agencies in regard to the solid waste management
+                      in Delhi. In particular, it refers to the problems arising
+                      out of use of plastic bags in general which are posing
+                      major environmental hazard. The petition, therefore, prays
+                      for directions for upgrading the waste management system,
+                      effective means to curb the tendency to generate needless
+                      waste by strict legislative measures and also by educating
+                      the people at large about the hazards to environment
+                      arising out of absence of a scientific waste management
+                      programme. It prays for a mandamus directing the
+                      respondents to amend the provisions of the Delhi Plastic
+                      Bag (Manufacture, Sales and Usage) and Non-Biodegradable
+                      Garbage (Control) Act, 2000 and the Rules framed
+                      thereunder so as to ensure that the same apply and extend
+                      not only to prohibition but also to the manufacture and
+                      sale of all plastic bags in general.", "basin": null,
+                      "category": "jurisprudence", "celex_num": null,
+                      "classification": "jurisprudence", "courtname": "High
+                      Court of Delhi", "date": "Aug 7, 2008", "depository":
+                      null, "document_id": 2313, "document_source": "ecolex",
+                      "documenttype": null, "entryintoforce": null,
+                      "entryintoforcenotes": null, "fieldofapplication": null,
+                      "form": null, "fulltext_cleaned": "", "fulltextlink":
+                      "https://www.informea.org/sites/default/files/court-decisions/COU-156254.pdf",
+                      "isbn": null, "issn": null, "journalseries": null,
+                      "meetinglink": null, "meetingname": null, "name": "Vinod
+                      Kumar Jain vs Union Of India And Anr.", "pages": null,
+                      "placeofadoption": null, "placepublication": null,
+                      "publisher": null, "referencenumber": null, "seatofcourt":
+                      null, "sourceid": null, "sourcelink":
+                      "https://www.informea.org/en/court-decision/vinod-kumar-jain-vs-union-india-and-anr",
+                      "sourcename": "UNEP", "status": null, "title": null,
+                      "treatylink": null, "treatyname": null, "typeofcourt":
+                      "National - higher court", "website": null, "websitelink":
+                      null } ]
+                    </dd></pre
+                  >
+                </b>
+              </p>
             </div>
           </div>
         </div>
-
       </div>
-    </div>
-  </footer>
+    </main>
 
-</body>
-
+    <footer class="container">
+      <div class="row">
+        <div class="col">
+          <div class="container content">
+            <div class="row">
+              <div class="col text-center">
+                <span class="copyright">© AILab</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
 </html>

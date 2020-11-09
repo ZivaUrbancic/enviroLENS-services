@@ -169,11 +169,17 @@ def search_documents():
     will return top 10 documents matching your query.
     """
 
-    text = request.args.get('query')
     HOST = app.config.get('RETRIEVAL_HOST')
     PORT = app.config.get('RETRIEVAL_PORT')
+
     query_params = {
-        'query' : request.args.get('query', "")
+        'text': request.args.get('text', default=None),
+        'sources': request.args.get('sources', default=None),
+        'locations': request.args.get('locations', default=None),
+        'languages': request.args.get('languages', default=None),
+        'informea': request.args.get('informea', default=None),
+        'limit': request.args.get('limit', default=None),
+        'page': request.args.get('page', default=None)
     }
-    r = requests.get(f"http://{HOST}:{PORT}/api/v1/docRetrieval/retrieval", params=query_params)
+    r = requests.get(f"http://{HOST}:{PORT}/api/v1/search", params=query_params)
     return jsonify(r.json())
